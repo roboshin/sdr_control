@@ -1,0 +1,63 @@
+<p>basic category chart with chart type selector.</p>
+<!--<div>-->
+<!--  <span>Chart Type:</span>-->
+<!--  <select [(ngModel)]="chartType">-->
+<!--    <option>Auto</option>-->
+<!--    <option>Area</option>-->
+<!--    <option>Line</option>-->
+<!--    <option>Column</option>-->
+<!--    <option>Point</option>-->
+<!--    <option>Spline</option>-->
+<!--    <option>SplineArea</option>-->
+<!--    <option>StepArea</option>-->
+<!--    <option>StepLine</option>-->
+<!--    <option>Waterfall</option>-->
+<!--  </select>-->
+<!--</div>-->
+<!--<igx-category-chart height="550px" width="100%"-->
+<!--    chartTitle="Population per Country (millions)"-->
+<!--    [chartType]="chartType"-->
+<!--    [dataSource]="data">-->
+<!--</igx-category-chart>-->
+
+<igx-data-chart isHorizontalZoomEnabled="true" isVerticalZoomEnabled="true"
+                width="100%"
+                height="100%" (click)="clickEvemt($event)">
+  <igx-numeric-x-axis #xAxis name="xAxis" minimumValue="-1000" maximumValue="1000" interval="200"></igx-numeric-x-axis>
+  <igx-numeric-y-axis #yAxis name="yAxis" minimumValue="-600" maximumValue="600" interval="200"></igx-numeric-y-axis>
+
+  <igx-scatter-polyline-series name="airplaneShapeSeries" #airplaneShapeSeries
+                               [xAxis]="xAxis"
+                               [yAxis]="yAxis" shapeMemberPath="points" thickness="0.5"
+                               title="Airplane Shape" brush="LightGray" outline="Black">
+  </igx-scatter-polyline-series>
+
+  <igx-scatter-polyline-series name="airplaneSeatSeries" #airplaneSeatSeries
+                               [xAxis]="xAxis"
+                               [yAxis]="yAxis" shapeMemberPath="points"
+                               title="Airplane Seats"
+                               (styleShape)="onStylingShape($event)">
+  </igx-scatter-polyline-series>
+</igx-data-chart>
+
+
+<div class="option horizontal">
+  <div><span style="border-color: dodgerblue; "></span><label>First Class</label></div>
+  <div><span style="border-color: LimeGreen; "></span><label>Business Class</label></div>
+  <div><span style="border-color: Orange; "></span><label>Premium Class</label></div>
+  <div><span style="border-color: red; "></span><label>Economy Class</label></div>
+  <div><span style="border-color: gray; "></span><label>Sold Seat</label></div>
+</div>
+
+
+<ng-template let-series="series" let-item="item" #seatTooltip>
+  <div>
+    <span>{{item.class}} Class</span>
+    <br/>
+    <span>Seat: {{item.seat}}</span>
+    <br/>
+    <span>Price: ${{item.price}}</span>
+    <br/>
+    <span>Status: {{item.status}}</span>
+  </div>
+</ng-template>

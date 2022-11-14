@@ -1,0 +1,19 @@
+<p>Robot Control Panel</p>
+
+
+<div class="sample-wrapper drop-down-wrapper">
+<!--  <button #button igxButton="raised" igxRipple [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">Toggle dropdown</button>-->
+<!--  <igx-drop-down width="200px" #dropdown>-->
+<!--    <igx-drop-down-item *ngFor="let item of items" [disabled]="!!item.disabled" [isHeader]="!!item.header">-->
+<!--      {{ item.name }}-->
+<!--    </igx-drop-down-item>-->
+<!--  </igx-drop-down>-->
+
+  <igx-buttongroup>
+    <button igxButton [igxRipple]="rippleColor" (click)="onPlay()">START</button>
+    <button igxButton [igxRipple]="rippleColor" (click)="onHold()">HOLD</button>
+    <button igxButton [igxRipple]="rippleColor" (click)="onStop()">STOP</button>
+    <button igxButton [igxRipple]="rippleColor" [selected]="true">RESERVED</button>
+  </igx-buttongroup>
+
+</div>

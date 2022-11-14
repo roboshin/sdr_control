@@ -1,0 +1,57 @@
+<p>墨出しロボット接続設定</p>
+
+<div class="select-wrapper">
+  <igx-select #selectRobotName>
+    <label igxLabel>ロボット名称</label>
+    <igx-select-item *ngFor="let item of itemsRobot" [value]="item">
+      {{item}}
+    </igx-select-item>
+  </igx-select>
+
+  <igx-select #selectKuiName>
+    <label igxLabel>杭ナビ番号</label>
+    <igx-select-item *ngFor="let item of itemsKui" [value]="item">
+      {{item}}
+    </igx-select-item>
+  </igx-select>
+
+  <button igxButton="raised">接続</button>
+
+  <div class="text-center">
+    <input class="form-control" type="file"
+           (change)="onChange($event)">
+
+    <!-- ファイル送信ボタン-->
+    <button (click)="onUpload()"
+            class="btn btn-success">
+      Upload
+    </button>
+  </div>
+
+  <!-- Shareable short link of  uploaded file -->
+  <div class="container text-center jumbotron"
+       *ngIf="shortLink">
+    <h2> Visit Here</h2>
+    <a href="{{shortLink}}">{{shortLink}}</a>
+  </div>
+
+  <!--Flag variable is used here-->
+  <div class="container" *ngIf="loading">
+    <h3>Loading ...</h3>
+  </div>
+
+  <igx-select #selectDrawLayer>
+    <label igxLabel>表示レイヤー名</label>
+    <igx-select-item *ngFor="let item of itemViewLayer" [value]="item" (click)="onLoadViewLayer()">
+      {{item}}
+    </igx-select-item>
+  </igx-select>
+
+  <igx-select #selectDrawLayer>
+    <label igxLabel>描画レイヤー名</label>
+    <igx-select-item *ngFor="let item of itemDrawLayer" [value]="item" (click)="onLoadViewLayer()" >
+      {{item}}
+    </igx-select-item>
+  </igx-select>
+
+</div>
