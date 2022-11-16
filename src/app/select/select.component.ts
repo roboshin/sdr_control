@@ -39,6 +39,10 @@ export class SelectComponent implements OnInit {
 
   /**
    * ファイルアップロード用
+   * ロボット側で、ファイルアップロード後にファイルパースの結果を受け取る
+   * サーバーからの戻り値　DXFに含まれるレイヤー名の一覧
+   * 画面表示用に、　各カーブのポイント配列、レイヤー名
+   * 交点タップ用に　各カーブ同士の交点一覧
    */
   onUpload() {
     this.loading = !this.loading;

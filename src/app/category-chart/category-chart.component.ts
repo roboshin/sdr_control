@@ -58,6 +58,7 @@ export class CategoryChartComponent implements AfterViewInit{
 
   public onStylingShape(ev: { sender: any, args: IgxStyleShapeEventArgs }) {
 
+    console.log(ev.args)
     ev.args.shapeOpacity = 1.0;
     ev.args.shapeStrokeThickness = 1.0;
     ev.args.shapeStroke = 'Black';
@@ -83,5 +84,9 @@ export class CategoryChartComponent implements AfterViewInit{
 
   public clickEvemt(event){
     console.log(event)
+  }
+
+  public onStyleLine(ev: { sender: any; args: IgxStyleShapeEventArgs }) {
+
   }
 }
