@@ -11,16 +11,34 @@ import { IgxScatterPolylineSeriesComponent } from "igniteui-angular-charts";
 })
 export class CategoryChartComponent implements AfterViewInit{
 
+  /**
+   * TODO:
+   * クリックポイント周辺の交点を見つける
+   * 交点からのXYを基準点のXYとする
+   * 基準点はポップアップウィンドウを表示し、ウィンドウ内でオフセットを設定できるようにする
+   * 基準点は、基準点としてグラフに表示する
+   *
+   * 単なるロボットの現在位置表示なのか、基準点設定なのかを選択するボタンを設ける
+   * ロボットの現在位置を常に表示する
+   * ロボットの形状（姿勢）も含めて表示できればベスト
+   */
+
+  /**
+   * TODO:
+   * Notificationを各ステップごとに表示
+   * ロボットの姿勢計算部が終了
+   * 計測完了など
+   */
+
   public chartType = CategoryChartType.Auto;
 
-  data = [
-    { CountryName: 'China', Pop1995: 1216, Pop2005: 1297, },
-    { CountryName: 'India', Pop1995: 920, Pop2005: 1090, },
-    { CountryName: 'United States', Pop1995: 266, Pop2005: 295, },
-    { CountryName: 'Indonesia', Pop1995: 197, Pop2005: 229, },
-    { CountryName: 'Brazil', Pop1995: 161, Pop2005: 186, }
-  ];
-
+  // data = [
+  //   { CountryName: 'China', Pop1995: 1216, Pop2005: 1297, },
+  //   { CountryName: 'India', Pop1995: 920, Pop2005: 1090, },
+  //   { CountryName: 'United States', Pop1995: 266, Pop2005: 295, },
+  //   { CountryName: 'Indonesia', Pop1995: 197, Pop2005: 229, },
+  //   { CountryName: 'Brazil', Pop1995: 161, Pop2005: 186, }
+  // ];
 
   @ViewChild('airplaneShapeSeries', {static: true})
   public airplaneShapeSeries: IgxScatterPolylineSeriesComponent;
