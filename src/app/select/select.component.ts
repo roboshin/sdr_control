@@ -23,6 +23,8 @@ export class SelectComponent implements OnInit {
   loading: boolean = false;
   file: File = null;
 
+  private layerNames:string[];  // レイヤー名称のリスト
+
   constructor(private fileUploadService: FileService, private viewLayerService: ViewLayerService) {
   }
 
@@ -51,6 +53,10 @@ export class SelectComponent implements OnInit {
       if (typeof (event) == 'object') {
         this.shortLink = event.link;
         this.loading = false;
+
+        this.layerNames = event.layers; // 解析されたレイヤー名のリストを取得
+        this.itemViewLayer = event.layers;
+        this.itemDrawLayer = event.layers;
       }
     });
   }

@@ -84,12 +84,28 @@ export class RobotControService{
   constructor(private http:HttpClient) {
   }
 
+  /**
+   * ロボットへスタート信号を送る
+   * @param str
+   */
   setPlay(str:string):Observable<any>{
-  return this.http.put(this.baseApiUrl+'/play',str,this.httpOptions);}
+  return this.http.put(this.baseApiUrl+'/play',str,this.httpOptions);
+  }
 
+  /**
+   * ロボットへ一時停止信号を送る
+   * ロボットはインク吐出中であれば、吐出を停止する
+   * @param str
+   */
   setHold(str:string):Observable<any>{
-    return this.http.put(this.baseApiUrl+'/hold',str,this.httpOptions);}
+    return this.http.put(this.baseApiUrl+'/hold',str,this.httpOptions);
+  }
 
+  /**
+   *
+   * @param str
+   */
   setStop(str:string):Observable<any>{
-    return this.http.put(this.baseApiUrl+'/stop',str,this.httpOptions);}
+    return this.http.put(this.baseApiUrl+'/stop',str,this.httpOptions);
+  }
 }
