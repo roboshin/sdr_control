@@ -1,3 +1,24 @@
 .select-wrapper {
-  max-width: 200px;
+  max-width: 250px;
 }
+
+.wrapper {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.button-igx-primary {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  flex: 1 0 30%;
+  margin: 16px 0;
+  background: 	#007bff;
+  color: white;
+}
+
+/*
+.select-dxffile {
+  display: none;
+} */

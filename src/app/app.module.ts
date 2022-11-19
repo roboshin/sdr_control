@@ -16,6 +16,7 @@ import { IgxRadialGaugeModule } from 'igniteui-angular-gauges';
 import { FileService } from "./file.service";
 import { HttpClientModule } from '@angular/common/http';
 import { DropDownComponent } from './drop-down/drop-down.component';
+import { SvgViewComponent } from './svg-view/svg-view.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { DropDownComponent } from './drop-down/drop-down.component';
     CategoryChartComponent,
     SelectComponent,
     RadialGaugeComponent,
-    DropDownComponent
+    DropDownComponent,
+    SvgViewComponent
   ],
   imports: [
     FormsModule,
