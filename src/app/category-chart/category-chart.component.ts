@@ -100,10 +100,6 @@ export class CategoryChartComponent implements AfterViewInit{
     }
   }
 
-  public clickEvemt(event){
-    console.log(event)
-  }
-
   public onStyleLine(ev: { sender: any; args: IgxStyleShapeEventArgs }) {
 
   }

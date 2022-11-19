@@ -12,7 +12,7 @@ import { DropDownComponent } from './drop-down/drop-down.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent, data: { text: 'Home' } },
+  { path: 'home', component: HomeComponent, data: { text: 'ホーム' } },
   { path: 'error', component: UncaughtErrorComponent },
   { path: 'select', component: SelectComponent, data: { text: 'ロボット設定' } },
   { path: 'category-chart', component: CategoryChartComponent, data: { text: '描画表示' } },

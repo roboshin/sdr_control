@@ -15,15 +15,13 @@
     </igx-select-item>
   </igx-select>
 
+  <!-- 接続ボタン -->
   <button igxButton="raised">接続</button>
 
   <div class="text-center">
-    <input class="form-control" type="file"
-           (change)="onChange($event)">
-
+    <input class="form-control" type="file" (change)="onChange($event)">
     <!-- ファイル送信ボタン-->
-    <button (click)="onUpload()"
-            class="btn btn-success">
+    <button (click)="onUpload()" class="btn btn-success">
       Upload
     </button>
   </div>
@@ -49,9 +47,17 @@
 
   <igx-select #selectDrawLayer>
     <label igxLabel>描画レイヤー名</label>
-    <igx-select-item *ngFor="let item of itemDrawLayer" [value]="item" (click)="onLoadViewLayer()" >
+    <igx-select-item *ngFor="let item of itemDrawLayer" [value]="item" (click)="onLoadViewLayer()">
       {{item}}
     </igx-select-item>
   </igx-select>
+
+  <!--  ファイル読み込み完了Dialogの表示用-->
+  <igx-dialog #alert
+              [title]="dialog_title"
+              [message]="dialog_msg"
+              leftButtonLabel="OK"
+              (leftButtonSelect)="alert.close()">
+  </igx-dialog>
 
 </div>

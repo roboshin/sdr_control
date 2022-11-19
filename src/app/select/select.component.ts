@@ -1,5 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, AfterViewInit,} from '@angular/core';
 import {FileService, ViewLayerService} from "../file.service";
+import {catchError, lastValueFrom, take} from "rxjs";
+import {map} from "rxjs/operators";
+import {IgxDialogComponent} from "igniteui-angular";
+import {filter} from "rxjs/operators";
+import {LineInfo} from "../LineInfo";
+import {FileInfo} from "@angular-devkit/build-angular/src/utils/index-file/augment-index-html";
+import {Tuple} from "igniteui-angular-core";
+import {strict} from "assert";
 
 
 @Component({
@@ -7,7 +15,8 @@ import {FileService, ViewLayerService} from "../file.service";
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss']
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent implements OnInit, AfterViewInit {
+  @ViewChild('alert') public alertDialg: IgxDialogComponent;
   /**
    * itemsRobot : ロボット名称
    * itemsKui   :　杭ナビ番号
@@ -19,16 +28,24 @@ export class SelectComponent implements OnInit {
   public itemViewLayer: string[] = ['A'];
   public itemDrawLayer: string[] = ['DrawLayer01'];
 
+  dialog_title: string ="";
+  dialog_msg : string ="";
+
   shortLink: string = "";
   loading: boolean = false;
   file: File = null;
 
-  private layerNames:string[];  // レイヤー名称のリスト
+  private layerNames: string[];  // レイヤー名称のリスト
 
   constructor(private fileUploadService: FileService, private viewLayerService: ViewLayerService) {
   }
 
+
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
+    console.log(this.alertDialg);
   }
 
   /**
@@ -48,23 +65,42 @@ export class SelectComponent implements OnInit {
    */
   onUpload() {
     this.loading = !this.loading;
-    console.log(this.file);
-    this.fileUploadService.upload(this.file).subscribe((event: any) => {
-      if (typeof (event) == 'object') {
-        this.shortLink = event.link;
-        this.loading = false;
+    const layersMap = this.fileUploadService.upload(this.file).pipe(map((v, i) => {
+      this.alertDialg.open();
+      return v["Item2"]
+    }));
 
-        this.layerNames = event.layers; // 解析されたレイヤー名のリストを取得
-        this.itemViewLayer = event.layers;
-        this.itemDrawLayer = event.layers;
-      }
+    layersMap.subscribe(x=> {
+      console.log(x);
+      this.itemViewLayer = x;
+      this.itemDrawLayer = x;
     });
+
+    console.log(layersMap);
+    this.dialog_title = "Success";
+    this.dialog_msg = "ファイル転送完了\nLayers : "+this.itemViewLayer;
   }
 
+  // onUpload_getData() {
+  //   var ob = this.fileUploadService.upload(this.file);
+  //   ob.pipe(filter(cat=>cat=='a'))
+  // }
 
+
+  // TODO: エラー時の処理を追加する
+  /**
+   * レイヤー名　一覧を取得する
+   */
   onLoadViewLayer() {
     this.viewLayerService.getViewLayer()
-      .subscribe(viewLayers => this.itemViewLayer = viewLayers);
+      .subscribe({
+        next(vl) {
+          this.itemViewLayer = vl
+        },
+        error(msg) {
+          console.log(msg);
+        }
+      });
   }
 
 

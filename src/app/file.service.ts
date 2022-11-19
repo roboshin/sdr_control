@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {HttpClient,HttpHeaders} from '@angular/common/http';
-import { Observable} from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 /**
  *
@@ -102,7 +102,7 @@ export class RobotControService{
   }
 
   /**
-   *
+   * ロボットへ停止信号を送信する
    * @param str
    */
   setStop(str:string):Observable<any>{
