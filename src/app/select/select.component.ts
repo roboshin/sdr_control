@@ -1,13 +1,12 @@
 import {Component, ElementRef, OnInit, ViewChild, AfterViewInit,} from '@angular/core';
-import {FileService, ViewLayerService} from "../file.service";
+import { FileService, ViewLayerService} from "../file.service";
 import {catchError, lastValueFrom, take} from "rxjs";
 import {map} from "rxjs/operators";
 import {IgxDialogComponent} from "igniteui-angular";
 import {filter} from "rxjs/operators";
 import {LineInfo} from "../LineInfo";
 import {FileInfo} from "@angular-devkit/build-angular/src/utils/index-file/augment-index-html";
-import {Tuple} from "igniteui-angular-core";
-import {strict} from "assert";
+import {SharedDataService} from "../SharedData.Service";
 
 
 @Component({
@@ -28,8 +27,8 @@ export class SelectComponent implements OnInit, AfterViewInit {
   public itemViewLayer: string[] = ['A'];
   public itemDrawLayer: string[] = ['DrawLayer01'];
 
-  dialog_title: string ="";
-  dialog_msg : string ="";
+  dialog_title: string =""; // ポップアップウィンドウタイトル
+  dialog_msg : string ="";  // ポップアップメッセージ
 
   shortLink: string = "";
   loading: boolean = false;
@@ -37,15 +36,28 @@ export class SelectComponent implements OnInit, AfterViewInit {
 
   private layerNames: string[];  // レイヤー名称のリスト
 
-  constructor(private fileUploadService: FileService, private viewLayerService: ViewLayerService) {
+  private lineDatas : LineInfo[]; // 描画用データ
+
+  constructor(
+    private fileUploadService: FileService,
+    private viewLayerService: ViewLayerService,
+    private shareDataService: SharedDataService) {
   }
 
 
   ngOnInit(): void {
+    this.shareDataService.sharedData$.subscribe(sData=>this.shareDataService = sData);
   }
 
   ngAfterViewInit(): void {
     console.log(this.alertDialg);
+  }
+
+  /**
+   *
+   */
+  upDateLineData(){
+    this.shareDataService.setData(this.lineDatas);
   }
 
   /**
@@ -67,6 +79,12 @@ export class SelectComponent implements OnInit, AfterViewInit {
     this.loading = !this.loading;
     const layersMap = this.fileUploadService.upload(this.file).pipe(map((v, i) => {
       this.alertDialg.open();
+
+      this.layerNames = v["Item2"];
+      this.lineDatas = v["Item1"];
+
+      this.upDateLineData();  // 描画データの更新
+
       return v["Item2"]
     }));
 
@@ -79,6 +97,9 @@ export class SelectComponent implements OnInit, AfterViewInit {
     console.log(layersMap);
     this.dialog_title = "Success";
     this.dialog_msg = "ファイル転送完了\nLayers : "+this.itemViewLayer;
+
+    // 受信データから、描画ラインのデータを抜き出す
+
   }
 
   // onUpload_getData() {

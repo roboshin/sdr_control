@@ -52,6 +52,9 @@ export class CategoryChartComponent implements AfterViewInit{
   constructor() {
   }
 
+  /**
+   * 起動時にサービスから描画データを取得する
+   */
   public ngAfterViewInit() {
 
     fetch('https://static.infragistics.com/xplatform/json/airplane-shape.json')
