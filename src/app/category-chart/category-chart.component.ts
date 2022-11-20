@@ -3,6 +3,7 @@ import { CategoryChartType } from 'igniteui-angular-charts';
 import { AfterViewInit, TemplateRef, ViewChild, ElementRef } from "@angular/core";
 import { IgxStyleShapeEventArgs } from "igniteui-angular-charts";
 import { IgxScatterPolylineSeriesComponent } from "igniteui-angular-charts";
+import {IgxDialogComponent} from "igniteui-angular";
 
 @Component({
   selector: 'app-category-chart',
@@ -11,6 +12,7 @@ import { IgxScatterPolylineSeriesComponent } from "igniteui-angular-charts";
 })
 export class CategoryChartComponent implements AfterViewInit{
 
+  @ViewChild('form') public form:IgxDialogComponent;
   /**
    * TODO:
    * クリックポイント周辺の交点を見つける
@@ -64,7 +66,14 @@ export class CategoryChartComponent implements AfterViewInit{
     fetch('https://static.infragistics.com/xplatform/json/airplane-seats.json')
       .then((response) => response.json())
       .then((data) => this.onLoadedJsonSeats(data));
+
+    // Loadしたら、サービスからデータを取得する
+
+    // for debug
+    // dialogの表示
+    this.form.open();
   }
+
   public onLoadedJsonShape(jsonData: any[]) {
     // console.log('airplane-shape.json ' + jsonData.length);
     this.airplaneShapeSeries.dataSource = jsonData;

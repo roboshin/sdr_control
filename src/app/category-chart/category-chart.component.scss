@@ -419,3 +419,22 @@ table {
   height: 50px;
   width: 70px;
 }
+
+:host {
+  display: block;
+  padding: 16px;
+}
+
+.signInForm {
+  igx-input-group + igx-input-group {
+    margin-top: 24px;
+  }
+}
+
+.title-container{
+  display: flex;
+
+  igx-icon {
+    margin-right: 8px;
+  }
+}
