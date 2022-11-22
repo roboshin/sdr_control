@@ -92,28 +92,46 @@
   </igx-dialog-title>
 
   <form class="signInForm">
+
+    <igx-combo #combo class="combo" [itemsMaxHeight]="250"
+               [data]="BasePointList" [displayKey]="'field'" [valueKey]="'field'"
+               placeholder="Location(s)" searchPlaceholder="Search...">
+    </igx-combo>
+
+    <!-- X 値の表示用-->
     <igx-input-group>
-      <igx-prefix>
-        <igx-icon>person</igx-icon>
-      </igx-prefix>
+<!--      <igx-prefix>-->
+<!--        <igx-icon>person</igx-icon>-->
+<!--      </igx-prefix>-->
       <label igxLabel for="xValue">X [mm]</label>
-      <input igxInput id="xValue" type="text"/>
-      <label igxLabel for="xOffset">Offset X [mm]</label>
-      <input igxInput id="xOffset" type="text"/>
+      <input igxInput id="xValue"/>
     </igx-input-group>
+
+    <!-- X Offset入力用-->
     <igx-input-group>
-      <igx-prefix>
-        <igx-icon>lock</igx-icon>
-      </igx-prefix>
-      <label igxLabel for="yValue">Y [mm]</label>
-      <input igxInput id="yValue" type="text"/>
-      <label igxLabel for="yOffset">Offset Y [mm]</label>
-      <input igxInput id="yOffset" type="text"/>
+      <label igxLabel for="xOffset">X [mm]</label>
+      <input igxInput id="xOffset"/>
     </igx-input-group>
+
+    <!-- Y 値の表示用-->
+    <igx-input-group>
+<!--      <igx-prefix>-->
+<!--        <igx-icon>lock</igx-icon>-->
+<!--      </igx-prefix>-->
+      <label igxLabel for="yValue">Y [mm]</label>
+      <input igxInput id="yValue"/>
+    </igx-input-group>
+
+    <!-- Y Offset入力用-->
+    <igx-input-group>
+      <label igxLabel for="yOffset">Y Offset[mm]</label>
+      <input igxInput id="yOffset"/>
+    </igx-input-group>
+
   </form>
 
   <div igxDialogActions>
     <button igxButton (click)="form.close()">CANCEL</button>
-    <button igxButton (click)="form.close()">SIGN IN</button>
+    <button igxButton (click)="form.close()">設定</button>
   </div>
 </igx-dialog>

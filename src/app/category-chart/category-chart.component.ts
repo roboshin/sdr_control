@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
-import { CategoryChartType } from 'igniteui-angular-charts';
-import { AfterViewInit, TemplateRef, ViewChild, ElementRef } from "@angular/core";
-import { IgxStyleShapeEventArgs } from "igniteui-angular-charts";
-import { IgxScatterPolylineSeriesComponent } from "igniteui-angular-charts";
+import {Component} from '@angular/core';
+import {CategoryChartType} from 'igniteui-angular-charts';
+import {AfterViewInit, TemplateRef, ViewChild, ElementRef} from "@angular/core";
+import {IgxStyleShapeEventArgs} from "igniteui-angular-charts";
+import {IgxScatterPolylineSeriesComponent} from "igniteui-angular-charts";
 import {IgxDialogComponent} from "igniteui-angular";
+import { Point2D} from "../LineInfo";
 
 @Component({
   selector: 'app-category-chart',
   templateUrl: './category-chart.component.html',
   styleUrls: ['./category-chart.component.scss']
 })
-export class CategoryChartComponent implements AfterViewInit{
+export class CategoryChartComponent implements AfterViewInit {
 
-  @ViewChild('form') public form:IgxDialogComponent;
+  @ViewChild('form') public form: IgxDialogComponent;
   /**
    * TODO:
    * クリックポイント周辺の交点を見つける
@@ -45,11 +46,18 @@ export class CategoryChartComponent implements AfterViewInit{
   @ViewChild('airplaneShapeSeries', {static: true})
   public airplaneShapeSeries: IgxScatterPolylineSeriesComponent;
   //
-  @ViewChild('airplaneSeatSeries', { static: true })
+  @ViewChild('airplaneSeatSeries', {static: true})
   public airplaneSeatSeries: IgxScatterPolylineSeriesComponent;
   //
-  @ViewChild('seatTooltip', { static: true })
+  @ViewChild('seatTooltip', {static: true})
   public seatTooltip: TemplateRef<object>;
+
+  // 計測基準点名のリスト
+  BasePointList = [
+    {name: "P1", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0]},
+    {name: "P2", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0]},
+    {name: "P3", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0]},
+  ];
 
   constructor() {
   }
