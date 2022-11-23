@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CategoryChartType} from 'igniteui-angular-charts';
 import {AfterViewInit, TemplateRef, ViewChild, ElementRef} from "@angular/core";
 import {IgxStyleShapeEventArgs} from "igniteui-angular-charts";
 import {IgxScatterPolylineSeriesComponent} from "igniteui-angular-charts";
-import {IgxDialogComponent} from "igniteui-angular";
+import {IgxDialogComponent, IgxSimpleComboComponent} from "igniteui-angular";
 import { Point2D} from "../LineInfo";
 
 @Component({
@@ -11,7 +11,7 @@ import { Point2D} from "../LineInfo";
   templateUrl: './category-chart.component.html',
   styleUrls: ['./category-chart.component.scss']
 })
-export class CategoryChartComponent implements AfterViewInit {
+export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   @ViewChild('form') public form: IgxDialogComponent;
   /**
@@ -52,12 +52,17 @@ export class CategoryChartComponent implements AfterViewInit {
   @ViewChild('seatTooltip', {static: true})
   public seatTooltip: TemplateRef<object>;
 
+  @ViewChild(IgxSimpleComboComponent, { read: IgxSimpleComboComponent, static: true })
+  public simpleCombo: IgxSimpleComboComponent;
+
   // 計測基準点名のリスト
   BasePointList = [
-    {name: "P1", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0]},
-    {name: "P2", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0]},
-    {name: "P3", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0]},
+    {name: "P1", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0], id:1},
+    {name: "P2", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0], id:2},
+    {name: "P3", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0], id:3},
   ];
+
+  selectedPointName : string;
 
   constructor() {
   }
@@ -80,6 +85,11 @@ export class CategoryChartComponent implements AfterViewInit {
     // for debug
     // dialogの表示
     this.form.open();
+  }
+
+  public ngOnInit() {
+    // this.selectedPointName = this.BasePointList[0].name;
+    this.simpleCombo.select(0);
   }
 
   public onLoadedJsonShape(jsonData: any[]) {
@@ -122,5 +132,20 @@ export class CategoryChartComponent implements AfterViewInit {
 
   public onStyleLine(ev: { sender: any; args: IgxStyleShapeEventArgs }) {
 
+  }
+
+  onErrorInput() {
+
+  }
+
+  onGetValue(sp: string) {
+    console.log("sp : "+sp);
+    this.BasePointList.map(d=>{
+      if(d.name == sp){
+        console.log(d);
+        return d.msterPoint[0];
+      }
+      else return typeof d !== 'undefined'
+    })
   }
 }

@@ -93,10 +93,18 @@
 
   <form class="signInForm">
 
-    <igx-combo #combo class="combo" [itemsMaxHeight]="250"
-               [data]="BasePointList" [displayKey]="'field'" [valueKey]="'field'"
-               placeholder="Location(s)" searchPlaceholder="Search...">
-    </igx-combo>
+    <div class="combo-section">
+    <igx-simple-combo #combo
+                      [data]="BasePointList"
+                      [(ngModel)]="selectedPointName"
+                      [displayKey]="'name'" [valueKey]="'id'">
+    </igx-simple-combo>
+    </div>
+
+    <div *ngIf="!!selectedPointName">
+      <h6>Selected City's Id:</h6>
+      <div>{{ selectedPointName }}</div>
+    </div>
 
     <!-- X 値の表示用-->
     <igx-input-group>
@@ -104,12 +112,12 @@
 <!--        <igx-icon>person</igx-icon>-->
 <!--      </igx-prefix>-->
       <label igxLabel for="xValue">X [mm]</label>
-      <input igxInput id="xValue"/>
+      <input igxInput id="xValue" [value]="onGetValue(selectedPointName )" (error)="onErrorInput()"/>
     </igx-input-group>
 
     <!-- X Offset入力用-->
     <igx-input-group>
-      <label igxLabel for="xOffset">X [mm]</label>
+      <label igxLabel for="xOffset">X Offset [mm]</label>
       <input igxInput id="xOffset"/>
     </igx-input-group>
 
