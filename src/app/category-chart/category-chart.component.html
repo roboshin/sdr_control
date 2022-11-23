@@ -25,6 +25,22 @@
     <label id="legendTitle">Airplane Seating Chart (Polylines)</label>
   </div>
 
+  <!-- P基準点選択Combo   -->
+  <div class="combo-section">
+    <igx-simple-combo class="input-container" #combo
+                      [data]="BasePointList"
+                      [displayKey]="'name'" [valueKey]="'id'"
+                      [(ngModel)]="selectedPointName">
+    </igx-simple-combo>
+  </div>
+
+  <igx-select #selectBasePoint>
+    <label igxLabel>基準点名</label>
+    <igx-select-item *ngFor="let item of itemBasePointName" [value]="item">
+      {{item}}
+    </igx-select-item>
+  </igx-select>
+
   <div class="custom-legend">
     <div><span style="background: DodgerBlue; "></span><label>First Class</label></div>
     <div><span style="background: LimeGreen; "></span><label>Business Class</label></div>
@@ -80,10 +96,12 @@
   </div>
 </ng-template>
 
+
+
 <!--<button igxButton="raised" igxRipple="white" (click)="form.open()">Show Custom Dialog</button>-->
 
 <!--位置入力Dialog -->
-<igx-dialog #form [closeOnOutsideSelect]="true">
+<igx-dialog #form [closeOnOutsideSelect]="true" [hidden]="true">
   <igx-dialog-title>
     <div class="title-container">
       <igx-icon>vpn_key</igx-icon>
@@ -93,12 +111,13 @@
 
   <form class="signInForm">
 
+    <!-- P基準点選択Combo   -->
     <div class="combo-section">
-    <igx-simple-combo #combo
-                      [data]="BasePointList"
-                      [(ngModel)]="selectedPointName"
-                      [displayKey]="'name'" [valueKey]="'id'">
-    </igx-simple-combo>
+      <igx-simple-combo class="input-container" #combo
+                        [data]="BasePointList"
+                        [displayKey]="'name'" [valueKey]="'id'"
+                        [(ngModel)]="selectedPointName">
+      </igx-simple-combo>
     </div>
 
     <div *ngIf="!!selectedPointName">
@@ -108,9 +127,9 @@
 
     <!-- X 値の表示用-->
     <igx-input-group>
-<!--      <igx-prefix>-->
-<!--        <igx-icon>person</igx-icon>-->
-<!--      </igx-prefix>-->
+      <!--      <igx-prefix>-->
+      <!--        <igx-icon>person</igx-icon>-->
+      <!--      </igx-prefix>-->
       <label igxLabel for="xValue">X [mm]</label>
       <input igxInput id="xValue" [value]="onGetValue(selectedPointName )" (error)="onErrorInput()"/>
     </igx-input-group>
@@ -123,9 +142,9 @@
 
     <!-- Y 値の表示用-->
     <igx-input-group>
-<!--      <igx-prefix>-->
-<!--        <igx-icon>lock</igx-icon>-->
-<!--      </igx-prefix>-->
+      <!--      <igx-prefix>-->
+      <!--        <igx-icon>lock</igx-icon>-->
+      <!--      </igx-prefix>-->
       <label igxLabel for="yValue">Y [mm]</label>
       <input igxInput id="yValue"/>
     </igx-input-group>

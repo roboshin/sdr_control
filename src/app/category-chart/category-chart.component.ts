@@ -62,7 +62,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     {name: "P3", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0], id:3},
   ];
 
-  selectedPointName : string;
+  public selectedPointName : string;
+
+  public selectedId : Number;
+  public itemBasePointName: string[];
 
   constructor() {
   }
@@ -89,7 +92,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   public ngOnInit() {
     // this.selectedPointName = this.BasePointList[0].name;
-    this.simpleCombo.select(0);
+    this.selectedPointName = this.BasePointList[0].name;
+    this.selectedId = this.BasePointList[0].id;
+
+    this.itemBasePointName = this.BasePointList.map(d=>{return d.name});
   }
 
   public onLoadedJsonShape(jsonData: any[]) {
