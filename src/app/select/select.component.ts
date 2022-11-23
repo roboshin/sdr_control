@@ -1,16 +1,21 @@
-import { Observable } from 'rxjs';
+import {Component, ElementRef, OnInit, ViewChild, AfterViewInit,} from '@angular/core';
+import { FileService, ViewLayerService} from "../file.service";
+import {catchError, lastValueFrom, take} from "rxjs";
+import {map} from "rxjs/operators";
+import {IgxDialogComponent} from "igniteui-angular";
+import {filter} from "rxjs/operators";
+import {LineInfo} from "../LineInfo";
+import {FileInfo} from "@angular-devkit/build-angular/src/utils/index-file/augment-index-html";
+import {SharedDataService} from "../SharedData.Service";
 
-import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-
-import { FileService, LayerService } from '../file.service';
 
 @Component({
   selector: 'app-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss']
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent implements OnInit, AfterViewInit {
+  @ViewChild('alert') public alertDialg: IgxDialogComponent;
   /**
    * itemsRobot : ロボット名称
    * itemsKui   :　杭ナビ番号
@@ -22,42 +27,37 @@ export class SelectComponent implements OnInit {
   public itemViewLayer: string[] = ['A'];
   public itemDrawLayer: string[] = ['DrawLayer01'];
 
+  dialog_title: string =""; // ポップアップウィンドウタイトル
+  dialog_msg : string ="";  // ポップアップメッセージ
+
   shortLink: string = "";
   loading: boolean = false;
   file: File = null;
 
-  progress = 0;
-  message = '';
-  uploadcomplete: boolean = false;
+  private layerNames: string[];  // レイヤー名称のリスト
 
-  public selviewlayername: string;
-  public seldrawlayername: string;
-  public initviewlayer: string;
-  public initdrawlayer: string;
-  public currfilename: string;
+  private lineDatas : LineInfo[]; // 描画用データ
 
-  constructor(private fileService: FileService, private layerService: LayerService) {
+  constructor(
+    private fileUploadService: FileService,
+    private viewLayerService: ViewLayerService,
+    private shareDataService: SharedDataService) {
   }
 
-  ngOnInit(): void {
-    this.fileService.getCurrDxfFilename().subscribe(dxffilename => this.currfilename = dxffilename);
-    this.layerService.getLayers().subscribe(layerstrings => {
-        this.itemViewLayer = layerstrings;
-        this.itemDrawLayer = layerstrings;
-      });
-    this.layerService.getViewLayer().subscribe(viewlayerstring => {
-        // this.initviewlayer = viewlayerstring;
-        this.selviewlayername = viewlayerstring;
-        console.log("viewlayerstring: " + viewlayerstring);
-        console.log("this.selviewlayername: " + this.selviewlayername);
-      });
-    this.layerService.getDrawLayer().subscribe(drawlayerstring => {
-        // this.initdrawlayer = drawlayerstring;
-        this.seldrawlayername = drawlayerstring;
-        console.log("viewlayerstring: " + drawlayerstring);
-        console.log("this.seldrawlayername: " + this.seldrawlayername);
-      });
 
+  ngOnInit(): void {
+    this.shareDataService.sharedData$.subscribe(sData=>this.shareDataService = sData);
+  }
+
+  ngAfterViewInit(): void {
+    console.log(this.alertDialg);
+  }
+
+  /**
+   *
+   */
+  upDateLineData(){
+    this.shareDataService.setData(this.lineDatas);
   }
 
   /**
@@ -70,178 +70,58 @@ export class SelectComponent implements OnInit {
 
   /**
    * ファイルアップロード用
+   * ロボット側で、ファイルアップロード後にファイルパースの結果を受け取る
+   * サーバーからの戻り値　DXFに含まれるレイヤー名の一覧
+   * 画面表示用に、　各カーブのポイント配列、レイヤー名
+   * 交点タップ用に　各カーブ同士の交点一覧
    */
-   onUpload(): void {
-    this.progress = 0;
-    this.uploadcomplete = false;
-
-    // 各種データ初期化
-    this.initviewlayer = "";
-    this.initdrawlayer = "";
-    this.currfilename = "";
-    this.itemViewLayer = [];
-    this.itemDrawLayer = [];
-
-    if (this.file) {
-      this.fileService.upload(this.file).subscribe(
-        (event: any) => {
-          if (event.type === HttpEventType.UploadProgress) {
-            this.progress = Math.round(100 * event.loaded / event.total);
-            console.log("loaded: " + event.loaded + " total: " + event.total);
-            console.log("progress:" + this.progress);
-            if (event.loaded >= event.total) {
-              this.uploadcomplete = true;
-            }
-          } else if (event instanceof HttpResponse) {
-            // this.message = event.body.message;
-            // console.log("message "+ this.message);
-            console.log(event);
-          }
-        },
-        (err: any) => {
-          console.log(err);
-          this.progress = 0;
-
-          if (err.error && err.error.message) {
-            this.message = err.error.message;
-          } else {
-            this.message = 'Could not upload the file!';
-          }
-          console.log(this.message);
-        },
-        () => {
-          this.file = undefined;
-          this.uploadcomplete = true;
-          console.log("upload compleate");
-          console.log(this.uploadcomplete);
-          if (this.uploadcomplete) {  // Uploadが成功したのでLayerリストを取得し上書き
-            this.layerService.getLayers().subscribe(
-              layerstrings => {
-                this.itemViewLayer = layerstrings;
-                this.itemDrawLayer = layerstrings;
-              }
-            );
-          }
-        });
-    }
-  }
-  /*
   onUpload() {
     this.loading = !this.loading;
-    console.log(this.file);
-    this.fileService.upload(this.file).subscribe((event: any) => {
-      if (typeof (event) == 'object') {
-        this.shortLink = event.link;
-        this.loading = false;
-      }
-    });
-  }
-  */
+    const layersMap = this.fileUploadService.upload(this.file).pipe(map((v, i) => {
+      this.alertDialg.open();
 
+      this.layerNames = v["Item2"];
+      this.lineDatas = v["Item1"];
+
+      this.upDateLineData();  // 描画データの更新
+
+      return v["Item2"]
+    }));
+
+    layersMap.subscribe(x=> {
+      console.log(x);
+      this.itemViewLayer = x;
+      this.itemDrawLayer = x;
+    });
+
+    console.log(layersMap);
+    this.dialog_title = "Success";
+    this.dialog_msg = "ファイル転送完了\nLayers : "+this.itemViewLayer;
+
+    // 受信データから、描画ラインのデータを抜き出す
+
+  }
+
+  // onUpload_getData() {
+  //   var ob = this.fileUploadService.upload(this.file);
+  //   ob.pipe(filter(cat=>cat=='a'))
+  // }
+
+
+  // TODO: エラー時の処理を追加する
   /**
-   * アップロードファイルパース用
+   * レイヤー名　一覧を取得する
    */
-  onParse(): void {
-    this.fileService.parseuploadfile().subscribe({
-      next: (response: HttpResponse<any>) => {
-        console.log('response: ', response);
-        console.log(response.body)
-        this.itemViewLayer = [];  // 一旦クリア
-        this.itemViewLayer = response.body; // パース結果のLayerリストを設定
-        this.itemDrawLayer = [];  // 一旦クリア
-        this.itemDrawLayer = response.body; // パース結果のLayerリストを設定
-      },
-      error: (e) => {
-        switch (e.status) {
-          default:
-            console.log('error: ', e);
-            break;
-        }
-      },
-      complete: () => {
-        console.log('complete');
-      }
-    });
-  }
-
-  selViewLayer(event) {
-    console.log('event: '+ event);
-    this.layerService.setViewLayer(event).subscribe({
-      next: (response: HttpResponse<any>) => {
-        console.log('response: ', response);
-        console.log('response-body: ', response.body);
-      },
-      error: (e) => {
-        switch (e.status) {
-          default:
-            console.log('error: ', e);
-            break;
-        }
-      },
-      complete: () => {
-        console.log('complete');
-      }
-    });
-  }
-
-  selDrawLayer(event) {
-    console.log('event: '+ event);
-    this.layerService.setDrawLayer(event).subscribe({
-      next: (response: HttpResponse<any>) => {
-        console.log('response: ', response);
-        console.log('response-body: ', response.body);
-      },
-      error: (e) => {
-        switch (e.status) {
-          default:
-            console.log('error: ', e);
-            break;
-        }
-      },
-      complete: () => {
-        console.log('complete');
-      }
-    });
-  }
-
-  /*
-  selViewLayer() {
-    this.layerService.setViewLayer("View Layerzo").subscribe({
-      next: (response: HttpResponse<any>) => {
-        console.log('response: ', response);
-        console.log('response-body: ', response.body);
-      },
-      error: (e) => {
-        switch (e.status) {
-          default:
-            console.log('error: ', e);
-            break;
-        }
-      },
-      complete: () => {
-        console.log('complete');
-      }
-    });
-  }
   onLoadViewLayer() {
-    // this.viewLayerService.getViewLayer()
-    //   .subscribe(viewLayers => this.itemViewLayer = viewLayers);
-    this.layerService.setViewLayer("View Layerzo").subscribe({
-      next: (response: HttpResponse<any>) => {
-        console.log('response: ', response);
-        console.log('response-body: ', response.body);
-      },
-      error: (e) => {
-        switch (e.status) {
-          default:
-            console.log('error: ', e);
-            break;
+    this.viewLayerService.getViewLayer()
+      .subscribe({
+        next(vl) {
+          this.itemViewLayer = vl
+        },
+        error(msg) {
+          console.log(msg);
         }
-      },
-      complete: () => {
-        console.log('complete');
-      }
-    });
+      });
   }
 
 

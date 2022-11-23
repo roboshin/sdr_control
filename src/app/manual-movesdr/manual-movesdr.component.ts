@@ -65,9 +65,10 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
    */
    @HostListener('mousedown', ['$event'])  
    onMouseDown(event) {
-     console.log("mouse down event " + event)
-     if(event.target.className == "targetsvg") {
-      ;
+     console.log("mouse down event");
+     console.log(event);
+     if(event.target.id == "leftturnbtn") {
+      console.log("left turn button click.");
      }
    }
  
