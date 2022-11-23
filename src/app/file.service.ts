@@ -1,17 +1,16 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {LineInfo, Point2D} from "./LineInfo";
+import { catchError, Observable, throwError } from 'rxjs';
 
-/**
- *
- */
+import {
+    HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpRequest, HttpResponse
+} from '@angular/common/http';
+import { TmplAstRecursiveVisitor } from '@angular/compiler';
+import { Injectable } from '@angular/core';
+
 @Injectable({
   providedIn: 'root'
 })
 export class FileService {
   baseApiUrl = "/app/upload"
-
   //baseApiUrl = "https://file.io"
   /**
    *
@@ -20,12 +19,49 @@ export class FileService {
   constructor(private http: HttpClient) {
   }
 
+  getCurrDxfFilename():Observable<string>{
+    return this.http.get<string>(`${this.baseApiUrl}/getdxffilename`);
+  }
+
   /**
    *
    * @param file
    */
+  upload(file: File): Observable<HttpEvent<any>> {
+      const formData: FormData = new FormData();
+
+      formData.append('file', file);
+
+      const req = new HttpRequest('POST', `${this.baseApiUrl}/upload`, formData, {
+        reportProgress: true,
+        responseType: 'json'
+      });
+
+      return this.http.request(req);
+  }
+
+  /**
+   * @param void
+   */
+  parseuploadfile(): Observable<HttpResponse<any>> {
+      return this.http.get<any>(`${this.baseApiUrl}/parsedxffile`, {observe: 'response'})
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 0) {
+      console.error('An Error Occurred: ', error.error.message);
+    } else {
+      console.error(`Backend returned code ${error.status}, body was: `, error.error.message);
+    }
+    return throwError(() => new Error('Something bad happened; please try again later.'))
+  }
+
+/*
   upload(file): Observable<any> {
-    console.log("upload : " + file);
+    console.log("upload : "+file);
 
     const formData = new FormData();
 
@@ -44,15 +80,23 @@ export class FileService {
 @Injectable({
   providedIn: 'root'
 })
-export class ViewLayerService {
+export class ViewLayerService{
   baseApiUrl = "/app/viewLayer"
 
-  constructor(private http: HttpClient) {
+  constructor(private http:HttpClient) {
   }
 
-  getViewLayer(): Observable<string[]> {
+  getViewLayer():Observable<string[]>{
     return this.http.get<string[]>(this.baseApiUrl);
   }
+
+  setDrawLayer(str: string): Observable<HttpResponse<any>> {
+    let drawlayerjson = {"layername" : str };
+    const transjson = JSON.stringify(drawlayerjson);
+
+    return this.http.put<any>(`${this.baseApiUrl}/setDrawLayer`,transjson);
+  }
+
 }
 
 /**
@@ -61,13 +105,13 @@ export class ViewLayerService {
 @Injectable({
   providedIn: 'root'
 })
-export class DrawLayerService {
+export class DrawLayerService{
   baseApiUrl = "/app/drawLayer"
 
-  constructor(private http: HttpClient) {
+  constructor(private http:HttpClient) {
   }
 
-  getViewLayer(): Observable<string[]> {
+  getViewLayer():Observable<string[]>{
     return this.http.get<string[]>(this.baseApiUrl);
   }
 }
@@ -76,45 +120,22 @@ export class DrawLayerService {
 @Injectable({
   providedIn: 'root'
 })
-export class RobotControService {
+export class RobotControService{
   baseApiUrl = "/app/robotControl"
 
   httpOptions = {
-    headers: new HttpHeaders({'Content-Type': 'application/json'},)
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' },)
   };
 
-  constructor(private http: HttpClient) {
+  constructor(private http:HttpClient) {
   }
 
-  /**
-   * ロボットへスタート信号を送る
-   * @param str
-   */
-  setPlay(str: string): Observable<any> {
-    return this.http.put(this.baseApiUrl + '/play', str, this.httpOptions);
-  }
+  setPlay(str:string):Observable<any>{
+  return this.http.put(this.baseApiUrl+'/play',str,this.httpOptions);}
 
-  /**
-   * ロボットへ一時停止信号を送る
-   * ロボットはインク吐出中であれば、吐出を停止する
-   * @param str
-   */
-  setHold(str: string): Observable<any> {
-    return this.http.put(this.baseApiUrl + '/hold', str, this.httpOptions);
-  }
+  setHold(str:string):Observable<any>{
+    return this.http.put(this.baseApiUrl+'/hold',str,this.httpOptions);}
 
-  /**
-   * ロボットへ停止信号を送信する
-   * @param str
-   */
-  setStop(str: string): Observable<any> {
-    return this.http.put(this.baseApiUrl + '/stop', str, this.httpOptions);
-  }
+  setStop(str:string):Observable<any>{
+    return this.http.put(this.baseApiUrl+'/stop',str,this.httpOptions);}
 }
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class DrawLineDatas {
-//   public points: LineInfo[];
-// }

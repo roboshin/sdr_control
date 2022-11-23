@@ -1,40 +1,45 @@
+import 'hammerjs';
+
+import {
+    IgxButtonGroupModule, IgxButtonModule, IgxDragDropModule, IgxDropDownModule, IgxLayoutModule,
+    IgxNavbarModule, IgxNavigationDrawerModule, IgxRippleModule, IgxSelectModule, IgxSliderModule,
+    IgxToggleModule
+} from 'igniteui-angular';
+import {
+    IgxCategoryChartModule, IgxDataChartCoreModule, IgxDataChartInteractivityModule,
+    IgxDataChartScatterModule, IgxDataChartShapeCoreModule, IgxDataChartShapeModule, IgxLegendModule
+} from 'igniteui-angular-charts';
+import { IgxRadialGaugeModule } from 'igniteui-angular-gauges';
+
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  IgxButtonGroupModule,
-  IgxLayoutModule,
-  IgxNavbarModule,
-  IgxNavigationDrawerModule,
-  IgxRippleModule,
-  IgxSelectModule,
-  IgxButtonModule,
-  IgxToggleModule,
-  IgxDropDownModule,
-  IgxDialogModule, IgxComboModule, IgxSimpleComboModule,
-} from 'igniteui-angular';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { CategoryChartComponent } from './category-chart/category-chart.component';
 import { IgxCategoryChartModule } from 'igniteui-angular-charts';
 import { SelectComponent } from './select/select.component';
-import {
-  IgxDataChartCoreModule,
-  IgxDataChartShapeModule,
-  IgxDataChartShapeCoreModule,
-  IgxLegendModule,
-  IgxDataChartInteractivityModule,
-  IgxDataChartScatterModule
-} from "igniteui-angular-charts";
+import { IgxDataChartCoreModule, IgxDataChartShapeModule, IgxDataChartShapeCoreModule, IgxLegendModule, IgxDataChartInteractivityModule, IgxDataChartScatterModule } from "igniteui-angular-charts";
 import { CommonModule } from "@angular/common";
 import { RadialGaugeComponent } from './radial-gauge/radial-gauge.component';
 import { IgxRadialGaugeModule } from 'igniteui-angular-gauges';
 import { FileService } from "./file.service";
 import { HttpClientModule } from '@angular/common/http';
 import { DropDownComponent } from './drop-down/drop-down.component';
-
+import { FileService } from './file.service';
+import { HomeComponent } from './home/home.component';
+import { ManualMovesdrComponent } from './manual-movesdr/manual-movesdr.component';
+import { RadialGaugeComponent } from './radial-gauge/radial-gauge.component';
+import {
+    ReferencepointMeasureComponent
+} from './referencepoint-measure/referencepoint-measure.component';
+import { SelectComponent } from './select/select.component';
+import { SvgViewComponent } from './svg-view/svg-view.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +48,10 @@ import { DropDownComponent } from './drop-down/drop-down.component';
     CategoryChartComponent,
     SelectComponent,
     RadialGaugeComponent,
-    DropDownComponent
+    DropDownComponent,
+    SvgViewComponent,
+    ReferencepointMeasureComponent,
+    ManualMovesdrComponent
   ],
   imports: [
     FormsModule,
@@ -73,9 +81,8 @@ import { DropDownComponent } from './drop-down/drop-down.component';
     HttpClientModule,
     IgxDropDownModule,
     IgxButtonGroupModule,
-    IgxDialogModule,
-    IgxComboModule,
-    IgxSimpleComboModule,
+    IgxDragDropModule,
+    IgxSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent],

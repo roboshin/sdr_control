@@ -8,22 +8,26 @@
     </igx-select-item>
   </igx-select>
 
+  <div>
   <igx-select #selectKuiName>
     <label igxLabel>杭ナビ番号</label>
     <igx-select-item *ngFor="let item of itemsKui" [value]="item">
       {{item}}
     </igx-select-item>
   </igx-select>
+  <button class="button-igx-primary">指定杭ナビ接続</button>
+  </div>
+  <br>
 
-  <!-- 接続ボタン -->
-  <button igxButton="raised">接続</button>
+  <div>
+  <!-- <div class="text-center"> -->
+    設定中のDXFファイル: {{ currfilename }}<br>
+    新規DXFファイル設定: <input class="select-dxffile" type="file"
+           (change)="onChange($event)">
 
-  <div class="text-center">
-    <input class="form-control" type="file" (change)="onChange($event)">
     <!-- ファイル送信ボタン-->
-    <button (click)="onUpload()" class="btn btn-success">
-      Upload
-    </button>
+    <button (click)="onUpload()" class="btn btn-success">Upload</button>
+    <button (click)="onParse()" class="btn btn-success">Parse</button>
   </div>
 
   <!-- Shareable short link of  uploaded file -->
@@ -38,26 +42,20 @@
     <h3>Loading ...</h3>
   </div>
 
-  <igx-select #selectDrawLayer>
+  <igx-select #selectViewLayer [ngModel]="selviewlayername" (ngModelChange)="selViewLayer($event)">
     <label igxLabel>表示レイヤー名</label>
-    <igx-select-item *ngFor="let item of itemViewLayer" [value]="item" (click)="onLoadViewLayer()">
+    <!-- <igx-select-item *ngFor="let item of itemViewLayer" [value]="item" (click)="selViewLayer()"> -->
+    <igx-select-item *ngFor="let item of itemViewLayer" [value]="item">
       {{item}}
     </igx-select-item>
   </igx-select>
 
-  <igx-select #selectDrawLayer>
+  <igx-select #selectDrawLayer [ngModel]="seldrawlayername" (ngModelChange)="selDrawLayer($event)">
     <label igxLabel>描画レイヤー名</label>
-    <igx-select-item *ngFor="let item of itemDrawLayer" [value]="item" (click)="onLoadViewLayer()">
+    <!-- <igx-select-item *ngFor="let item of itemDrawLayer" [value]="item" (click)="onLoadViewLayer()" > -->
+    <igx-select-item *ngFor="let item of itemDrawLayer" [value]="item">
       {{item}}
     </igx-select-item>
   </igx-select>
-
-  <!--  ファイル読み込み完了Dialogの表示用-->
-  <igx-dialog #alert
-              [title]="dialog_title"
-              [message]="dialog_msg"
-              leftButtonLabel="OK"
-              (leftButtonSelect)="alert.close()">
-  </igx-dialog>
 
 </div>
