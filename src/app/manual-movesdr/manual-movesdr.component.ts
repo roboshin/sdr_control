@@ -15,6 +15,8 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
   boundingelement: any;
   animationDuration = 0.3;
 
+  manualstartX = 0;   // ドラッグ最初のx座標
+  manualstarty = 0;   // ドラッグ最初のy座標
   // sliderType = IgxSliderType;
 
   // volumeL = 50;
@@ -73,6 +75,8 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
   onDragStart(event: IDragBaseEventArgs) {
     console.log("DragStart");
     console.log(event);
+    this.manualstartX = event.startX;
+    this.manualstarty = event.startY;
     // Sets specific class when dragging.
     // event.owner.data.dragged = true;
   }
@@ -80,6 +84,7 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
   onDragEnd(event: IDragBaseEventArgs) {
     console.log("DragEnd");
     console.log(event);
+    console.log("saved Start x: "+this.manualstartX+" y:"+this.manualstarty);
     // if (this.newIndex !== null) {
     //     // When we have moved the dragged element up/down, animate it to its new location.
     //     const moveDown = this.newIndex > itemIndex;
@@ -103,6 +108,7 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
 
   onDragMove(event: IDragMoveEventArgs) {
     console.log("DragMove...");
+    console.log("start base x: "+event.startX+" y: "+event.startY);
     console.log("from x: "+event.pageX+" y: "+event.pageY);
     console.log("to x: "+event.nextPageX+" y: "+event.nextPageY);
 
