@@ -1,2 +1,14 @@
-<img src="{{imageurl}}" width="auto" hight="auto">
-<button (click)="onClickSetSVGBkground()">SVGファイルで背景セット</button>
+<!-- <img src="{{imageurl}}" width="{{imgwidth}}" height="{{imgheight}}"> -->
+<div class="btnbase" width="1px" height="1px">
+    <img class="targetsvg" src="{{imageurl}}">
+    <span class="rpoint1btn"><button [class.btnpushed]="on_point1" (click)="onclickbtn1()">P1セット</button></span>
+    <span class="rpoint2btn"><button [class.btnpushed]="on_point2" (click)="onclickbtn2()">P2セット</button></span>
+    <span class="rpoint3btn"><button [class.btnpushed]="on_point3" (click)="onclickbtn3()">P3セット</button></span>
+    <div class="cross1"></div><div class="p1disp">P1</div>
+    <div class="cross2"></div><div class="p2disp">P2</div>
+    <div class="cross3"></div><div class="p3disp">P3</div>
+    <!-- <p class="rpoint1btn"><button (click)="onclickbtn1()">P1セット</button></p>
+    <p class="rpoint2btn"><button (click)="onclickbtn2()">P2セット</button></p>
+    <p class="rpoint3btn"><button (click)="onclickbtn3()">P3セット</button></p> -->
+    <!-- <img src="/assets/out.svg" height="auto"> -->
+</div>

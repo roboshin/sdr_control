@@ -1,14 +1,49 @@
-<div class="outer-wrapper" igxLayout>
-  <igx-nav-drawer #nav id="project-menu" [isOpen]="true" [enableGestures]="true" width="280px">
+<!-- <div class="outer-wrapper" igxLayout>
+    <igx-nav-drawer #nav id="project-menu" [isOpen]="true" [enableGestures]="true" width="280px">
     <ng-template igxDrawer>
       <span igxDrawerItem [isHeader]="true">Main Menus</span>
       <span *ngFor="let route of topNavLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" [routerLink]="route.path">{{route.name}}</span>
     </ng-template>
   </igx-nav-drawer>
   <div igxFlex igxLayout igxLayoutDir="columns">
-    <igx-navbar title="SDR Control" actionButtonIcon="menu" (action)="nav.toggle()"></igx-navbar>
+      <igx-navbar title="SDR Control" actionButtonIcon="menu" (action)="nav.toggle()"></igx-navbar>
     <div class="content" igxFlex>
       <router-outlet></router-outlet>
      </div>
   </div>
+</div> -->
+
+<div class="outer-wrapper" igxLayout>
+    <igx-nav-drawer id="project-menu" #nav [isOpen]="true" [pinThreshold]="5000">
+    <ng-template igxDrawer>
+      <nav>
+        <span igxDrawerItem [isHeader]="true">Main Menu</span>
+        <span *ngFor="let route of topNavLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" [routerLink]="route.path">{{route.name}}</span>
+      </nav>
+    </ng-template>
+  </igx-nav-drawer>
+  <div igxFlex igxLayout igxLayoutDir="column">
+    <igx-navbar title="SDR Control" actionButtonIcon="menu" (action)="nav.toggle()"></igx-navbar>
+    <div class="content" igxFlex igxFlexBasis="fit-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>
+
+
+<!-- <div class="content-wrap">
+  <igx-nav-drawer id="project-menu" #nav [isOpen]="true" [pinThreshold]="5000">
+    <ng-template igxDrawer>
+      <nav>
+        <span igxDrawerItem [isHeader]="true">Main Menu</span>
+        <span *ngFor="let route of topNavLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" [routerLink]="route.path">{{route.name}}</span>
+      </nav>
+    </ng-template>
+  </igx-nav-drawer>
+  <span>
+    <igx-navbar title="SDR Control" actionButtonIcon="menu" (action)="nav.toggle()"></igx-navbar>
+  </span>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div> -->
