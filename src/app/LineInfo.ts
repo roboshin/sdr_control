@@ -8,6 +8,7 @@ export interface LineInfo{
   LineType : string;
 }
 
+
 /**
  *
  */
@@ -15,6 +16,8 @@ export interface Point2D
 {
   X : Number;
   Y : Number;
+  x : Number;
+  y : Number;
 }
 
 /**

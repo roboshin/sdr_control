@@ -1,20 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {CategoryChartType, IgxPlotAreaMouseButtonEventArgs} from 'igniteui-angular-charts';
-import {AfterViewInit, TemplateRef, ViewChild, ElementRef} from "@angular/core";
-import {IgxStyleShapeEventArgs} from "igniteui-angular-charts";
-import {IgxScatterPolylineSeriesComponent} from "igniteui-angular-charts";
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {
   IDialogCancellableEventArgs,
   IDialogEventArgs,
   IgxDialogComponent,
   IgxSimpleComboComponent
 } from "igniteui-angular";
+import {CategoryChartType, IgxScatterPolylineSeriesComponent, IgxStyleShapeEventArgs} from "igniteui-angular-charts";
 import {LineInfo, Point2D} from "../LineInfo";
-import {any} from "codelyzer/util/function";
 import {BasePointService} from "../BasePoint.Service";
-import {map} from "rxjs/operators";
 import {SharedDataService} from "../SharedData.Service";
 import {FileService} from "../file.service";
+import {map} from "rxjs/operators";
 
 class linfo implements LineInfo {
   Draw: boolean;
@@ -31,11 +27,12 @@ class linfo implements LineInfo {
 }
 
 @Component({
-  selector: 'app-category-chart',
-  templateUrl: './category-chart.component.html',
-  styleUrls: ['./category-chart.component.scss']
+  selector: 'app-measure-base',
+  templateUrl: './measure-base.component.html',
+  styleUrls: ['./measure-base.component.scss']
 })
-export class CategoryChartComponent implements AfterViewInit, OnInit {
+export class MeasureBaseComponent implements OnInit {
+
 
   @ViewChild('form') public form: IgxDialogComponent;
   /**
@@ -63,8 +60,8 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   private dummyData:LineInfo[] = [
     new linfo(true, "00", "Line",
       [
-      {X:110,Y:100,x:110,y:100},
-      {X:100,Y:200,x:100,y:200}]
+        {X:110,Y:100,x:110,y:100},
+        {X:100,Y:200,x:100,y:200}]
     ),
   ]
 
@@ -225,7 +222,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
 
   /**
-   * 基準点の設定
+   * 計測点の設定
    */
   formUpdate() {
     console.log(this.selectedPointName);
@@ -236,10 +233,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     this.BasePointList.find(d=>d.name == this.selectedPointName).msterPoint[1] = this.tmpY;
 
     // 基準点の情報をロボットへ送信する
-    var masterName:string = this.BasePointList.find(d=>d.name==this.selectedPointName).masterName;
+    var masterName:string = this.BasePointList.find(d=>d.name==this.selectedPointName).name;
 
     // ロボットへマスター設定値を送信
-    this.basePS.setMasterPoint(masterName,this.tmpX+this.tmpOffsetX, this.tmpY+this.tmpOffsetY).subscribe();
+    this.basePS.setMeasurePoint(masterName,this.tmpX+this.tmpOffsetX, this.tmpY+this.tmpOffsetY).subscribe();
   }
 
   onOpening($event: IDialogCancellableEventArgs) {
@@ -247,7 +244,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   }
 
   /**
-   * 基準点情報を取得する
+   * 計測点を取得する
    * @param $event
    */
   onOpen($event: IDialogEventArgs) {
@@ -255,9 +252,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     var selItem = this.simpleCombo.value;
     var it = this.BasePointList.find(d=>d.name == selItem);
 
-    var masterName = it.masterName; // 送信用マスター値
+    var measureName = it.name; // 送信用マスター値
 
-    var subObj = this.basePS.getMasterPoint(masterName).pipe(map((v,i)=>{
+    var subObj = this.basePS.getMeasurePoint(measureName).pipe(map((v,i)=>{
+      console.log(v);
       this.tmpX = v['body']['X'];
       this.tmpY = v['body']['Y'];
       console.log(v);
@@ -271,7 +269,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   }
 
   /**
-   * 基準点情報を更新する
+   * 計測点を更新する
    * @param $event
    */
   onComboChange($event: any) {
@@ -279,9 +277,9 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     var selItem = this.simpleCombo.value;
     var it = this.BasePointList.find(d=>d.name == selItem);
 
-    var masterName = it.masterName; // 送信用マスター値
+    var measureName = it.name; // 送信用マスター値
 
-    var subObj = this.basePS.getMasterPoint(masterName).pipe(map((v,i)=>{
+    var subObj = this.basePS.getMeasurePoint(measureName).pipe(map((v,i)=>{
       this.tmpX = v['body']['X'];
       this.tmpY = v['body']['Y'];
       console.log(v);

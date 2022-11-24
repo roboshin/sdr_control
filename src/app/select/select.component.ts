@@ -46,7 +46,7 @@ export class SelectComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
-    this.shareDataService.sharedData$.subscribe(sData=>this.shareDataService = sData);
+    this.shareDataService.sharedData$.subscribe(sData=>this.lineDatas = sData);
   }
 
   ngAfterViewInit(): void {
@@ -54,9 +54,10 @@ export class SelectComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   *
+   * Dxfデータを保存する
    */
   upDateLineData(){
+    console.log("upDateLineData")
     this.shareDataService.setData(this.lineDatas);
   }
 
@@ -78,10 +79,18 @@ export class SelectComponent implements OnInit, AfterViewInit {
   onUpload() {
     this.loading = !this.loading;
     const layersMap = this.fileUploadService.upload(this.file).pipe(map((v, i) => {
+
+      console.log("onUpload");
+      console.log(v);
       this.alertDialg.open();
 
-      this.layerNames = v["Item2"];
+      this.layerNames = v["Item2"]; // C#側からtupleでデータ送信されるDXF内のレイヤー
       this.lineDatas = v["Item1"];
+
+      console.log("layerNames");
+      console.log(this.layerNames);
+      console.log("lineDatas");
+      console.log(this.lineDatas);
 
       this.upDateLineData();  // 描画データの更新
 

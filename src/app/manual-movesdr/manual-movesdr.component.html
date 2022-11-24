@@ -1,7 +1,13 @@
-<div class="baseplate">
+<div class="baseplate"  >
+  <div class="box-minmax">
+        <span><button #leftturnbtn (click)="onMouseDown($event)" igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"
+                      class="sample-button">左回転</button></span>
+    <span><button igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"
+                  class="sample-button">右回転</button></span>
+  </div>
     <div class="boundingcircle">
-        <div class="movecircle" 
-            igxDrag 
+        <div class="movecircle" #bCircle
+            igxDrag
             #dragRef
             [dragTolerance]="20"
             (dragStart)="onDragStart($event)"
@@ -11,12 +17,7 @@
                 Drag toward the direction of movement
         </div>
     </div>
-    <div class="box-minmax">
-        <span><button #leftturnbtn (click)="onMouseDown($event)" igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"
-            class="sample-button">左回転</button></span>
-        <span><button igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"
-            class="sample-button">右回転</button></span>
-    </div>
+
     <!-- <input id="rs-range-line" class="rs-range" type="range" value="100" min="0" max="200"> -->
     <!-- <p>Volume: {{volume}}</p> -->
     <!-- <igx-input-group type="border">

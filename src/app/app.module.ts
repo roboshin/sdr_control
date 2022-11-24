@@ -1,9 +1,9 @@
 import 'hammerjs';
 
 import {
-    IgxButtonGroupModule, IgxButtonModule, IgxDragDropModule, IgxDropDownModule, IgxLayoutModule,
-    IgxNavbarModule, IgxNavigationDrawerModule, IgxRippleModule, IgxSelectModule, IgxSliderModule,
-    IgxToggleModule
+  IgxButtonGroupModule, IgxButtonModule, IgxDialogModule, IgxDragDropModule, IgxDropDownModule, IgxLayoutModule,
+  IgxNavbarModule, IgxNavigationDrawerModule, IgxRippleModule, IgxSelectModule, IgxSimpleComboModule, IgxSliderModule,
+  IgxToggleModule
 } from 'igniteui-angular';
 import {
     IgxCategoryChartModule, IgxDataChartCoreModule, IgxDataChartInteractivityModule,
@@ -28,10 +28,11 @@ import { RadialGaugeComponent } from './radial-gauge/radial-gauge.component';
 import { FileService } from "./file.service";
 import { DropDownComponent } from './drop-down/drop-down.component';
 import { ManualMovesdrComponent } from './manual-movesdr/manual-movesdr.component';
-import {
-    ReferencepointMeasureComponent
-} from './referencepoint-measure/referencepoint-measure.component';
-import { SvgViewComponent } from './svg-view/svg-view.component';
+import { MeasureBaseComponent } from './measure-base/measure-base.component';
+// import {
+//     ReferencepointMeasureComponent
+// } from './referencepoint-measure/referencepoint-measure.component';
+// import { SvgViewComponent } from './svg-view/svg-view.component';
 
 @NgModule({
   declarations: [
@@ -41,9 +42,10 @@ import { SvgViewComponent } from './svg-view/svg-view.component';
     SelectComponent,
     RadialGaugeComponent,
     DropDownComponent,
-    SvgViewComponent,
-    ReferencepointMeasureComponent,
-    ManualMovesdrComponent
+    // SvgViewComponent,
+    // ReferencepointMeasureComponent,
+    ManualMovesdrComponent,
+    MeasureBaseComponent
   ],
   imports: [
     FormsModule,
@@ -74,7 +76,9 @@ import { SvgViewComponent } from './svg-view/svg-view.component';
     IgxDropDownModule,
     IgxButtonGroupModule,
     IgxDragDropModule,
-    IgxSliderModule
+    IgxSliderModule,
+    IgxDialogModule,
+    IgxSimpleComboModule
   ],
   providers: [],
   bootstrap: [AppComponent],

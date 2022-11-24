@@ -2,32 +2,39 @@
 //     background: linear-gradient(180deg, #DB302A 0%, #62186B 100%) no-repeat;
 // }
 
+.baseplate {
+  max-width: 200px;
+}
+
 .boundingcircle {
-    display: block;
-    position: absolute;
-    // overflow: hidden;
-    top:  0;                     /* 位置指定 */
-    bottom:  0;                  /* 位置指定 */
-    left:  0;                    /* 位置指定 */
-    right:  0;                   /* 位置指定 */
-    margin:  auto;               /* 中央寄せ */
-    border-radius: 50%;
-    border: solid 0px black;
+  display: block;
+  //position: absolute;
+  // overflow: hidden;
+  //top:  0;                     /* 位置指定 */
+  //bottom:  0;                  /* 位置指定 */
+  //left:  0;                    /* 位置指定 */
+  //right:  0;                   /* 位置指定 */
+  margin: auto; /* 中央寄せ */
+  border-radius: 50%;
+  border: solid 0px black;
+
 }
 
 .movecircle {
-    display: block;
-    position: absolute;
-    color: #fff;
-    background-color:blue;
-    text-align: center;
-    font-size: x-small;
-    border-radius: 50%;
-    top:  0;                     /* 位置指定 */
-    bottom:  0;                  /* 位置指定 */
-    left:  0;                    /* 位置指定 */
-    right:  0;                   /* 位置指定 */
-    margin:  auto;               /* 中央寄せ */
+  display: block;
+  //position: absolute;
+  color: #fff;
+  background-color: blue;
+  text-align: center;
+  font-size: x-small;
+  border-radius: 50%;
+  //top:  0;                     /* 位置指定 */
+  //bottom:  0;                  /* 位置指定 */
+  //left:  0;                    /* 位置指定 */
+  //right:  0;                   /* 位置指定 */
+  margin: auto; /* 中央寄せ */
+  height: 100px;
+  width: 100px;
 }
 
 // .box-minmax {
@@ -38,7 +45,7 @@
 //     font-size: small;
 //     color: green;
 // }
-  
+
 // .rs-range {
 //     // margin-top: 29px;
 //     width: 600px;
@@ -66,7 +73,7 @@
 //         border-radius: 0px;
 //         border: 0px solid #010101;
 //     }
-  
+
 // //     &::-webkit-slider-thumb {
 // //         box-shadow: none;
 // //         border: 0px solid #ffffff;
