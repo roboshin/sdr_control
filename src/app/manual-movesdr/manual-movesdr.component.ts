@@ -1,7 +1,11 @@
-import {IDragBaseEventArgs, IDragMoveEventArgs, IgxSliderType} from 'igniteui-angular';
-import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
-import {ManualService} from "../Manual.Service";
-import {error} from "protractor";
+import { IDragBaseEventArgs, IDragMoveEventArgs, IgxSliderType } from 'igniteui-angular';
+import { error } from 'protractor';
+
+import {
+    AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild
+} from '@angular/core';
+
+import { ManualService } from '../Manual.Service';
 
 @Component({
   selector: 'app-manual-movesdr',
@@ -19,6 +23,9 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
 
   manualstartX = 0;   // ドラッグ最初のx座標
   manualstarty = 0;   // ドラッグ最初のy座標
+  public leftbtnpress: boolean = false;
+  public rightbtnpress: boolean = false;
+
   // sliderType = IgxSliderType;
 
   // volumeL = 50;
@@ -71,18 +78,69 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * クリックイベント時の処理
+   * ポインターダウン((or マウスダウン) or タッチ) イベント時の処理
    */
-  @HostListener('mousedown', ['$event'])
+  // @HostListener('mousedown', ['$event'])
+  @HostListener('pointerdown', ['$event'])    // スマートフォンのタッチも認識するため変更
   onMouseDown(event) {
     console.log("mouse down event");
-    console.log(event);
-    if (event.target.id == "leftturnbtn") {
+    // console.log(event);
+    if (event.target.className.indexOf('leftturnbtn') >= 0) {   // 押されたボタンのクラス名に"leftturnbtn"(左回転ボタン)が含まれている
       console.log("left turn button click.");
+      this.leftbtnpress = true;   // 左回転中フラグセット
+
+      // ここにロボット左回転命令（サービス経由になると思われる）をセットする
+      console.log("Todo ROBOT HIDARI KAITEN JIKKOH")      
+    } else if (event.target.className.indexOf('rightturnbtn') >= 0) {   // 押されたボタンのクラス名に"rightturnbtn"(右回転ボタン)が含まれている
+      console.log("right turn button click.");
+      this.rightbtnpress = true;   // 右回転中フラグセット
+
+      // ここにロボット右回転命令（サービス経由になると思われる）をセットする
+      console.log("Todo ROBOT MIGI KAITEN JIKKOH")      
     }
   }
 
+  /**
+   * ポインターアップ((or マウスアップ) or タッチリリース) イベント時の処理
+   */
+   @HostListener('pointerup', ['$event'])  
+   onMouseUp(event) {
+     console.log("mouse up event");
+    //  console.log(event);
 
+    // もし左右どちらかに回転中フラグが立っていた場合
+    // 指やマウスを押したままボタンから外れた状態でリリースされた場合、リリースイベントにボタンIDは入らないが、その場合でも対応できるように
+    if (this.leftbtnpress == true || this.rightbtnpress == true) {
+      // ここにロボット回転停止命令（サービス経由になると思われる）をセットする
+      console.log("Todo ROBOT KAITEN STOP.")
+
+      // 左右回転フラグを落とす（ここでは無駄になる判断入れずに両方のフラグを落としてしまうことにする）
+      this.leftbtnpress = false;
+      this.rightbtnpress = false; 
+    }
+   }
+
+  /**
+   * ポインターアウト((or マウスアウト) or タッチアウト) イベント時の処理 
+   * 押しっぱなしでポインタもしくは指がエレメント外に移動したときのための処理（回転ボタンについてはキャンセルしたものとする）
+   */
+      @HostListener('pointerout', ['$event'])  
+      onMouseOut(event) {
+        console.log("mouse out of element event");
+       //  console.log(event);
+   
+       // もし左右どちらかに回転中フラグが立っていた場合
+       // 指やマウスを押したままボタンから外れた場合、どちらかに回転中の場合はこのイベントで止める
+       if (this.leftbtnpress == true || this.rightbtnpress == true) {
+         // ここにロボット回転停止命令（サービス経由になると思われる）をセットする
+         console.log("Todo ROBOT KAITEN STOP.")
+   
+         // 左右回転フラグを落とす（ここでは無駄になる判断入れずに両方のフラグを落としてしまうことにする）
+         this.leftbtnpress = false;
+         this.rightbtnpress = false; 
+       }
+      }  
+   
   onDragStart(event: IDragBaseEventArgs) {
     console.log("DragStart");
     console.log(event);
