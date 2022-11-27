@@ -1,5 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {CategoryChartType, IgxPlotAreaMouseButtonEventArgs} from 'igniteui-angular-charts';
+import {
+  CategoryChartType,
+  IgxDataChartMouseButtonEventArgs,
+  IgxPlotAreaMouseButtonEventArgs
+} from 'igniteui-angular-charts';
 import {AfterViewInit, TemplateRef, ViewChild, ElementRef} from "@angular/core";
 import {IgxStyleShapeEventArgs} from "igniteui-angular-charts";
 import {IgxScatterPolylineSeriesComponent} from "igniteui-angular-charts";
@@ -160,6 +164,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   }
 
+  /**
+   *
+   * @param jsonData
+   */
   public onLoadedJsonShape(jsonData: any[]) {
     console.log('airplane-shape.json ' + jsonData.length);
     console.log(jsonData);
@@ -289,5 +297,17 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     }));
 
     subObj.subscribe(x=>{});
+  }
+
+  seriesMouseLeftBtnDown($event: { sender: any; args: IgxDataChartMouseButtonEventArgs }) {
+    let item = $event.args.item;
+    console.log("seriesMouseLeftBtnDown")
+    console.log(item);
+  }
+
+  plorAreaMouseLeftBtnDown($event: { sender: any; args: IgxPlotAreaMouseButtonEventArgs }) {
+    let item = $event.args;
+    console.log("plorAreaMouseLeftBtnDown")
+    console.log(item);
   }
 }
