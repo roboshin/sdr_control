@@ -8,7 +8,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ManualService{
+
   baseApiUrl = "/app/control"
+
   constructor(private http:HttpClient) {
   }
 
@@ -18,7 +20,7 @@ export class ManualService{
    * @param y
    */
   moveWheel(x : Number, y : Number): Observable<HttpEvent<any>> {
-    let getUrl = `${this.baseApiUrl}/${x}/${y}`;
+    let getUrl = `${this.baseApiUrl}/move/${x}/${y}`;
     console.log(getUrl);
     return this.http.get<any>(getUrl);
   }

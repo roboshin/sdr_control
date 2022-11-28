@@ -29,6 +29,7 @@ import { FileService } from "./file.service";
 import { DropDownComponent } from './drop-down/drop-down.component';
 import { ManualMovesdrComponent } from './manual-movesdr/manual-movesdr.component';
 import { MeasureBaseComponent } from './measure-base/measure-base.component';
+import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 // import {
 //     ReferencepointMeasureComponent
 // } from './referencepoint-measure/referencepoint-measure.component';
@@ -45,7 +46,8 @@ import { MeasureBaseComponent } from './measure-base/measure-base.component';
     // SvgViewComponent,
     // ReferencepointMeasureComponent,
     ManualMovesdrComponent,
-    MeasureBaseComponent
+    MeasureBaseComponent,
+    LoginDialogComponent
   ],
   imports: [
     FormsModule,

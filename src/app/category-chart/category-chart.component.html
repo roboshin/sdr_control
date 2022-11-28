@@ -58,6 +58,8 @@
                                    title="Airplane Seats"
                                    (styleShape)="onStylingShape($event)">
       </igx-scatter-polyline-series>
+
+      <igx-scatter-area-series></igx-scatter-area-series>
     </igx-data-chart>
   </div>
 
@@ -70,6 +72,7 @@
   </div>
 </div>
 
+<!--ツールチップ用テンプレート -->
 <ng-template let-series="series" let-item="item" #seatTooltip>
   <div>
     <span>{{item.class}}</span><br/>

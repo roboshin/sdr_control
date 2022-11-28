@@ -97,8 +97,17 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
     console.log(event);
     console.log("saved Start x: " + this.manualstartX + " y:" + this.manualstarty);
 
+    const obs = {
+      next:(x:any)=>{console.log("next obs")},
+      error:(err:Error)=>{
+        console.log("err : "+err);
+        console.log(err.message)
+        },
+      complete:()=>{console.log("comp")}
+    };
 
-    this.manualMove.moveWeelStop().subscribe(); // 台車を停止させる
+
+    this.manualMove.moveWeelStop().subscribe(obs); // 台車を停止させる
     // if (this.newIndex !== null) {
     //     // When we have moved the dragged element up/down, animate it to its new location.
     //     const moveDown = this.newIndex > itemIndex;
@@ -126,11 +135,11 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
     console.log("from x: " + event.pageX + " y: " + event.pageY);
     console.log("to x: " + event.nextPageX + " y: " + event.nextPageY);
 
-    var rect = this.boundCircle.nativeElement.getBoundingClientRect();
+    let rect = this.boundCircle.nativeElement.getBoundingClientRect();
     console.log(rect);
 
-    var nowX = rect.x;
-    var nowY = rect.y;
+    let nowX = rect.x;
+    let nowY = rect.y;
 
     let diffX = nowX- this.startX;
     let diffY = -(nowY- this.startY);

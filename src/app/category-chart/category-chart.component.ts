@@ -190,7 +190,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
     console.log(ev.args)
     ev.args.shapeOpacity = 1.0;
-    ev.args.shapeStrokeThickness = 1.0;
+    ev.args.shapeStrokeThickness = 5.0;
     ev.args.shapeStroke = 'Black';
 
     const itemRecord = ev.args.item as any;
