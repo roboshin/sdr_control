@@ -235,8 +235,27 @@ export class MeasureBaseComponent implements OnInit {
     // 基準点の情報をロボットへ送信する
     var masterName:string = this.BasePointList.find(d=>d.name==this.selectedPointName).name;
 
+    const obs = {
+      next:(x:any)=>{
+        // console.log("next obs")
+      },
+      error:(err:Error)=>{
+        console.log("err : "+err);
+        console.log(err.message)
+      },
+      complete:()=>{
+        // フォームを閉じる
+        console.log("comp")
+        // this.form.close();
+      }
+    };
+
     // ロボットへマスター設定値を送信
-    this.basePS.setMeasurePoint(masterName,this.tmpX+this.tmpOffsetX, this.tmpY+this.tmpOffsetY).subscribe();
+    this.basePS.setMeasurePoint(masterName,this.tmpX+this.tmpOffsetX, this.tmpY+this.tmpOffsetY).subscribe(obs);
+  }
+
+  formMeasure(){
+
   }
 
   onOpening($event: IDialogCancellableEventArgs) {

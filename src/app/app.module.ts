@@ -7,7 +7,7 @@ import {
 } from 'igniteui-angular';
 import {
     IgxCategoryChartModule, IgxDataChartCoreModule, IgxDataChartInteractivityModule,
-    IgxDataChartScatterModule, IgxDataChartShapeCoreModule, IgxDataChartShapeModule, IgxLegendModule
+    IgxDataChartScatterModule, IgxDataChartShapeCoreModule, IgxDataChartShapeModule, IgxLegendModule,
 } from 'igniteui-angular-charts';
 import { IgxRadialGaugeModule } from 'igniteui-angular-gauges';
 

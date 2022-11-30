@@ -1,29 +1,60 @@
-<div class="baseplate"  >
+<div class="baseplate">
   <div class="box-minmax">
-        <span><button #leftturnbtn (click)="onMouseDown($event)" igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"
-                      class="sample-button">左回転</button></span>
-    <span><button igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"
-                  class="sample-button">右回転</button></span>
-  </div>
-    <div class="boundingcircle">
-        <div class="movecircle" #bCircle
-            igxDrag
-            #dragRef
-            [dragTolerance]="20"
-            (dragStart)="onDragStart($event)"
-            (dragMove)="onDragMove($event)"
-            (dragEnd)="onDragEnd($event)"
-            [ghost]="false">
-                Drag toward the direction of movement
-        </div>
-    </div>
 
-    <!-- <input id="rs-range-line" class="rs-range" type="range" value="100" min="0" max="200"> -->
-    <!-- <p>Volume: {{volume}}</p> -->
-    <!-- <igx-input-group type="border">
-        <input igxInput id="percentInput" type="number" [(ngModel)]="task.completion" />
-        <label igxLabel for="percentInput">Task Completion</label>
-        <igx-suffix>%</igx-suffix>
-    </igx-input-group>     -->
+    <!-- -->
+<!--    <span>-->
+      <button #leftturnbtn igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"
+              class="sample-button leftturnbtn">左回転</button>
+<!--    </span>-->
+
+    <!-- -->
+<!--    <span>-->
+      <button #rightturnbtn igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"
+              class="sample-button rightturnbtn">右回転</button>
+<!--    </span>-->
+
+    <!--並進速度設定-->
+    <igx-slider #moveSpeedSlider
+                [maxValue]="100"
+                [primaryTicks]="2"
+                [secondaryTicks]="4"
+                [showTicks]="true" [step]="5" (valueChange)="onWheelSpeedChange($event)"></igx-slider>
+
+    <!-- 回転速度設定 -->
+    <igx-slider #rotSpeedSlider
+                [maxValue]="100"
+                [primaryTicks]="2"
+                [secondaryTicks]="4"
+                [showTicks]="true" [step]="5" (valueChange)="onWheelRotSpeedChange($event)"></igx-slider>
+
+    <!-- リフレクタ回転速度設定 -->
+    <igx-slider #reflectorSpeedSlider
+                [maxValue]="100"
+                [primaryTicks]="2"
+                [secondaryTicks]="4"
+                [showTicks]="true" [step]="5" (valueChange)="onReflectorSpeedChange($event)"></igx-slider>
+
+
+  </div>
+  <div class="boundingcircle">
+    <div class="movecircle" #bCircle
+         igxDrag
+         #dragRef
+         [dragTolerance]="20"
+         (dragStart)="onDragStart($event)"
+         (dragMove)="onDragMove($event)"
+         (dragEnd)="onDragEnd($event)"
+         [ghost]="false">
+      ロボプリン-RP2
+    </div>
+  </div>
+
+  <!-- <input id="rs-range-line" class="rs-range" type="range" value="100" min="0" max="200"> -->
+  <!-- <p>Volume: {{volume}}</p> -->
+  <!-- <igx-input-group type="border">
+      <input igxInput id="percentInput" type="number" [(ngModel)]="task.completion" />
+      <label igxLabel for="percentInput">Task Completion</label>
+      <igx-suffix>%</igx-suffix>
+  </igx-input-group>     -->
 </div>
 <!-- <div igxDrag>回転方向にドラッグ</div> -->

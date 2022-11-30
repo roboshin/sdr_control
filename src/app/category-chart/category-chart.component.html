@@ -25,14 +25,14 @@
     <label id="legendTitle">Airplane Seating Chart (Polylines)</label>
   </div>
 
-<!--  <div class="custom-legend">-->
-<!--    <div><span style="background: DodgerBlue; "></span><label>First Class</label></div>-->
-<!--    <div><span style="background: LimeGreen; "></span><label>Business Class</label></div>-->
-<!--    <div><span style="background: Orange; "></span><label>Premium Class</label></div>-->
-<!--    <div><span style="background: Red; "></span><label>Economy Class</label></div>-->
-<!--    <div><span style="background: Gray; "></span><label>Sold Seat</label></div>-->
-<!--    <div><span style="background: LightGray; "></span><label>Airplane</label></div>-->
-<!--  </div>-->
+  <!--  <div class="custom-legend">-->
+  <!--    <div><span style="background: DodgerBlue; "></span><label>First Class</label></div>-->
+  <!--    <div><span style="background: LimeGreen; "></span><label>Business Class</label></div>-->
+  <!--    <div><span style="background: Orange; "></span><label>Premium Class</label></div>-->
+  <!--    <div><span style="background: Red; "></span><label>Economy Class</label></div>-->
+  <!--    <div><span style="background: Gray; "></span><label>Sold Seat</label></div>-->
+  <!--    <div><span style="background: LightGray; "></span><label>Airplane</label></div>-->
+  <!--  </div>-->
 
   <div class="container">
     <igx-data-chart isHorizontalZoomEnabled="true" isVerticalZoomEnabled="true"
@@ -40,6 +40,7 @@
                     height="100%" defaultInteraction="auto"
                     (seriesMouseLeftButtonDown)="seriesMouseLeftBtnDown($event)"
                     (plotAreaMouseLeftButtonDown)="plorAreaMouseLeftBtnDown($event)"
+                    computedPlotAreaMarginMode="Series"
     >
       <igx-numeric-x-axis #xAxis name="xAxis" minimumValue="-10000" maximumValue="10000"
                           interval="500"></igx-numeric-x-axis>
@@ -49,7 +50,8 @@
       <igx-scatter-polyline-series name="airplaneShapeSeries" #airplaneShapeSeries
                                    [xAxis]="xAxis"
                                    [yAxis]="yAxis" shapeMemberPath="points" thickness="0.5"
-                                   (styleShape)="onStyleLine($event)">
+                                   (styleShape)="onStyleLine($event)"
+      >
       </igx-scatter-polyline-series>
 
       <igx-scatter-polyline-series name="airplaneSeatSeries" #airplaneSeatSeries
@@ -58,6 +60,34 @@
                                    title="Airplane Seats"
                                    (styleShape)="onStylingShape($event)">
       </igx-scatter-polyline-series>
+
+
+      <!-- 交点の表示用 -->
+      <igx-scatter-series
+        [xAxis]="xAxis"
+        [yAxis]="yAxis"
+        xMemberPath="px"
+        yMemberPath="py"
+        markerType="Circle"
+        [dataSource]="BasePointsCrossPointData"
+        showDefaultTooltip="true"
+        title="CroosPoint"
+        name="ScatterSeries1"
+        #scatterSeriesCross>
+      </igx-scatter-series>
+
+      <!-- ロボットの現在位置表示用 -->
+      <igx-scatter-series
+        [xAxis]="xAxis"
+        [yAxis]="yAxis"
+        xMemberPath="pX"
+        yMemberPath="pY"
+        markerType="Circle"
+         showDefaultTooltip="true"
+        title="Europe"
+        name="ScatterSeries1"
+        #scatterSeriesRobotPos>
+      </igx-scatter-series>
 
       <igx-scatter-area-series></igx-scatter-area-series>
     </igx-data-chart>
@@ -84,7 +114,7 @@
 
 
 <!--位置入力Dialog -->
-<igx-dialog #form [closeOnOutsideSelect]="true" [hidden]="true" (opened)="onOpen($event)">
+<igx-dialog #form [closeOnOutsideSelect]="false" [hidden]="true" (opened)="onOpen($event)">
   <igx-dialog-title>
     <div class="title-container">
       <igx-icon>vpn_key</igx-icon>

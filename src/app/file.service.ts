@@ -81,6 +81,15 @@ export class FileService {
 
     return this.http.get(getBaseUrl);
   }
+
+  /**
+   * 交点情報を取得する
+   */
+  getCrossPoint():Observable<any>{
+    const getBaseUrl = "/app/crossData";
+
+    return this.http.get(getBaseUrl);
+  }
 }
 
 /**

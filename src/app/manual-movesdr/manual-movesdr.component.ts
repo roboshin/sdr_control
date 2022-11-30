@@ -1,4 +1,10 @@
-import {IDragBaseEventArgs, IDragMoveEventArgs, IgxSliderType} from 'igniteui-angular';
+import {
+  IDragBaseEventArgs,
+  IDragMoveEventArgs,
+  IgxSliderComponent,
+  IgxSliderType,
+  ISliderValueChangeEventArgs
+} from 'igniteui-angular';
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ManualService} from "../Manual.Service";
 import {error} from "protractor";
@@ -11,6 +17,11 @@ import {error} from "protractor";
 export class ManualMovesdrComponent implements OnInit, AfterViewInit {
 
   @ViewChild('bCircle', {static: true}) public boundCircle: ElementRef;
+
+  @ViewChild("moveSpeedSlider") public moveSpeedSlider : IgxSliderComponent;
+  @ViewChild("rotSpeedSlider") public rotSpeedSlider : IgxSliderComponent;
+  @ViewChild("reflectorSpeedSlider") public reflectorSilder : IgxSliderComponent;
+
   screenwidth: any;
   screenheight: any;
   dragmoveelement: any;
@@ -35,12 +46,16 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
   public startY: any;
 
   ngOnInit(): void {
+    console.log("Init Module");
   }
 
   /**
    *  最初の一度だけ実行
    */
   ngAfterViewInit() {
+
+    this.moveSpeedSlider.value = 0;
+
     // ドラッグ関連エレメント取得
     this.dragmoveelement = this._el.getElementsByClassName('movecircle');
     this.boundingelement = this._el.getElementsByClassName('boundingcircle');
@@ -65,8 +80,10 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
     // }
 
     var rect = this.boundCircle.nativeElement.getBoundingClientRect();
+    // this.boundCircle.nativeElement.style.top+="100pc";
     this.startX = rect.x;
     this.startY = rect.y;
+
 
   }
 
@@ -77,9 +94,31 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
   onMouseDown(event) {
     console.log("mouse down event");
     console.log(event);
+
+    let rotValue = 0;
+
     if (event.target.id == "leftturnbtn") {
       console.log("left turn button click.");
+      rotValue = 1;
     }
+    else if(event.target.id == "rightturnbtn"){
+      console.log("right turn button click.");
+      rotValue = -1;
+    }
+
+    const obs = {
+      next:(x:any)=>{console.log("next obs")},
+      error:(err:Error)=>{
+        console.log("err : "+err);
+        console.log(err.message)
+      },
+      complete:()=>{console.log("comp")}
+    };
+
+    this.manualMove.moveRotWheel(rotValue).subscribe(obs);  // 回転の通知
+
+    console.log("Todo roboto is rotation move!!")
+
   }
 
 
@@ -106,21 +145,7 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
       complete:()=>{console.log("comp")}
     };
 
-
     this.manualMove.moveWeelStop().subscribe(obs); // 台車を停止させる
-    // if (this.newIndex !== null) {
-    //     // When we have moved the dragged element up/down, animate it to its new location.
-    //     const moveDown = this.newIndex > itemIndex;
-    //     // If the new position is below add the height moved down, otherwise subtract it.
-    //     const prefix = moveDown ? 1 : -1;
-    //     // The height that the new position differs from the current. We know that each item is 55px height.
-    //     const movedHeight = prefix * Math.abs(this.newIndex - itemIndex) * this.listItemHeight;
-    //     const originLocation = event.owner.originLocation;
-    //     event.owner.transitionTo(
-    //         new IgxDragLocation(originLocation.pageX, originLocation.pageY + movedHeight),
-    //         { duration: this.animationDuration }
-    //     );
-    // }
 
     // ここにロボット停止命令（サービス経由になると思われる）をセットする
     console.log("Todo ROBOT STOP!!")
@@ -136,15 +161,35 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
     console.log("to x: " + event.nextPageX + " y: " + event.nextPageY);
 
     let rect = this.boundCircle.nativeElement.getBoundingClientRect();
-    console.log(rect);
+    console.log(`rect pos : ${rect.x}, ${rect.y}, ${this.startX}, ${this.startY}`);
 
     let nowX = rect.x;
     let nowY = rect.y;
 
-    let diffX = nowX- this.startX;
-    let diffY = -(nowY- this.startY);
+    let diffX = nowX- event.startX;
+    let diffY = -(nowY - event.startY);
 
     console.log("pos "+ diffX + ", " + diffY);
+
+    const obs = {
+      next:(x:any)=>{},
+      error:(err:Error)=>{console.log("err : "+err);},
+      complete:()=>{}
+    };
+
+    //https://angular.jp/guide/observables
+    this.manualMove.moveWheel(diffX, diffY).subscribe(obs);
+
+  }
+
+
+  /**
+   *
+   * @param $event
+   */
+  onWheelSpeedChange($event: ISliderValueChangeEventArgs) {
+    console.log("onWheelSpeedChante");
+    console.log($event.value);
 
     const obs = {
       next:(x:any)=>{console.log("next obs")},
@@ -152,43 +197,41 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
       complete:()=>{console.log("comp")}
     };
 
-    //https://angular.jp/guide/observables
-    this.manualMove.moveWheel(diffX, diffY).subscribe(obs);
+    this.manualMove.setMoveMaxSpeed((Number)($event.value)).subscribe(obs);
 
-    // const containerPosY = this.listContainer.nativeElement.getBoundingClientRect().top;
-    // // Relative position of the dragged element to the list container.
-    // const relativePosY = event.nextPageY - containerPosY;
-
-    // let newIndex = Math.floor(relativePosY / this.listItemHeight);
-    // newIndex = newIndex < 0 ? 0 : (newIndex >= this.employees.length ? this.employees.length - 1 : newIndex);
-    // if (newIndex === this.newIndex) {
-    //     // If the current new index is unchanged do nothing.
-    //     return;
-    // }
-
-    // const movingDown = newIndex > itemIndex;
-    // if (movingDown && newIndex > this.newIndex ||
-    //     (!movingDown && newIndex < this.newIndex && newIndex !== itemIndex)) {
-    //     // If we are moving the dragged element down and the new index is bigger than the current
-    //     // this means that the element we are stepping into is not shifted up and should be shifted.
-    //     // Same if we moving the dragged element up and the new index is smaller than the current.
-    //     const elementToMove = this.getDragDirectiveRef(this.employees[newIndex].id);
-    //     const currentLocation = elementToMove.location;
-    //     const prefix = movingDown ? -1 : 1;
-    //     elementToMove.transitionTo(
-    //         new IgxDragLocation(currentLocation.pageX, currentLocation.pageY + prefix * this.listItemHeight),
-    //         { duration: this.animationDuration }
-    //     );
-    // } else {
-    //     // Otherwise if are moving up but the new index is still bigger than the current, this means that
-    //     // the item we are stepping into is already shifted and should be returned to its original position.
-    //     // Same if we are moving down and the new index is still smaller than the current.
-    //     const elementToMove = this.getDragDirectiveRef(this.employees[this.newIndex].id);
-    //     elementToMove.transitionToOrigin({ duration: this.animationDuration });
-    // }
-
-    // this.newIndex = newIndex;
   }
 
+  /**
+   *
+   * @param $event
+   */
+  onWheelRotSpeedChange($event: ISliderValueChangeEventArgs) {
+    console.log("onWheelRotSpeedChange");
+    console.log($event.value);
 
+    const obs = {
+      next:(x:any)=>{console.log("next obs")},
+      error:(err:Error)=>{console.log("err : "+err);},
+      complete:()=>{console.log("comp")}
+    };
+
+    this.manualMove.setRotMaxSpeed((Number)($event.value)).subscribe(obs);
+  }
+
+  /**
+   *
+   * @param $event
+   */
+  onReflectorSpeedChange($event: ISliderValueChangeEventArgs) {
+    console.log("onReflectorSpeedChange");
+    console.log($event.value);
+
+    const obs = {
+      next:(x:any)=>{console.log("next obs")},
+      error:(err:Error)=>{console.log("err : "+err);},
+      complete:()=>{console.log("comp")}
+    };
+
+    this.manualMove.setRefMaxSpeed((Number)($event.value)).subscribe(obs);
+  }
 }

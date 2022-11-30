@@ -16,9 +16,9 @@ export class BasePointService{
 
   /**
    * 計測基準を設定する
-   * @param pname
-   * @param x
-   * @param y
+   * @param pname 基準点名称
+   * @param x X座標値
+   * @param y Y座標値
    */
   setMasterPoint(pname:string, x:number, y:number): Observable<HttpEvent<any>> {
     let getUrl = `${this.baseApiUrlMaster}/${pname}/${x}/${y}`;
@@ -38,9 +38,9 @@ export class BasePointService{
 
   /**
    * 計測値を設定する
-   * @param pname
-   * @param x
-   * @param y
+   * @param pname 計測ポイント名称
+   * @param x X座標値
+   * @param y Y座標値
    */
   setMeasurePoint(pname:string, x:number, y:number): Observable<HttpEvent<any>> {
     let getUrl = `${this.baseApiUrlMeasure}/${pname}/${x}/${y}`;
@@ -66,5 +66,6 @@ export class BasePointService{
     console.log(getUrl);
     return this.http.put<any>(getUrl,{});
   }
+
 
 }

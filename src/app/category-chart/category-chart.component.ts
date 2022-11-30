@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {
   CategoryChartType,
   IgxDataChartMouseButtonEventArgs,
-  IgxPlotAreaMouseButtonEventArgs
+  IgxPlotAreaMouseButtonEventArgs, IgxScatterPolygonSeriesComponent, IgxScatterSeriesComponent
 } from 'igniteui-angular-charts';
 import {AfterViewInit, TemplateRef, ViewChild, ElementRef} from "@angular/core";
 import {IgxStyleShapeEventArgs} from "igniteui-angular-charts";
@@ -75,8 +75,14 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   @ViewChild('airplaneShapeSeries', {static: true}) public airplaneShapeSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('airplaneSeatSeries', {static: true}) public airplaneSeatSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('seatTooltip', {static: true})  public seatTooltip: TemplateRef<object>;
-  @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
-  public simpleCombo: IgxSimpleComboComponent;
+  @ViewChild('combo', { read: IgxSimpleComboComponent, static: true }) public simpleCombo: IgxSimpleComboComponent;
+
+  @ViewChild('scatterSeriesCross', {static : true}) public scatterSeriesCross : IgxScatterSeriesComponent;
+  @ViewChild('scatterSeriesRobotPos', {static : true}) public scatterSeriesRobotPos : IgxScatterSeriesComponent;
+
+  @ViewChild('drawAreaSeries', {static :true}) public drawAreaSeries ; IgxScatterPolygonSeriesComponent
+
+
 
   // 計測基準点名のリスト
   BasePointList = [
@@ -85,15 +91,24 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     {name: "P3", msterPoint:[102.0,101.0], measurePoint:[200.0, 201.0], id:3, masterName: "MASTER_P3"},
   ];
 
+
+  // ベースポイントの候補値
+  BasePointsCrossPointData =
+    [
+      {points: [{x:0,y:0}], px:100, py:100},
+      {points: [{x:0,y:0}], px:200, py:300},
+      {points: [{x:0,y:0}], px:400, py:500},
+    ]
+
   public selectedPointName : string;
 
   public selectedId : Number;
   public itemBasePointName: string;
 
-  tmpX: number;
-  tmpY: number;
-  tmpOffsetX : number;
-  tmpOffsetY : number;
+  tmpX: number; // formのX入力値
+  tmpY: number; // formのY入植地
+  tmpOffsetX : number;  // formのOffsetX入力値
+  tmpOffsetY : number;  // formのOffsetY入力値
 
 
   constructor(
@@ -107,25 +122,9 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    */
   public ngAfterViewInit() {
 
-    // fetch('https://static.infragistics.com/xplatform/json/airplane-shape.json')
-    //   .then((response) => response.json())
-    //   .then((data) => this.onLoadedJsonShape(data));
-
-    // this.onLoadedJsonShape(this.dummyData.map(d=>{return  {points :[ [{x:100,y:100},{x:200,y:200}]] } }));
-
-    // this.shareDataService.sharedData$.subscribe(d=>this.shareDataService = d);
-    // this.shareDataService.setData(this.dummyData);
-
     console.log(this.dummyData);
     var viewData = this.dummyData.map(d=>{return {points : [d.Points]}})
-    this.onLoadedJsonShape(viewData);
-
-    // //
-    // fetch('https://static.infragistics.com/xplatform/json/airplane-seats.json')
-    //   .then((response) => response.json())
-    //   .then((data) => this.onLoadedJsonSeats(data));
-
-
+    this.onLoadedLineShape(viewData);
 
     // Loadしたら、サービスからデータを取得する
 
@@ -133,8 +132,11 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     // dialogの表示
     this.tmpOffsetY = 0;
     this.tmpOffsetX = 0;
-    this.form.open();
+
+
+    // this.form.open();
   }
+
 
   public ngOnInit() {
     // this.selectedPointName = this.BasePointList[0].name;
@@ -152,6 +154,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     console.log("dummy updated")
     console.log(this.dummyData);
 
+    // app/linedata にgetでアクセス
     this.fileUploadService.getLines().subscribe(subData =>{
       this.dummyData = subData['Item1'];  // linedata
       console.log('Item1')
@@ -159,21 +162,33 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
       // 画面の更新
       var viewData = this.dummyData.map(d=>{return {points : [d.Points]}})
-      this.onLoadedJsonShape(viewData);
+      this.onLoadedLineShape(viewData);
+    })
+
+    // app/crossDataにgetでアクセスして、交点情報を取得する
+    this.fileUploadService.getCrossPoint().subscribe( crossData =>{
+      var crossPoints = crossData['Item1'];
+      console.log("CrossPoints")
+      console.log(crossPoints);
+
+      // 受信データの整形
+      this.BasePointsCrossPointData = crossPoints.map(d=> {return {points: [{x:0,y:0}], px:d.X, py:d.Y}});
+      console.log("受信データ");
+      console.log(this.BasePointsCrossPointData);
     })
 
   }
 
   /**
-   *
+   *　描画ラインを表示
    * @param jsonData
    */
-  public onLoadedJsonShape(jsonData: any[]) {
-    console.log('airplane-shape.json ' + jsonData.length);
+  public onLoadedLineShape(jsonData: any[]) {
+    console.log('onLoadedLineShape' + jsonData.length);
     console.log(jsonData);
     this.airplaneShapeSeries.dataSource = jsonData;
 
-    console.log(this.airplaneShapeSeries.dataSource);
+    // console.log(this.airplaneShapeSeries.dataSource);
 
     this.airplaneShapeSeries.showDefaultTooltip = true;
     this.airplaneShapeSeries.tooltipTemplate = this.seatTooltip;
@@ -184,6 +199,14 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     this.airplaneSeatSeries.dataSource = jsonData;
     this.airplaneSeatSeries.showDefaultTooltip = true;
     this.airplaneSeatSeries.tooltipTemplate = this.seatTooltip;
+  }
+
+  public onLoadBasePoints(jsonData :any[])
+  {
+    console.log("onLoadBasePoints");
+    console.log(jsonData);
+
+    this.scatterSeriesCross.dataSource = jsonData;
   }
 
   public onStylingShape(ev: { sender: any, args: IgxStyleShapeEventArgs }) {
@@ -233,21 +256,37 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
 
   /**
-   * 基準点の設定
+   * 基準点の設定　formの設定ボタンを押したときの処理
    */
   formUpdate() {
-    console.log(this.selectedPointName);
-    console.log(this.tmpX);
-    console.log(this.tmpY);
+    console.log(this.selectedPointName+`${this.tmpX}, ${this.tmpY}`);
+    // console.log(this.tmpX);
+    // console.log(this.tmpY);
 
+    // 内部基準点データの更新
     this.BasePointList.find(d=>d.name == this.selectedPointName).msterPoint[0] = this.tmpX;
     this.BasePointList.find(d=>d.name == this.selectedPointName).msterPoint[1] = this.tmpY;
 
     // 基準点の情報をロボットへ送信する
-    var masterName:string = this.BasePointList.find(d=>d.name==this.selectedPointName).masterName;
+    const masterName: string = this.BasePointList.find(d => d.name == this.selectedPointName).masterName;
+
+    const obs = {
+      next:(x:any)=>{
+        // console.log("next obs")
+      },
+      error:(err:Error)=>{
+        console.log("err : "+err);
+        console.log(err.message)
+      },
+      complete:()=>{
+        // フォームを閉じる
+        console.log("comp")
+        this.form.close();
+      }
+    };
 
     // ロボットへマスター設定値を送信
-    this.basePS.setMasterPoint(masterName,this.tmpX+this.tmpOffsetX, this.tmpY+this.tmpOffsetY).subscribe();
+    this.basePS.setMasterPoint(masterName,this.tmpX+this.tmpOffsetX, this.tmpY+this.tmpOffsetY).subscribe(obs);
   }
 
   onOpening($event: IDialogCancellableEventArgs) {
@@ -263,16 +302,16 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     var selItem = this.simpleCombo.value;
     var it = this.BasePointList.find(d=>d.name == selItem);
 
-    var masterName = it.masterName; // 送信用マスター値
-
-    var subObj = this.basePS.getMasterPoint(masterName).pipe(map((v,i)=>{
-      this.tmpX = v['body']['X'];
-      this.tmpY = v['body']['Y'];
-      console.log(v);
-      console.log(this.tmpX);
-    }));
-
-    subObj.subscribe(x=>{});
+    // var masterName = it.masterName; // 送信用マスター値
+    //
+    // var subObj = this.basePS.getMasterPoint(masterName).pipe(map((v,i)=>{
+    //   this.tmpX = v['body']['X'];
+    //   this.tmpY = v['body']['Y'];
+    //   console.log(v);
+    //   console.log(this.tmpX);
+    // }));
+    //
+    // subObj.subscribe(x=>{});
 
     // this.tmpX = it.msterPoint[0];
     // this.tmpY = it.msterPoint[1];
@@ -299,15 +338,23 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     subObj.subscribe(x=>{});
   }
 
+  // 交点をクリック
   seriesMouseLeftBtnDown($event: { sender: any; args: IgxDataChartMouseButtonEventArgs }) {
     let item = $event.args.item;
     console.log("seriesMouseLeftBtnDown")
     console.log(item);
+
+    const clickX = item.px;
+    const clickY = item.py;
+
+    this.tmpX = clickX;
+    this.tmpY = clickY;
+    this.form.open(); // formをオープンする
   }
 
   plorAreaMouseLeftBtnDown($event: { sender: any; args: IgxPlotAreaMouseButtonEventArgs }) {
     let item = $event.args;
     console.log("plorAreaMouseLeftBtnDown")
-    console.log(item);
+    console.log($event.args);
   }
 }
