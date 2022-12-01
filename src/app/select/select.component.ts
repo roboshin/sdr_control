@@ -106,27 +106,40 @@ export class SelectComponent implements OnInit, AfterViewInit {
 
     const obsCallbacks = {
       next:(x:any)=>{
-        // console.log("next obs")
+
+        this.logger.debug("LayerName : "+`${this.layerNames}`);
+        this.logger.debug("lineDatas : "+`${this.lineDatas}`);
+        this.layerNames = x['Item2'];
+        this.lineDatas = x['Items1'];
+        this.upDateLineData();  // 描画データの更新
+
+        this.itemViewLayer = x['Item2'];
+        this.itemDrawLayer = x['Item2'];
+
       },
+
       error:(err:Error)=>{
         this.logger.error("Error in onUpload"+`${Error.name}`)
       },
-      complete:()=>{
 
+      complete:()=>{
+        this.dialog_title = "Success";
+        this.dialog_msg = "ファイル転送完了\nLayers : " + this.itemViewLayer;
+        this.alertDialg.open(); // 完了Dialogをオープンする
       }
     };
 
     layersMap.subscribe(obsCallbacks);
 
-    layersMap.subscribe(x => {
-      console.log(x);
-      this.itemViewLayer = x;
-      this.itemDrawLayer = x;
-    });
+    // layersMap.subscribe(x => {
+    //   console.log(x);
+    //   this.itemViewLayer = x;
+    //   this.itemDrawLayer = x;
+    // });
 
-    console.log(layersMap);
-    this.dialog_title = "Success";
-    this.dialog_msg = "ファイル転送完了\nLayers : " + this.itemViewLayer;
+    // console.log(layersMap);
+    // this.dialog_title = "Success";
+    // this.dialog_msg = "ファイル転送完了\nLayers : " + this.itemViewLayer;
 
     // 受信データから、描画ラインのデータを抜き出す
 
