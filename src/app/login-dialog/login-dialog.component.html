@@ -1,0 +1,37 @@
+<p>login-dialog works!</p>
+
+<igx-dialog #form [closeOnOutsideSelect]="false">
+  <!-- タイトル表示 -->
+  <igx-dialog-title>
+    <div class="title-container">
+      <igx-icon>vpn_key</igx-icon>
+      <div class="dialog-title">Sign In</div>
+    </div>
+  </igx-dialog-title>
+
+  <form class="signInForm">
+
+    <!-- ユーザ名入力エリア -->
+    <igx-input-group>
+      <igx-prefix>
+        <igx-icon>person</igx-icon>
+      </igx-prefix>
+      <label igxLabel for="username">Username</label>
+      <input igxInput id="username" type="text" />
+    </igx-input-group>
+
+    <!-- パスワード入力エリア -->
+    <igx-input-group>
+      <igx-prefix>
+        <igx-icon>lock</igx-icon>
+      </igx-prefix>
+      <label igxLabel>Password</label>
+      <input igxInput id="password" type="password" />
+    </igx-input-group>
+  </form>
+
+  <div igxDialogActions>
+    <button igxButton (click)="form.close()">CANCEL</button>
+    <button igxButton (click)="form.close()">SIGN IN</button>
+  </div>
+</igx-dialog>
