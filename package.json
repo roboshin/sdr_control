@@ -27,6 +27,7 @@
     "igniteui-angular-gauges": "~14.1.0",
     "jszip": "^3.5.0",
     "minireset.css": "~0.0.4",
+    "ngx-logger": "^5.0.11",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

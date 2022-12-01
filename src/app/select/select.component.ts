@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild, AfterViewInit,} from '@angular/core';
-import { FileService, ViewLayerService} from "../file.service";
+import {FileService, ViewLayerService} from "../file.service";
 import {catchError, lastValueFrom, take} from "rxjs";
 import {map} from "rxjs/operators";
 import {IgxDialogComponent} from "igniteui-angular";
@@ -7,7 +7,10 @@ import {filter} from "rxjs/operators";
 import {LineInfo} from "../LineInfo";
 import {FileInfo} from "@angular-devkit/build-angular/src/utils/index-file/augment-index-html";
 import {SharedDataService} from "../SharedData.Service";
+import {NGXLogger} from "ngx-logger";
 
+// for ngx-logger
+// https://github.com/dbfannin/ngx-logger
 
 @Component({
   selector: 'app-select',
@@ -15,6 +18,14 @@ import {SharedDataService} from "../SharedData.Service";
   styleUrls: ['./select.component.scss']
 })
 export class SelectComponent implements OnInit, AfterViewInit {
+
+  constructor(
+    private fileUploadService: FileService,
+    private viewLayerService: ViewLayerService,
+    private shareDataService: SharedDataService,
+    private logger: NGXLogger) {
+  }
+
   @ViewChild('alert') public alertDialg: IgxDialogComponent;
   /**
    * itemsRobot : ロボット名称
@@ -27,37 +38,36 @@ export class SelectComponent implements OnInit, AfterViewInit {
   public itemViewLayer: string[] = ['A'];
   public itemDrawLayer: string[] = ['DrawLayer01'];
 
-  dialog_title: string =""; // ポップアップウィンドウタイトル
-  dialog_msg : string ="";  // ポップアップメッセージ
+  dialog_title: string = ""; // ポップアップウィンドウタイトル
+  dialog_msg: string = "";  // ポップアップメッセージ
 
   shortLink: string = "";
   loading: boolean = false;
   file: File = null;
 
   private layerNames: string[];  // レイヤー名称のリスト
-
-  private lineDatas : LineInfo[]; // 描画用データ
-
-  constructor(
-    private fileUploadService: FileService,
-    private viewLayerService: ViewLayerService,
-    private shareDataService: SharedDataService) {
-  }
+  private lineDatas: LineInfo[]; // 描画用データ
 
 
+  /**
+   *
+   */
   ngOnInit(): void {
-    this.shareDataService.sharedData$.subscribe(sData=>this.lineDatas = sData);
+    this.shareDataService.sharedData$.subscribe(sData => this.lineDatas = sData);
   }
 
+  /**
+   *
+   */
   ngAfterViewInit(): void {
-    console.log(this.alertDialg);
+
   }
 
   /**
    * Dxfデータを保存する
    */
-  upDateLineData(){
-    console.log("upDateLineData")
+  upDateLineData() {
+    this.logger.debug("[START] : upDateLineData")
     this.shareDataService.setData(this.lineDatas);
   }
 
@@ -67,6 +77,7 @@ export class SelectComponent implements OnInit, AfterViewInit {
    */
   onChange(event) {
     this.file = event.target.files[0];
+    this.logger.debug('FILE : ' + `${this.file}`);
   }
 
   /**
@@ -77,27 +88,23 @@ export class SelectComponent implements OnInit, AfterViewInit {
    * 交点タップ用に　各カーブ同士の交点一覧
    */
   onUpload() {
+    this.logger.debug("[STAR] : onUpload");
+
     this.loading = !this.loading;
     const layersMap = this.fileUploadService.upload(this.file).pipe(map((v, i) => {
 
-      console.log("onUpload");
-      console.log(v);
-      this.alertDialg.open();
-
+      this.alertDialg.open(); // 完了Dialogをオープンする
       this.layerNames = v["Item2"]; // C#側からtupleでデータ送信されるDXF内のレイヤー
       this.lineDatas = v["Item1"];
-
-      console.log("layerNames");
-      console.log(this.layerNames);
-      console.log("lineDatas");
-      console.log(this.lineDatas);
+      this.logger.debug("LayerName : "+`${this.layerNames}`);
+      this.logger.debug("lineDatas : "+`${this.lineDatas}`);
 
       this.upDateLineData();  // 描画データの更新
 
       return v["Item2"]
     }));
 
-    layersMap.subscribe(x=> {
+    layersMap.subscribe(x => {
       console.log(x);
       this.itemViewLayer = x;
       this.itemDrawLayer = x;
@@ -105,7 +112,7 @@ export class SelectComponent implements OnInit, AfterViewInit {
 
     console.log(layersMap);
     this.dialog_title = "Success";
-    this.dialog_msg = "ファイル転送完了\nLayers : "+this.itemViewLayer;
+    this.dialog_msg = "ファイル転送完了\nLayers : " + this.itemViewLayer;
 
     // 受信データから、描画ラインのデータを抜き出す
 

@@ -30,6 +30,8 @@ import { DropDownComponent } from './drop-down/drop-down.component';
 import { ManualMovesdrComponent } from './manual-movesdr/manual-movesdr.component';
 import { MeasureBaseComponent } from './measure-base/measure-base.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
+import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
+
 // import {
 //     ReferencepointMeasureComponent
 // } from './referencepoint-measure/referencepoint-measure.component';
@@ -80,7 +82,16 @@ import { LoginDialogComponent } from './login-dialog/login-dialog.component';
     IgxDragDropModule,
     IgxSliderModule,
     IgxDialogModule,
-    IgxSimpleComboModule
+    IgxSimpleComboModule,
+
+    /**
+     * for logger
+     */
+    LoggerModule.forRoot({
+      serverLoggingUrl: '/api/logs',
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],
