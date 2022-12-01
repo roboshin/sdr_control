@@ -104,6 +104,20 @@ export class SelectComponent implements OnInit, AfterViewInit {
       return v["Item2"]
     }));
 
+    const obsCallbacks = {
+      next:(x:any)=>{
+        // console.log("next obs")
+      },
+      error:(err:Error)=>{
+        this.logger.error("Error in onUpload"+`${Error.name}`)
+      },
+      complete:()=>{
+
+      }
+    };
+
+    layersMap.subscribe(obsCallbacks);
+
     layersMap.subscribe(x => {
       console.log(x);
       this.itemViewLayer = x;
