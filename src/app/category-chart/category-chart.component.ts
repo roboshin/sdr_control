@@ -17,8 +17,8 @@ import {LineInfo, Point2D} from "../LineInfo";
 import {any} from "codelyzer/util/function";
 import {BasePointService} from "../BasePoint.Service";
 import {map} from "rxjs/operators";
-import {SharedDataService} from "../SharedData.Service";
 import {FileService} from "../file.service";
+import {NGXLogger} from "ngx-logger";
 
 class linfo implements LineInfo {
   Draw: boolean;
@@ -26,7 +26,7 @@ class linfo implements LineInfo {
   LineType: string;
   Points: Point2D[];
 
-  constructor(draw:boolean, layerName:string, lineType:string, points:Point2D[]) {
+  constructor(draw: boolean, layerName: string, lineType: string, points: Point2D[]) {
     this.Draw = draw;
     this.LayerName = layerName;
     this.LineType = lineType;
@@ -42,6 +42,7 @@ class linfo implements LineInfo {
 export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   @ViewChild('form') public form: IgxDialogComponent;
+
   /**
    * TODO:
    * クリックポイント周辺の交点を見つける
@@ -61,121 +62,159 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    * 計測完了など
    */
 
+  constructor(
+    private basePS: BasePointService,
+    private fileUploadService: FileService,
+    private logger: NGXLogger) {
+  }
+
   public chartType = CategoryChartType.Auto;
 
   // ダミー表示用データ
-  private dummyData:LineInfo[] = [
+  private dummyData: LineInfo[] = [
     new linfo(true, "00", "Line",
       [
-      {X:110,Y:100,x:110,y:100},
-      {X:100,Y:200,x:100,y:200}]
+        {X: 110, Y: 100, x: 110, y: 100},
+        {X: 100, Y: 200, x: 100, y: 200}]
     ),
   ]
 
   @ViewChild('airplaneShapeSeries', {static: true}) public airplaneShapeSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('airplaneSeatSeries', {static: true}) public airplaneSeatSeries: IgxScatterPolylineSeriesComponent;
-  @ViewChild('seatTooltip', {static: true})  public seatTooltip: TemplateRef<object>;
-  @ViewChild('combo', { read: IgxSimpleComboComponent, static: true }) public simpleCombo: IgxSimpleComboComponent;
+  @ViewChild('seatTooltip', {static: true}) public seatTooltip: TemplateRef<object>;
+  @ViewChild('combo', {read: IgxSimpleComboComponent, static: true}) public simpleCombo: IgxSimpleComboComponent;
 
-  @ViewChild('scatterSeriesCross', {static : true}) public scatterSeriesCross : IgxScatterSeriesComponent;
-  @ViewChild('scatterSeriesRobotPos', {static : true}) public scatterSeriesRobotPos : IgxScatterSeriesComponent;
+  @ViewChild('scatterSeriesCross', {static: true}) public scatterSeriesCross: IgxScatterSeriesComponent;
+  @ViewChild('scatterSeriesRobotPos', {static: true}) public scatterSeriesRobotPos: IgxScatterSeriesComponent;
 
-  @ViewChild('drawAreaSeries', {static :true}) public drawAreaSeries ; IgxScatterPolygonSeriesComponent
-
+  @ViewChild('drawAreaSeries', {static: true}) public drawAreaSeries;
+  IgxScatterPolygonSeriesComponent
 
 
   // 計測基準点名のリスト
   BasePointList = [
-    {name: "P1", msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0], id:1, masterName: "MASTER_P1"},
-    {name: "P2", msterPoint:[101.0,101.0], measurePoint:[200.0, 201.0], id:2, masterName: "MASTER_P2"},
-    {name: "P3", msterPoint:[102.0,101.0], measurePoint:[200.0, 201.0], id:3, masterName: "MASTER_P3"},
+    {name: "P1", msterPoint: [100.0, 101.0], measurePoint: [200.0, 201.0], id: 1, masterName: "MASTER_P1"},
+    {name: "P2", msterPoint: [101.0, 101.0], measurePoint: [200.0, 201.0], id: 2, masterName: "MASTER_P2"},
+    {name: "P3", msterPoint: [102.0, 101.0], measurePoint: [200.0, 201.0], id: 3, masterName: "MASTER_P3"},
   ];
 
 
   // ベースポイントの候補値
   BasePointsCrossPointData =
     [
-      {points: [{x:0,y:0}], px:100, py:100},
-      {points: [{x:0,y:0}], px:200, py:300},
-      {points: [{x:0,y:0}], px:400, py:500},
+      {points: [{x: 0, y: 0}], px: 100, py: 100},
+      {points: [{x: 0, y: 0}], px: 200, py: 300},
+      {points: [{x: 0, y: 0}], px: 400, py: 500},
     ]
 
-  public selectedPointName : string;
+  public selectedPointName: string;
 
-  public selectedId : Number;
+  public selectedId: Number;
   public itemBasePointName: string;
 
   tmpX: number; // formのX入力値
   tmpY: number; // formのY入植地
-  tmpOffsetX : number;  // formのOffsetX入力値
-  tmpOffsetY : number;  // formのOffsetY入力値
+  tmpOffsetX: number;  // formのOffsetX入力値
+  tmpOffsetY: number;  // formのOffsetY入力値
 
-
-  constructor(
-    private basePS : BasePointService,
-    private shareDataService: SharedDataService,
-    private fileUploadService:FileService) {
-  }
 
   /**
    * 起動時にサービスから描画データを取得する
    */
   public ngAfterViewInit() {
 
-    console.log(this.dummyData);
-    var viewData = this.dummyData.map(d=>{return {points : [d.Points]}})
+    var viewData = this.dummyData.map(d => {
+      return {points: [d.Points]}
+    })
     this.onLoadedLineShape(viewData);
 
-    // Loadしたら、サービスからデータを取得する
-
-    // for debug
-    // dialogの表示
     this.tmpOffsetY = 0;
     this.tmpOffsetX = 0;
 
-
-    // this.form.open();
   }
 
 
+  /**
+   * 起動時の処理
+   */
   public ngOnInit() {
-    // this.selectedPointName = this.BasePointList[0].name;
+
     this.selectedPointName = this.BasePointList[0].name;
     this.selectedId = this.BasePointList[0].id;
-
     this.itemBasePointName = this.BasePointList[0].name;
 
-    console.log("dummy update")
-    this.shareDataService.sharedData$.subscribe(sData=> {
-      this.dummyData = sData;
-      console.log("subscribed")
-      console.log(sData);
-    });
-    console.log("dummy updated")
-    console.log(this.dummyData);
+    const getLines = this.fileUploadService.getLines();
+    const getCross = this.fileUploadService.getCrossPoint();
 
-    // app/linedata にgetでアクセス
-    this.fileUploadService.getLines().subscribe(subData =>{
-      this.dummyData = subData['Item1'];  // linedata
-      console.log('Item1')
-      console.log(this.dummyData);
+    // ライン情報を取得する
+    const getLinesCallbacks = {
+      next: (x: any) => {
+        this.dummyData = x['Item1'];
+        // 画面の更新
+        const viewData = this.dummyData.map(d => {
+          return {points: [d.Points]}
+        })
+        this.onLoadedLineShape(viewData);
 
-      // 画面の更新
-      var viewData = this.dummyData.map(d=>{return {points : [d.Points]}})
-      this.onLoadedLineShape(viewData);
-    })
+      },
+      error: (err: Error) => {
+        this.logger.debug("Error in getLines" + `${Error.name}`);
 
-    // app/crossDataにgetでアクセスして、交点情報を取得する
-    this.fileUploadService.getCrossPoint().subscribe( crossData =>{
-      var crossPoints = crossData['Item1'];
-      console.log("CrossPoints")
-      console.log(crossPoints);
+      },
+      complete: () => {
 
-      // 受信データの整形
-      this.BasePointsCrossPointData = crossPoints.map(d=> {return {points: [{x:0,y:0}], px:d.X, py:d.Y}});
-      console.log("受信データ");
-      console.log(this.BasePointsCrossPointData);
-    })
+      }
+    };
+
+    // 交点情報を取得する
+    const getCrossCallbacks = {
+      next: (x: any) => {
+        let crossPoints = x['Item1'];
+        // 受信データの整形
+        this.BasePointsCrossPointData = crossPoints.map(d => {
+          return {points: [{x: 0, y: 0}], px: d.X, py: d.Y}
+        });
+
+        this.logger.debug("受信データ");
+        this.logger.debug(this.BasePointsCrossPointData);
+      },
+      error: (err: Error) => {
+        this.logger.debug("Error in getLines" + `${Error.name}`);
+      },
+      complete: () => {
+
+      }
+    };
+
+    getLines.subscribe(getLinesCallbacks);
+    getCross.subscribe(getCrossCallbacks);
+
+    // // app/linedata にgetでアクセス
+    // this.fileUploadService.getLines().subscribe(subData => {
+    //   this.dummyData = subData['Item1'];  // linedata
+    //   console.log('Item1')
+    //   console.log(this.dummyData);
+    //
+    //   // 画面の更新
+    //   var viewData = this.dummyData.map(d => {
+    //     return {points: [d.Points]}
+    //   })
+    //   this.onLoadedLineShape(viewData);
+    // })
+
+    // // app/crossDataにgetでアクセスして、交点情報を取得する
+    // this.fileUploadService.getCrossPoint().subscribe(crossData => {
+    //   var crossPoints = crossData['Item1'];
+    //   console.log("CrossPoints")
+    //   console.log(crossPoints);
+    //
+    //   // 受信データの整形
+    //   this.BasePointsCrossPointData = crossPoints.map(d => {
+    //     return {points: [{x: 0, y: 0}], px: d.X, py: d.Y}
+    //   });
+    //   console.log("受信データ");
+    //   console.log(this.BasePointsCrossPointData);
+    // })
 
   }
 
@@ -201,8 +240,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     this.airplaneSeatSeries.tooltipTemplate = this.seatTooltip;
   }
 
-  public onLoadBasePoints(jsonData :any[])
-  {
+  public onLoadBasePoints(jsonData: any[]) {
     console.log("onLoadBasePoints");
     console.log(jsonData);
 
@@ -236,7 +274,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   }
 
   public onStyleLine(ev: { sender: any; args: IgxStyleShapeEventArgs }) {
-    console.log( ev.args.item);
+    console.log(ev.args.item);
   }
 
   onErrorInput() {
@@ -245,12 +283,11 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   onGetValue(sp: string) {
     // console.log("sp : "+sp);
-    this.BasePointList.map(d=>{
-      if(d.name == sp){
+    this.BasePointList.map(d => {
+      if (d.name == sp) {
         // console.log(d);
         return d.msterPoint[0];
-      }
-      else return typeof d !== 'undefined'
+      } else return typeof d !== 'undefined'
     })
   }
 
@@ -259,26 +296,26 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    * 基準点の設定　formの設定ボタンを押したときの処理
    */
   formUpdate() {
-    console.log(this.selectedPointName+`${this.tmpX}, ${this.tmpY}`);
+    console.log(this.selectedPointName + `${this.tmpX}, ${this.tmpY}`);
     // console.log(this.tmpX);
     // console.log(this.tmpY);
 
     // 内部基準点データの更新
-    this.BasePointList.find(d=>d.name == this.selectedPointName).msterPoint[0] = this.tmpX;
-    this.BasePointList.find(d=>d.name == this.selectedPointName).msterPoint[1] = this.tmpY;
+    this.BasePointList.find(d => d.name == this.selectedPointName).msterPoint[0] = this.tmpX;
+    this.BasePointList.find(d => d.name == this.selectedPointName).msterPoint[1] = this.tmpY;
 
     // 基準点の情報をロボットへ送信する
     const masterName: string = this.BasePointList.find(d => d.name == this.selectedPointName).masterName;
 
     const obs = {
-      next:(x:any)=>{
-        // console.log("next obs")
+      next: (x: any) => {
+        // 設定しましたDialogを表示する
       },
-      error:(err:Error)=>{
-        console.log("err : "+err);
+      error: (err: Error) => {
+        console.log("err : " + err);
         console.log(err.message)
       },
-      complete:()=>{
+      complete: () => {
         // フォームを閉じる
         console.log("comp")
         this.form.close();
@@ -286,7 +323,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     };
 
     // ロボットへマスター設定値を送信
-    this.basePS.setMasterPoint(masterName,this.tmpX+this.tmpOffsetX, this.tmpY+this.tmpOffsetY).subscribe(obs);
+    this.basePS.setMasterPoint(masterName, this.tmpX + this.tmpOffsetX, this.tmpY + this.tmpOffsetY).subscribe(obs);
   }
 
   onOpening($event: IDialogCancellableEventArgs) {
@@ -300,7 +337,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   onOpen($event: IDialogEventArgs) {
     console.log("onOpen");
     var selItem = this.simpleCombo.value;
-    var it = this.BasePointList.find(d=>d.name == selItem);
+    var it = this.BasePointList.find(d => d.name == selItem);
 
     // var masterName = it.masterName; // 送信用マスター値
     //
@@ -324,18 +361,19 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   onComboChange($event: any) {
     console.log("change combo")
     var selItem = this.simpleCombo.value;
-    var it = this.BasePointList.find(d=>d.name == selItem);
+    var it = this.BasePointList.find(d => d.name == selItem);
 
     var masterName = it.masterName; // 送信用マスター値
 
-    var subObj = this.basePS.getMasterPoint(masterName).pipe(map((v,i)=>{
+    var subObj = this.basePS.getMasterPoint(masterName).pipe(map((v, i) => {
       this.tmpX = v['body']['X'];
       this.tmpY = v['body']['Y'];
       console.log(v);
       console.log(this.tmpX);
     }));
 
-    subObj.subscribe(x=>{});
+    subObj.subscribe(x => {
+    });
   }
 
   // 交点をクリック

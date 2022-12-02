@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild, AfterViewInit,} from '@angular
 import {FileService, ViewLayerService} from "../file.service";
 import {catchError, lastValueFrom, take} from "rxjs";
 import {map} from "rxjs/operators";
-import {IgxDialogComponent} from "igniteui-angular";
+import {IgxDialogComponent, IgxSelectComponent} from "igniteui-angular";
 import {filter} from "rxjs/operators";
 import {LineInfo} from "../LineInfo";
 import {FileInfo} from "@angular-devkit/build-angular/src/utils/index-file/augment-index-html";
@@ -26,7 +26,9 @@ export class SelectComponent implements OnInit, AfterViewInit {
     private logger: NGXLogger) {
   }
 
-  @ViewChild('alert') public alertDialg: IgxDialogComponent;
+  @ViewChild('alert', {static : true}) public alertDialg: IgxDialogComponent;
+  @ViewChild('selectViewLayer', {static : true}) selectViewLayer : IgxSelectComponent;
+  @ViewChild('selectDrawLayer', {static : true}) selectDrawLayer : IgxSelectComponent;
   /**
    * itemsRobot : ロボット名称
    * itemsKui   :　杭ナビ番号
@@ -91,35 +93,39 @@ export class SelectComponent implements OnInit, AfterViewInit {
     this.logger.debug("[STAR] : onUpload");
 
     this.loading = !this.loading;
-    const layersMap = this.fileUploadService.upload(this.file).pipe(map((v, i) => {
-
-      this.alertDialg.open(); // 完了Dialogをオープンする
-      this.layerNames = v["Item2"]; // C#側からtupleでデータ送信されるDXF内のレイヤー
-      this.lineDatas = v["Item1"];
-      this.logger.debug("LayerName : "+`${this.layerNames}`);
-      this.logger.debug("lineDatas : "+`${this.lineDatas}`);
-
-      this.upDateLineData();  // 描画データの更新
-
-      return v["Item2"]
-    }));
+    const layersMap = this.fileUploadService.upload(this.file);
 
     const obsCallbacks = {
       next:(x:any)=>{
+        this.logger.debug(x);
 
-        this.logger.debug("LayerName : "+`${this.layerNames}`);
-        this.logger.debug("lineDatas : "+`${this.lineDatas}`);
         this.layerNames = x['Item2'];
-        this.lineDatas = x['Items1'];
+        this.lineDatas  = x['Item1'];
         this.upDateLineData();  // 描画データの更新
 
         this.itemViewLayer = x['Item2'];
         this.itemDrawLayer = x['Item2'];
 
+        this.logger.debug("LayerName : "+`${this.layerNames}`);
+        this.logger.debug("lineDatas : "+`${this.lineDatas}`);
+
+        if(this.itemViewLayer.length > 0) {
+          this.selectViewLayer.setSelectedItem(0);
+        }
+
+        if(this.itemDrawLayer.length > 0){
+          this.selectDrawLayer.setSelectedItem(0);
+        }
       },
 
       error:(err:Error)=>{
+        // エラー処理
+        // Dialogを開いて、
         this.logger.error("Error in onUpload"+`${Error.name}`)
+
+        this.dialog_title = "Failed";
+        this.dialog_msg = "ファイル転送に失敗しました";
+        this.alertDialg.open(); // 完了Dialogをオープンする
       },
 
       complete:()=>{

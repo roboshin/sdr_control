@@ -41,7 +41,7 @@
     <h3>Loading ...</h3>
   </div>
 
-  <igx-select #selectDrawLayer>
+  <igx-select #selectViewLayer>
     <label igxLabel>表示レイヤー名</label>
     <igx-select-item *ngFor="let item of itemViewLayer" [value]="item" (click)="onLoadViewLayer()">
       {{item}}
@@ -62,5 +62,7 @@
               leftButtonLabel="OK"
               (leftButtonSelect)="alert.close()">
   </igx-dialog>
+
+
 
 </div>
