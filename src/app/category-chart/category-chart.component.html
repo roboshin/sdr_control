@@ -175,4 +175,13 @@
     <button igxButton (click)="form.close()">CANCEL</button>
     <button igxButton (click)="formUpdate()">設定</button>
   </div>
+
+  <!--  ファイル読み込み完了Dialogの表示用-->
+  <igx-dialog #alert
+              [title]="dialogTitle"
+              [message]="dialogMsg"
+              leftButtonLabel="OK"
+              (leftButtonSelect)="alert.close()">
+  </igx-dialog>
+
 </igx-dialog>

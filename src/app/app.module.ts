@@ -31,6 +31,7 @@ import { ManualMovesdrComponent } from './manual-movesdr/manual-movesdr.componen
 import { MeasureBaseComponent } from './measure-base/measure-base.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
+import { KuinavyControlComponent } from './kuinavy-control/kuinavy-control.component';
 
 // import {
 //     ReferencepointMeasureComponent
@@ -49,7 +50,8 @@ import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
     // ReferencepointMeasureComponent,
     ManualMovesdrComponent,
     MeasureBaseComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    KuinavyControlComponent
   ],
   imports: [
     FormsModule,

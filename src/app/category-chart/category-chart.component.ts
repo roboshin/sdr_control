@@ -41,6 +41,10 @@ class linfo implements LineInfo {
 })
 export class CategoryChartComponent implements AfterViewInit, OnInit {
 
+  dialogTitle: string;  // dialog用タイトル
+  dialogMsg : string    // dialog用メッセージ
+  @ViewChild('alert', {static : true}) public alertDialg: IgxDialogComponent;
+
   @ViewChild('form') public form: IgxDialogComponent;
 
   /**
@@ -123,9 +127,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    */
   public ngAfterViewInit() {
 
-    var viewData = this.dummyData.map(d => {
+    let viewData = this.dummyData.map(d => {
       return {points: [d.Points]}
     })
+
     this.onLoadedLineShape(viewData);
 
     this.tmpOffsetY = 0;
@@ -160,9 +165,18 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       error: (err: Error) => {
         this.logger.debug("Error in getLines" + `${Error.name}`);
 
+        // エラー表示
+        // DXFが読み込まれていない
+        this.dialogTitle = "Error in DXF";
+        this.dialogMsg = "The DXF file is not loaded.";
+        this.alertDialg.open();
+
       },
       complete: () => {
-
+        // データ読み込み完了の表示
+        this.dialogTitle ="DXF Data Read";
+        this.dialogMsg = "DXF Data Read Complete.";
+        this.alertDialg.open();
       }
     };
 
@@ -180,41 +194,24 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       },
       error: (err: Error) => {
         this.logger.debug("Error in getLines" + `${Error.name}`);
+
+        // エラー表示
+        // DXFが読み込まれていない
+        this.dialogTitle = "Error in Cross Points";
+        this.dialogMsg = "The Cross Points Data is not loaded.";
+        this.alertDialg.open();
       },
       complete: () => {
-
+        // データ読み込み完了の表示
+        this.dialogTitle ="Cross Points Data Read";
+        this.dialogMsg = "Cross Points Data Read Complete.";
+        this.alertDialg.open();
       }
     };
 
     getLines.subscribe(getLinesCallbacks);
     getCross.subscribe(getCrossCallbacks);
 
-    // // app/linedata にgetでアクセス
-    // this.fileUploadService.getLines().subscribe(subData => {
-    //   this.dummyData = subData['Item1'];  // linedata
-    //   console.log('Item1')
-    //   console.log(this.dummyData);
-    //
-    //   // 画面の更新
-    //   var viewData = this.dummyData.map(d => {
-    //     return {points: [d.Points]}
-    //   })
-    //   this.onLoadedLineShape(viewData);
-    // })
-
-    // // app/crossDataにgetでアクセスして、交点情報を取得する
-    // this.fileUploadService.getCrossPoint().subscribe(crossData => {
-    //   var crossPoints = crossData['Item1'];
-    //   console.log("CrossPoints")
-    //   console.log(crossPoints);
-    //
-    //   // 受信データの整形
-    //   this.BasePointsCrossPointData = crossPoints.map(d => {
-    //     return {points: [{x: 0, y: 0}], px: d.X, py: d.Y}
-    //   });
-    //   console.log("受信データ");
-    //   console.log(this.BasePointsCrossPointData);
-    // })
 
   }
 
@@ -223,12 +220,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    * @param jsonData
    */
   public onLoadedLineShape(jsonData: any[]) {
-    console.log('onLoadedLineShape' + jsonData.length);
-    console.log(jsonData);
+    this.logger.debug('onLoadedLineShape' + `${jsonData.length}`);
+    this.logger.debug(jsonData);
+
     this.airplaneShapeSeries.dataSource = jsonData;
-
-    // console.log(this.airplaneShapeSeries.dataSource);
-
     this.airplaneShapeSeries.showDefaultTooltip = true;
     this.airplaneShapeSeries.tooltipTemplate = this.seatTooltip;
   }
@@ -377,6 +372,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   }
 
   // 交点をクリック
+
   seriesMouseLeftBtnDown($event: { sender: any; args: IgxDataChartMouseButtonEventArgs }) {
     let item = $event.args.item;
     console.log("seriesMouseLeftBtnDown")
