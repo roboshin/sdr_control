@@ -1,0 +1,29 @@
+<p>kuinavy-control works!</p>
+
+<!--杭ナビ接続方法-->
+<div>
+  <!-- 接続方法の選択 -->
+  <label>杭ナビ接続方法</label>
+  <igx-radio-group>
+    <igx-radio [(ngModel)]="selected" value="optionBluetooth">Bluetooth</igx-radio>
+    <igx-radio [(ngModel)]="selected" value="optionWIFI">Wifi</igx-radio>
+  </igx-radio-group>
+
+  <div>
+    <button igxButton="raised" igxRipple type="submit" (click)="onConnect()">接続</button>
+    <button igxButton="raised" igxRipple type="submit" (click)="onDisconnect()">切断</button>
+  </div>
+
+
+  <!-- ターゲット・サーチ-->
+  <div>
+    <button igxButton="raised" igxRipple type="submit" (click)="onSearchTarget()">ターゲットサーチ</button>
+  </div>
+
+  <!-- 計測開始・停止-->
+  <div>
+    <button igxButton="raised" igxRipple type="submit" (click)="onStartMeasure()">計測開始</button>
+    <button igxButton="raised" igxRipple type="submit" (click)="onStopMeasure()">計測停止</button>
+  </div>
+
+</div>

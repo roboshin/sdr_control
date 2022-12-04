@@ -1,8 +1,19 @@
 import 'hammerjs';
 
 import {
-  IgxButtonGroupModule, IgxButtonModule, IgxDialogModule, IgxDragDropModule, IgxDropDownModule, IgxLayoutModule,
-  IgxNavbarModule, IgxNavigationDrawerModule, IgxRippleModule, IgxSelectModule, IgxSimpleComboModule, IgxSliderModule,
+  IgxButtonGroupModule,
+  IgxButtonModule,
+  IgxDialogModule,
+  IgxDragDropModule,
+  IgxDropDownModule,
+  IgxLayoutModule,
+  IgxNavbarModule,
+  IgxNavigationDrawerModule,
+  IgxRadioModule,
+  IgxRippleModule,
+  IgxSelectModule,
+  IgxSimpleComboModule,
+  IgxSliderModule,
   IgxToggleModule
 } from 'igniteui-angular';
 import {
@@ -94,6 +105,7 @@ import { KuinavyControlComponent } from './kuinavy-control/kuinavy-control.compo
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.ERROR
     }),
+    IgxRadioModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

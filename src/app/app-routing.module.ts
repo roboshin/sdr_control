@@ -11,11 +11,13 @@ import { RadialGaugeComponent } from './radial-gauge/radial-gauge.component';
 import { DropDownComponent } from './drop-down/drop-down.component';
 import {ManualMovesdrComponent} from "./manual-movesdr/manual-movesdr.component";
 import {MeasureBaseComponent} from "./measure-base/measure-base.component";
+import {KuinavyControlComponent} from "./kuinavy-control/kuinavy-control.component";
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent, data: { text: 'ホーム' } },
   { path: 'error', component: UncaughtErrorComponent },
+  {path: 'kui-navy', component: KuinavyControlComponent, data:{text: '杭ナビ設定'}},
   { path: 'select', component: SelectComponent, data: { text: 'DXF設定' } },
   { path: 'category-chart', component: CategoryChartComponent, data: { text: '基準点設定' } },
   { path: 'measure-base', component: MeasureBaseComponent, data: { text: '基準点計測' } },
