@@ -43,6 +43,8 @@ import { MeasureBaseComponent } from './measure-base/measure-base.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 import { KuinavyControlComponent } from './kuinavy-control/kuinavy-control.component';
+import { RobotParamSettingComponent } from './robot-param-setting/robot-param-setting.component';
+import { RobotInfoViewComponent } from './robot-info-view/robot-info-view.component';
 
 // import {
 //     ReferencepointMeasureComponent
@@ -62,7 +64,9 @@ import { KuinavyControlComponent } from './kuinavy-control/kuinavy-control.compo
     ManualMovesdrComponent,
     MeasureBaseComponent,
     LoginDialogComponent,
-    KuinavyControlComponent
+    KuinavyControlComponent,
+    RobotParamSettingComponent,
+    RobotInfoViewComponent
   ],
   imports: [
     FormsModule,
