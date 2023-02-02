@@ -268,10 +268,10 @@ export class MeasureBaseComponent implements OnInit {
    */
   onOpen($event: IDialogEventArgs) {
     console.log("onOpen");
-    var selItem = this.simpleCombo.value;
-    var it = this.BasePointList.find(d=>d.name == selItem);
+    const selItem = this.simpleCombo.value;
+    const it = this.BasePointList.find(d => d.name == selItem);
 
-    var measureName = it.name; // 送信用マスター値
+    const measureName = it.name; // 送信用マスター値
 
     var subObj = this.basePS.getMeasurePoint(measureName).pipe(map((v,i)=>{
       console.log(v);
@@ -285,6 +285,26 @@ export class MeasureBaseComponent implements OnInit {
 
     // this.tmpX = it.msterPoint[0];
     // this.tmpY = it.msterPoint[1];
+  }
+
+  /**
+   * 計測を開始する
+   */
+  onMMeasure(){
+    console.log("onMEasure");
+    var selItem = this.simpleCombo.value;
+    var it = this.BasePointList.find(d=>d.name == selItem);
+
+    var measureName = it.name; // 送信用マスター値
+    var subObj = this.basePS.getMeasurePoint(measureName).pipe(map((v,i)=>{
+      console.log(v);
+      this.tmpX = v['body']['X'];
+      this.tmpY = v['body']['Y'];
+      console.log(v);
+      console.log(this.tmpX);
+    }));
+
+    subObj.subscribe(x=>{});
   }
 
   /**
