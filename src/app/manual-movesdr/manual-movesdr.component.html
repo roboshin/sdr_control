@@ -1,16 +1,22 @@
 <div class="baseplate">
   <div class="box-minmax">
 
-    <!-- -->
-<!--    <span>-->
-      <button #leftturnbtn igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"
-              class="sample-button leftturnbtn">左回転</button>
-<!--    </span>-->
+<!--    &lt;!&ndash; &ndash;&gt;-->
+<!--&lt;!&ndash;    <span>&ndash;&gt;-->
+<!--      <button #leftturnbtn igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"-->
+<!--              class="leftturnbtn">左回転</button>-->
+<!--&lt;!&ndash;    </span>&ndash;&gt;-->
 
-    <!-- -->
-<!--    <span>-->
-      <button #rightturnbtn igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"
-              class="sample-button rightturnbtn">右回転</button>
+<!--    &lt;!&ndash; &ndash;&gt;-->
+<!--&lt;!&ndash;    <span>&ndash;&gt;-->
+<!--      <button #rightturnbtn igxButton="raised" igxButtonColor="black" igxButtonBackground="#e2e2e2"-->
+<!--              class="rightturnbtn">右回転</button>-->
+
+    <button igxButton="flat" igxRipple (buttonClick)="LeftTurn()">左回転</button>
+    <button igxButton="flat" igxRipple (buttonClick)="Stop()">停止</button>
+    <button igxButton="flat" igxRipple (buttonClick)="RightTurn()">右回転</button>
+    <button igxButton="flat" igxRipple (buttonClick)="onInkOn()">INK ON</button>
+    <button igxButton="flat" igxRipple (buttonClick)="onInkOff()">INK OFF</button>
 <!--    </span>-->
 
     <!--並進速度設定-->
@@ -35,6 +41,8 @@
                 [showTicks]="true" [step]="5" (valueChange)="onReflectorSpeedChange($event)"></igx-slider>
 
 
+
+
   </div>
   <div class="boundingcircle">
     <div class="movecircle" #bCircle
@@ -48,6 +56,7 @@
       ロボプリン-RP2
     </div>
   </div>
+
 
   <!-- <input id="rs-range-line" class="rs-range" type="range" value="100" min="0" max="200"> -->
   <!-- <p>Volume: {{volume}}</p> -->

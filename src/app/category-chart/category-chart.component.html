@@ -50,8 +50,7 @@
       <igx-scatter-polyline-series name="airplaneShapeSeries" #airplaneShapeSeries
                                    [xAxis]="xAxis"
                                    [yAxis]="yAxis" shapeMemberPath="points" thickness="0.5"
-                                   (styleShape)="onStyleLine($event)"
-      >
+                                   (styleShape)="onStyleLine($event)">
       </igx-scatter-polyline-series>
 
       <igx-scatter-polyline-series name="airplaneSeatSeries" #airplaneSeatSeries
@@ -80,13 +79,16 @@
       <igx-scatter-series
         [xAxis]="xAxis"
         [yAxis]="yAxis"
-        xMemberPath="pX"
-        yMemberPath="pY"
+        xMemberPath="px"
+        yMemberPath="py"
         markerType="Circle"
-         showDefaultTooltip="true"
-        title="Europe"
+        markerBrush="red"
+        [dataSource]="NowRobotPos"
+        showDefaultTooltip="true"
+        title="Robot Position"
         name="ScatterSeries1"
         #scatterSeriesRobotPos>
+
       </igx-scatter-series>
 
       <igx-scatter-area-series></igx-scatter-area-series>
@@ -185,3 +187,5 @@
   </igx-dialog>
 
 </igx-dialog>
+
+

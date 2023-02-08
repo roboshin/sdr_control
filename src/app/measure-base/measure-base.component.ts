@@ -1,8 +1,8 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {
   IDialogCancellableEventArgs,
   IDialogEventArgs,
-  IgxDialogComponent,
+  IgxDialogComponent, IgxOverlayService,
   IgxSimpleComboComponent
 } from "igniteui-angular";
 import {CategoryChartType, IgxScatterPolylineSeriesComponent, IgxStyleShapeEventArgs} from "igniteui-angular-charts";
@@ -11,6 +11,8 @@ import {BasePointService} from "../BasePoint.Service";
 import {SharedDataService} from "../SharedData.Service";
 import {FileService} from "../file.service";
 import {map} from "rxjs/operators";
+import {NGXLogger} from "ngx-logger";
+import {any} from "codelyzer/util/function";
 
 class linfo implements LineInfo {
   Draw: boolean;
@@ -33,26 +35,13 @@ class linfo implements LineInfo {
 })
 export class MeasureBaseComponent implements OnInit {
 
+  dialogTitle: string;  // dialog用タイトル
+  dialogMsg : string    // dialog用メッセージ
 
+  @ViewChild('alert', {static : true}) public alertDialg: IgxDialogComponent;
   @ViewChild('form') public form: IgxDialogComponent;
-  /**
-   * TODO:
-   * クリックポイント周辺の交点を見つける
-   * 交点からのXYを基準点のXYとする
-   * 基準点はポップアップウィンドウを表示し、ウィンドウ内でオフセットを設定できるようにする
-   * 基準点は、基準点としてグラフに表示する
-   *
-   * 単なるロボットの現在位置表示なのか、基準点設定なのかを選択するボタンを設ける
-   * ロボットの現在位置を常に表示する
-   * ロボットの形状（姿勢）も含めて表示できればベスト
-   */
 
-  /**
-   * TODO:
-   * Notificationを各ステップごとに表示
-   * ロボットの姿勢計算部が終了
-   * 計測完了など
-   */
+  @ViewChild('formResult') public formResult: IgxDialogComponent;   // 結果表示用フォーム
 
   public chartType = CategoryChartType.Auto;
 
@@ -88,11 +77,22 @@ export class MeasureBaseComponent implements OnInit {
   tmpOffsetX : number;
   tmpOffsetY : number;
 
+  // Result用変数
+  xResult : number;
+  yResult : number;
+  zResult : number;
+
+  rxResult : number;
+  ryResult : number;
+  rzResult : number;
+  xOffsetResult : number;
+  yOffsetResult : number;
 
   constructor(
     private basePS : BasePointService,
     private shareDataService: SharedDataService,
-    private fileUploadService:FileService) {
+    private fileUploadService:FileService,
+    private logger: NGXLogger,) {
   }
 
   /**
@@ -119,13 +119,11 @@ export class MeasureBaseComponent implements OnInit {
     //   .then((data) => this.onLoadedJsonSeats(data));
 
 
-
-    // Loadしたら、サービスからデータを取得する
-
-    // for debug
     // dialogの表示
     this.tmpOffsetY = 0;
     this.tmpOffsetX = 0;
+    this.tmpX = 0;
+    this.tmpY = 0;
     this.form.open();
   }
 
@@ -221,16 +219,14 @@ export class MeasureBaseComponent implements OnInit {
   }
 
 
-  /**
+/*  /!**
    * 計測点の設定
-   */
+   *!/
   formUpdate() {
-    console.log(this.selectedPointName);
-    console.log(this.tmpX);
-    console.log(this.tmpY);
+    this.logger.info(`${this.selectedPointName}, ${this.tmpX}. ${this.tmpY}`)
 
-    this.BasePointList.find(d=>d.name == this.selectedPointName).msterPoint[0] = this.tmpX;
-    this.BasePointList.find(d=>d.name == this.selectedPointName).msterPoint[1] = this.tmpY;
+    this.BasePointList.find(d=>d.name == this.selectedPointName).msterPoint[0] = 0;
+    this.BasePointList.find(d=>d.name == this.selectedPointName).msterPoint[1] = 0;
 
     // 基準点の情報をロボットへ送信する
     var masterName:string = this.BasePointList.find(d=>d.name==this.selectedPointName).name;
@@ -238,10 +234,16 @@ export class MeasureBaseComponent implements OnInit {
     const obs = {
       next:(x:any)=>{
         // console.log("next obs")
+        this.dialogTitle = `基準点測定`;
+        this.dialogMsg = `基準点${masterName}を測定しました。`;
+        this.alertDialg.open();
       },
       error:(err:Error)=>{
         console.log("err : "+err);
         console.log(err.message)
+        this.dialogTitle = `基準点測定`;
+        this.dialogMsg = `基準点${masterName}を測定時にエラーは発生しました。`;
+        this.alertDialg.open();
       },
       complete:()=>{
         // フォームを閉じる
@@ -250,9 +252,9 @@ export class MeasureBaseComponent implements OnInit {
       }
     };
 
-    // ロボットへマスター設定値を送信
+    // ロボットへ測定値情報を送信する
     this.basePS.setMeasurePoint(masterName,this.tmpX+this.tmpOffsetX, this.tmpY+this.tmpOffsetY).subscribe(obs);
-  }
+  }*/
 
   formMeasure(){
 
@@ -267,7 +269,7 @@ export class MeasureBaseComponent implements OnInit {
    * @param $event
    */
   onOpen($event: IDialogEventArgs) {
-    console.log("onOpen");
+    this.logger.debug(`OnOpen`)
     const selItem = this.simpleCombo.value;
     const it = this.BasePointList.find(d => d.name == selItem);
 
@@ -290,21 +292,94 @@ export class MeasureBaseComponent implements OnInit {
   /**
    * 計測を開始する
    */
-  onMMeasure(){
-    console.log("onMEasure");
+  onMeasure(){
+    this.logger.debug(`onMeasure : ${this.simpleCombo.value}`)
     var selItem = this.simpleCombo.value;
     var it = this.BasePointList.find(d=>d.name == selItem);
 
     var measureName = it.name; // 送信用マスター値
-    var subObj = this.basePS.getMeasurePoint(measureName).pipe(map((v,i)=>{
+/*    var subObj = this.basePS.getMeasurePoint(measureName).pipe(map((v,i)=>{
       console.log(v);
       this.tmpX = v['body']['X'];
       this.tmpY = v['body']['Y'];
       console.log(v);
       console.log(this.tmpX);
-    }));
+    }));*/
 
-    subObj.subscribe(x=>{});
+    const obs = {
+      next:(x:any)=>{
+        this.dialogTitle = `基準点測定`;
+        this.dialogMsg = `基準点${measureName}を測定しました。`;
+        this.alertDialg.open();
+        this.tmpX = x['body']['X'];
+        this.tmpY = x['body']['Y'];
+
+        this.logger.debug(`計測値 : ${x}\n${x['body']['X']}, ${x['body']['Y']}`)
+      },
+      error:(err:Error)=>{
+        console.log("err : "+err);
+        console.log(err.message)
+
+        this.form.close();
+        this.dialogTitle = `基準点測定`;
+        this.dialogMsg = `基準点${measureName}を測定時にエラーは発生しました。`;
+        this.alertDialg.open();
+
+        // if(measureName == `P3`){
+        //   this.form.close();
+        //   this.formResult.open();
+        // }
+      },
+      complete:()=>{
+        // フォームを閉じる
+        console.log("comp")
+
+        // if(measureName == `P3`){
+        //   this.form.close();
+        //   this.formResult.open();
+        // }
+        // this.form.close();
+      }
+    }
+
+    this.basePS.getMeasurePoint(measureName).subscribe(obs);
+  }
+
+  onCalcMatrix(){
+    const obs = {
+      next: (x: any) => {
+
+        console.log(x);
+        this.xResult = x['body'][0];
+        this.yResult = x['body'][1];
+        this.zResult = x['body'][2];
+        this.rxResult = x['body'][3];
+        this.ryResult = x['body'][4];
+        this.rzResult = x['body'][5];
+
+        this.xOffsetResult = 0;
+        this.yOffsetResult = 0;
+
+        this.dialogTitle = `座標変換計算`;
+        this.dialogMsg = `変換行列を計算しました。`;
+        this.alertDialg.open();
+      },
+      error: (err: Error) => {
+        this.dialogTitle = `座標変換計算エラー`;
+        this.dialogMsg = `変換行列を計算中にエラーが発生しました.`;
+        this.alertDialg.open();
+      },
+      complete: () => {
+
+
+
+        this.formResult.open();
+
+      }
+    }
+
+    this.basePS.getMeasurePoint("CALC").subscribe(obs);
+
   }
 
   /**
@@ -327,4 +402,38 @@ export class MeasureBaseComponent implements OnInit {
 
     subObj.subscribe(x=>{});
   }
+
+
+  onResultFormOpen($event: IDialogEventArgs) {
+    this.logger.debug(`Result form opend`);
+
+    const obs = {
+      next: (x: any) => {
+        this.logger.debug(`Result form next`);
+        this.logger.debug(`Result : ${x}`);
+        console.log(x)
+
+        this.xResult = x['body'][0];
+        this.yResult = x['body'][1];
+        this.zResult = x['body'][2];
+        this.rxResult = x['body'][3];
+        this.ryResult = x['body'][4];
+        this.rzResult = x['body'][5];
+
+        this.xOffsetResult = x['body'][6];
+        this.yOffsetResult = x['body'][7];
+      },
+      error: (err: Error) => {
+        this.logger.debug(`Result form error`);
+      }
+      ,
+      complete: () => {
+        this.logger.debug(`Result form complete`);
+      }
+    }
+
+    var obsResult = this.basePS.getMatrixResult(`dummy`).subscribe(obs);
+
+  }
 }
+

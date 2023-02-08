@@ -16,4 +16,13 @@
     <button igxButton [igxRipple]="rippleColor" [selected]="true">RESERVED</button>
   </igx-buttongroup>
 
+
+  <igx-dialog #alert
+              [title]="dialogTitle"
+              [message]="dialogMsg"
+              leftButtonLabel="OK"
+              (leftButtonSelect)="alert.close()">
+  </igx-dialog>
 </div>
+
+

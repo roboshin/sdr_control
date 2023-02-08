@@ -97,13 +97,16 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
 
     let rotValue = 0;
 
-    if (event.target.id == "leftturnbtn") {
+    if (event.target == "button.leftturnbtn.igx-button.igx-button--raised") {
       console.log("left turn button click.");
       rotValue = 1;
     }
-    else if(event.target.id == "rightturnbtn"){
+    else if(event.target == "button.rightturnbtn.igx-button.igx-button--raised"){
       console.log("right turn button click.");
       rotValue = -1;
+    }
+    else{
+      return;
     }
 
     const obs = {
@@ -233,5 +236,73 @@ export class ManualMovesdrComponent implements OnInit, AfterViewInit {
     };
 
     this.manualMove.setRefMaxSpeed((Number)($event.value)).subscribe(obs);
+  }
+
+  /**
+   * インクをOnにする
+   */
+  onInkOn() {
+    console.log("onInkOn cliked");
+
+    const obs = {
+      next:(x:any)=>{console.log("next obs")},
+      error:(err:Error)=>{console.log("err : "+err);},
+      complete:()=>{console.log("comp")}
+    };
+
+    this.manualMove.onInkOn(Number).subscribe(obs);
+
+  }
+
+  /**
+   * インクをOFFにする
+   */
+  onInkOff() {
+    console.log("onInkOn cliked");
+
+    const obs = {
+      next:(x:any)=>{console.log("next obs")},
+      error:(err:Error)=>{console.log("err : "+err);},
+      complete:()=>{console.log("comp")}
+    };
+
+    this.manualMove.onInkOff(Number).subscribe(obs);
+
+  }
+
+  LeftTurn() {
+    console.log("onInkOn cliked");
+
+    const obs = {
+      next:(x:any)=>{console.log("next obs")},
+      error:(err:Error)=>{console.log("err : "+err);},
+      complete:()=>{console.log("comp")}
+    };
+
+    this.manualMove.moveRotWheel(-1).subscribe(obs);
+  }
+
+  RightTurn() {
+    console.log("onInkOn cliked");
+
+    const obs = {
+      next:(x:any)=>{console.log("next obs")},
+      error:(err:Error)=>{console.log("err : "+err);},
+      complete:()=>{console.log("comp")}
+    };
+
+    this.manualMove.moveRotWheel(1).subscribe(obs);
+  }
+
+  Stop() {
+    console.log("onInkOn cliked");
+
+    const obs = {
+      next:(x:any)=>{console.log("next obs")},
+      error:(err:Error)=>{console.log("err : "+err);},
+      complete:()=>{console.log("comp")}
+    };
+
+    this.manualMove.moveWeelStop().subscribe(obs);
   }
 }

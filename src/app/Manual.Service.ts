@@ -121,6 +121,32 @@ export class ManualService{
   }
 
 
+  /**
+   * インクをONにする
+   * @param Number
+   */
+  onInkOn(Number: NumberConstructor) {
+    let cmd = "ink_on";
+    let getUrl = `${this.baseApiUrl}/${cmd}`;
+
+    console.log("ink on cmd : " + getUrl);
+
+    return this.http.get<any>(getUrl);
+  }
+
+  /**
+   * インクをOFFにする
+   * @param Number
+   */
+  onInkOff(Number: NumberConstructor) {
+    let cmd = "ink_off";
+    let getUrl = `${this.baseApiUrl}/${cmd}`;
+
+    console.log("ink on cmd : " + getUrl);
+
+    return this.http.get<any>(getUrl);
+  }
+
 
 }
 

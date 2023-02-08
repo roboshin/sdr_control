@@ -79,7 +79,7 @@
 
 
 <!--位置入力Dialog -->
-<igx-dialog #form [closeOnOutsideSelect]="true" [hidden]="true" (opened)="onOpen($event)">
+<igx-dialog #form [closeOnOutsideSelect]="true" [hidden]="true" >
   <igx-dialog-title>
     <div class="title-container">
       <igx-icon>vpn_key</igx-icon>
@@ -138,7 +138,92 @@
 
   <div igxDialogActions>
     <button igxButton (click)="form.close()">CANCEL</button>
-    <button igxButton (click)="onMMeasure()">計測</button>
+    <button igxButton (click)="onCalcMatrix()">変換計算</button>
+    <button igxButton (click)="onMeasure()">計測</button> <!-- 計測開始ボタン -->
     <!-- <button igxButton (click)="onMMeasure()">計測</button> -->
   </div>
+
+  <!--  ファイル読み込み完了Dialogの表示用-->
+  <igx-dialog #alert
+              [title]="dialogTitle"
+              [message]="dialogMsg"
+              leftButtonLabel="OK"
+              (leftButtonSelect)="alert.close()">
+  </igx-dialog>
 </igx-dialog>
+
+<!--変換結果表示用　Dialog -->
+<igx-dialog #formResult [closeOnOutsideSelect]="true" [hidden]="true" (opened)="onResultFormOpen($event)">
+  <igx-dialog-title>
+    <div class="title-container">
+      <igx-icon>vpn_key</igx-icon>
+      <div class="dialog-title">変換係数</div>
+    </div>
+  </igx-dialog-title>
+
+  <form class="signInForm">
+
+    <!-- X 値の表示用-->
+    <igx-input-group>
+      <label igxLabel for="xResult">X [mm]</label>
+      <input igxInput id="xResult" [(ngModel)]="xResult" name="xResult"/>
+    </igx-input-group>
+
+    <!-- Y 値の表示用-->
+    <igx-input-group>
+      <label igxLabel for="yResult">X [mm]</label>
+      <input igxInput id="yResult" [(ngModel)]="yResult" name="yResult"/>
+    </igx-input-group>
+
+    <!-- Z 値の表示用-->
+    <igx-input-group>
+      <label igxLabel for="zResult">X [mm]</label>
+      <input igxInput id="zResult" [(ngModel)]="zResult" name="zResult"/>
+    </igx-input-group>
+
+    <!-- RX 値の表示用-->
+    <igx-input-group>
+      <label igxLabel for="rxResult">X [mm]</label>
+      <input igxInput id="rxResult" [(ngModel)]="rxResult" name="rxResult"/>
+    </igx-input-group>
+
+    <!-- RY 値の表示用-->
+    <igx-input-group>
+      <label igxLabel for="ryResult">X [mm]</label>
+      <input igxInput id="ryResult" [(ngModel)]="ryResult" name="ryResult"/>
+    </igx-input-group>
+
+    <!-- RZ 値の表示用-->
+    <igx-input-group>
+      <label igxLabel for="rzResult">X [mm]</label>
+      <input igxInput id="rzResult" [(ngModel)]="rzResult" name="rzResult"/>
+    </igx-input-group>
+
+    <igx-input-group>
+      <label igxLabel for="xOffsetResult">Y Offset[mm]</label>
+      <input igxInput id="xOffsetResult" [(ngModel)]="xOffsetResult" name="xOffsetResult"/>
+    </igx-input-group>
+
+    <igx-input-group>
+      <label igxLabel for="yOffsetResult">Y Offset[mm]</label>
+      <input igxInput id="yOffsetResult" [(ngModel)]="yOffsetResult" name="yOffsetResult"/>
+    </igx-input-group>
+
+
+  </form>
+
+  <div igxDialogActions>
+    <button igxButton (click)="form.close()">CANCEL</button>
+    <button igxButton (click)="onMeasure()">計測</button> <!-- 計測開始ボタン -->
+    <!-- <button igxButton (click)="onMMeasure()">計測</button> -->
+  </div>
+
+  <!--  ファイル読み込み完了Dialogの表示用-->
+  <igx-dialog #alert
+              [title]="dialogTitle"
+              [message]="dialogMsg"
+              leftButtonLabel="OK"
+              (leftButtonSelect)="alert.close()">
+  </igx-dialog>
+</igx-dialog>
+

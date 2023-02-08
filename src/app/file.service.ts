@@ -159,4 +159,9 @@ export class RobotControService {
   setStop(str: string): Observable<any> {
     return this.http.put(this.baseApiUrl + '/stop', str, this.httpOptions);
   }
+
+
+  getRobotInfo(cmd : string) : Observable<any>{
+    return this.http.get(this.baseApiUrl+`/rinfo`);
+  }
 }

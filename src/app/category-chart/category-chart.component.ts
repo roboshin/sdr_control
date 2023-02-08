@@ -1,8 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, NgZone, Input, OnDestroy, Inject} from '@angular/core';
 import {
   CategoryChartType,
   IgxDataChartMouseButtonEventArgs,
-  IgxPlotAreaMouseButtonEventArgs, IgxScatterPolygonSeriesComponent, IgxScatterSeriesComponent
+  IgxPlotAreaMouseButtonEventArgs,
+  IgxRenderRequestedEventArgs,
+  IgxScatterPolygonSeriesComponent,
+  IgxScatterSeriesComponent
 } from 'igniteui-angular-charts';
 import {AfterViewInit, TemplateRef, ViewChild, ElementRef} from "@angular/core";
 import {IgxStyleShapeEventArgs} from "igniteui-angular-charts";
@@ -11,6 +14,7 @@ import {
   IDialogCancellableEventArgs,
   IDialogEventArgs,
   IgxDialogComponent,
+  IgxOverlayService,
   IgxSimpleComboComponent
 } from "igniteui-angular";
 import {LineInfo, Point2D} from "../LineInfo";
@@ -19,6 +23,8 @@ import {BasePointService} from "../BasePoint.Service";
 import {map} from "rxjs/operators";
 import {FileService} from "../file.service";
 import {NGXLogger} from "ngx-logger";
+import {logger} from "codelyzer/util/logger";
+import {keyframes} from "@angular/animations";
 
 class linfo implements LineInfo {
   Draw: boolean;
@@ -47,29 +53,13 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   @ViewChild('form') public form: IgxDialogComponent;
 
-  /**
-   * TODO:
-   * クリックポイント周辺の交点を見つける
-   * 交点からのXYを基準点のXYとする
-   * 基準点はポップアップウィンドウを表示し、ウィンドウ内でオフセットを設定できるようにする
-   * 基準点は、基準点としてグラフに表示する
-   *
-   * 単なるロボットの現在位置表示なのか、基準点設定なのかを選択するボタンを設ける
-   * ロボットの現在位置を常に表示する
-   * ロボットの形状（姿勢）も含めて表示できればベスト
-   */
-
-  /**
-   * TODO:
-   * Notificationを各ステップごとに表示
-   * ロボットの姿勢計算部が終了
-   * 計測完了など
-   */
 
   constructor(
     private basePS: BasePointService,
     private fileUploadService: FileService,
-    private logger: NGXLogger) {
+    private logger: NGXLogger,
+    private _zone: NgZone,
+    @Inject(IgxOverlayService) public overlayService: IgxOverlayService) {
   }
 
   public chartType = CategoryChartType.Auto;
@@ -97,11 +87,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   // 計測基準点名のリスト
   BasePointList = [
-    {name: "P1", msterPoint: [100.0, 101.0], measurePoint: [200.0, 201.0], id: 1, masterName: "MASTER_P1"},
-    {name: "P2", msterPoint: [101.0, 101.0], measurePoint: [200.0, 201.0], id: 2, masterName: "MASTER_P2"},
-    {name: "P3", msterPoint: [102.0, 101.0], measurePoint: [200.0, 201.0], id: 3, masterName: "MASTER_P3"},
+    {name: "P1", msterPoint: [100.0, 101.0], measurePoint: [200.0, 201.0], id: 1, masterName: "MASTER_P1", updated : false},
+    {name: "P2", msterPoint: [101.0, 101.0], measurePoint: [200.0, 201.0], id: 2, masterName: "MASTER_P2", updated : false},
+    {name: "P3", msterPoint: [102.0, 101.0], measurePoint: [200.0, 201.0], id: 3, masterName: "MASTER_P3", updated : false},
   ];
-
 
   // ベースポイントの候補値
   BasePointsCrossPointData =
@@ -109,6 +98,12 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       {points: [{x: 0, y: 0}], px: 100, py: 100},
       {points: [{x: 0, y: 0}], px: 200, py: 300},
       {points: [{x: 0, y: 0}], px: 400, py: 500},
+    ]
+
+  // ロボットの現在値を保持する
+  public NowRobotPos =
+    [
+      {px:100, py:210},
     ]
 
   public selectedPointName: string;
@@ -136,6 +131,12 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     this.tmpOffsetY = 0;
     this.tmpOffsetX = 0;
 
+    this.setupInterval();
+
+  }
+
+  public ngOnDestroy(){
+    this._interval = -1;
   }
 
 
@@ -250,9 +251,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     ev.args.shapeStroke = 'Black';
 
     const itemRecord = ev.args.item as any;
-    if (itemRecord.class === 'First') {
-      ev.args.shapeStroke = 'DodgerBlue';
-    }
+
+    console.log(itemRecord);
+
+
     if (itemRecord.class === 'Business') {
       ev.args.shapeStroke = 'LimeGreen';
     }
@@ -269,7 +271,9 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   }
 
   public onStyleLine(ev: { sender: any; args: IgxStyleShapeEventArgs }) {
+    console.log("onStyleLine");
     console.log(ev.args.item);
+
   }
 
   onErrorInput() {
@@ -286,14 +290,11 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     })
   }
 
-
   /**
    * 基準点の設定　formの設定ボタンを押したときの処理
    */
   formUpdate() {
     console.log(this.selectedPointName + `${this.tmpX}, ${this.tmpY}`);
-    // console.log(this.tmpX);
-    // console.log(this.tmpY);
 
     // 内部基準点データの更新
     this.BasePointList.find(d => d.name == this.selectedPointName).msterPoint[0] = this.tmpX;
@@ -301,24 +302,48 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
     // 基準点の情報をロボットへ送信する
     const masterName: string = this.BasePointList.find(d => d.name == this.selectedPointName).masterName;
+    this.BasePointList.find(d=>d.name == this.selectedPointName).updated = true;
+
+    {
+      // for debug
+      this.BasePointList.forEach((value, index, array)=>{
+        this.logger.debug(`updated flag ${index} : ${value.updated}`)
+      })
+    }
 
     const obs = {
       next: (x: any) => {
         // 設定しましたDialogを表示する
+
+        this.dialogTitle = `基準点設定`;
+        this.dialogMsg = `基準点${masterName}を設定しました。`;
+        this.alertDialg.open();
       },
       error: (err: Error) => {
         console.log("err : " + err);
-        console.log(err.message)
+        console.log(err.message);
+        this.form.close();
+
+        this.dialogTitle = "基準点設定エラー";
+        this.dialogMsg = `基準点${masterName}設定時にエラーが発生しました。`;
+        this.alertDialg.open();
       },
       complete: () => {
         // フォームを閉じる
         console.log("comp")
         this.form.close();
+
+        let flags =this.BasePointList.map(d=>d.updated);
+
       }
     };
 
     // ロボットへマスター設定値を送信
     this.basePS.setMasterPoint(masterName, this.tmpX + this.tmpOffsetX, this.tmpY + this.tmpOffsetY).subscribe(obs);
+
+    // テスト
+    console.log("test");
+    this.BasePointsCrossPointData[0].px = 1000;
   }
 
   onOpening($event: IDialogCancellableEventArgs) {
@@ -334,19 +359,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     var selItem = this.simpleCombo.value;
     var it = this.BasePointList.find(d => d.name == selItem);
 
-    // var masterName = it.masterName; // 送信用マスター値
-    //
-    // var subObj = this.basePS.getMasterPoint(masterName).pipe(map((v,i)=>{
-    //   this.tmpX = v['body']['X'];
-    //   this.tmpY = v['body']['Y'];
-    //   console.log(v);
-    //   console.log(this.tmpX);
-    // }));
-    //
-    // subObj.subscribe(x=>{});
 
-    // this.tmpX = it.msterPoint[0];
-    // this.tmpY = it.msterPoint[1];
   }
 
   /**
@@ -360,18 +373,18 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
     var masterName = it.masterName; // 送信用マスター値
 
-    var subObj = this.basePS.getMasterPoint(masterName).pipe(map((v, i) => {
-      this.tmpX = v['body']['X'];
-      this.tmpY = v['body']['Y'];
-      console.log(v);
-      console.log(this.tmpX);
-    }));
-
-    subObj.subscribe(x => {
-    });
+    // // マスター値をファイルから読み出す
+    // var subObj = this.basePS.getMasterPoint(masterName).pipe(map((v, i) => {
+    //   this.tmpX = v['body']['X'];
+    //   this.tmpY = v['body']['Y'];
+    //   console.log(v);
+    //   console.log(this.tmpX);
+    // }));
+    //
+    // subObj.subscribe(x => {
+    // });
   }
 
-  // 交点をクリック
 
   seriesMouseLeftBtnDown($event: { sender: any; args: IgxDataChartMouseButtonEventArgs }) {
     let item = $event.args.item;
@@ -391,4 +404,90 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     console.log("plorAreaMouseLeftBtnDown")
     console.log($event.args);
   }
+
+  /**
+   * データの再描画
+   * @param $event
+   */
+  onRenderRequest($event:{sender: any; args: IgxRenderRequestedEventArgs}) {
+    console.log("Render");
+    //this.BasePointsCrossPointData[0].px = 1000;
+
+    //this.NowRobotPos[0].px += 10;
+    // this.scatterSeriesRobotPos.dataSource = this.scatterSeriesRobotPos;
+
+  }
+
+  onRenderNowPointRequest($event: { sender: any; args: IgxRenderRequestedEventArgs }) {
+
+    //this.scatterSeriesRobotPos.dataSource = this.scatterSeriesRobotPos;
+    // this.scatterSeriesRobotPos.dataSource = this.NowRobotPos;
+/*    this.scatterSeriesRobotPos.renderSeries(true);*/
+/*    this.scatterSeriesRobotPos.styleUpdated();*/
+
+  }
+
+  private _interval: number = -1;
+  private _refreshInterval: number = 10;
+  private shouldTick: boolean = true;
+  // private _refreshInterval: number = 10;
+
+  /**
+   *
+   * @private
+   */
+  private setupInterval(): void {
+    if (this._interval >= 0) {
+      this._zone.runOutsideAngular(() => {
+        window.clearInterval(this._interval);
+      });
+      this._interval = -1;
+    }
+
+    this._zone.runOutsideAngular(() => {
+      this._interval = window.setInterval(() => this.tick(),
+        this._refreshInterval);
+    });
+  }
+
+  /**
+   *
+   * @private
+   */
+  private tick(): void {
+
+    if (this.shouldTick) {
+      //console.log("tick")
+      const newVal = {px:100+200, py:210};
+      this.NowRobotPos.push(newVal)
+
+      //console.log(this.NowRobotPos.length);
+      this.NowRobotPos.pop()
+
+      this.NowRobotPos[0].px += 10; // 現在地の更新
+      this.scatterSeriesRobotPos.dataSource = this.NowRobotPos;
+
+
+/*
+      this.currValue += Math.random() * 4.0 - 2.0;
+      this.currIndex++;
+      const newVal = { Label: this.currIndex.toString(), Value: this.currValue };
+
+      const oldVal = this.data[0];
+      this.data.push(newVal);
+      this.chart.notifyInsertItem(this.data, this.data.length - 1, newVal);
+      this.data.shift();
+      this.chart.notifyRemoveItem(this.data, 0, oldVal);
+
+      this._frames++;
+      const currTime = new Date();
+      const elapsed = (currTime.getTime() - this._time.getTime());
+      if (elapsed > 5000) {
+        const fps = this._frames / (elapsed / 1000.0);
+        this._time = currTime;
+        this._frames = 0;
+      }*/
+    }
+  }
+
 }
