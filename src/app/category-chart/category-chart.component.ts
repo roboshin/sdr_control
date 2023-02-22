@@ -18,7 +18,6 @@ import {
   IgxSimpleComboComponent
 } from "igniteui-angular";
 import {LineInfo, Point2D} from "../LineInfo";
-import {any} from "codelyzer/util/function";
 import {BasePointService} from "../BasePoint.Service";
 import {map} from "rxjs/operators";
 import {FileService} from "../file.service";
