@@ -41,6 +41,17 @@
     <h3>Loading ...</h3>
   </div>
 
+  <!-- 転送完了 -->
+  <div class="container" *ngIf="success_loading">
+    <h3>Load Success!</h3>
+  </div>
+
+  <!-- 転送エラー -->
+  <div class="container" *ngIf="error_loading">
+    <h3>Load Success!</h3>
+  </div>
+
+  <!-- 表示レイヤーのCombobox　-->
   <igx-select #selectViewLayer>
     <label igxLabel>表示レイヤー名</label>
     <igx-select-item *ngFor="let item of itemViewLayer" [value]="item" (click)="onLoadViewLayer()">
@@ -48,6 +59,7 @@
     </igx-select-item>
   </igx-select>
 
+  <!-- 描画レイヤーのCombobox -->
   <igx-select #selectDrawLayer>
     <label igxLabel>描画レイヤー名</label>
     <igx-select-item *ngFor="let item of itemDrawLayer" [value]="item" (click)="onLoadViewLayer()">

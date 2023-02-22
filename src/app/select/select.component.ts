@@ -44,7 +44,9 @@ export class SelectComponent implements OnInit, AfterViewInit {
   dialog_msg: string = "";  // ポップアップメッセージ
 
   shortLink: string = "";
-  loading: boolean = false;
+  loading: boolean = false;   // DXFデータロード中の表示用フラグ
+  success_loading: boolean = false; // DXFデータロード完了中の表示用
+  error_loading:boolean = false;
   file: File = null;
 
   private layerNames: string[];  // レイヤー名称のリスト

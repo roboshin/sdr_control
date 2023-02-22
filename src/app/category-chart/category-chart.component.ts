@@ -1,6 +1,7 @@
 import {Component, OnInit, NgZone, Input, OnDestroy, Inject} from '@angular/core';
 import {
   CategoryChartType,
+  DataChartMouseButtonEventArgs,
   IgxDataChartMouseButtonEventArgs,
   IgxPlotAreaMouseButtonEventArgs,
   IgxRenderRequestedEventArgs,
@@ -77,19 +78,15 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   @ViewChild('airplaneSeatSeries', {static: true}) public airplaneSeatSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('seatTooltip', {static: true}) public seatTooltip: TemplateRef<object>;
   @ViewChild('combo', {read: IgxSimpleComboComponent, static: true}) public simpleCombo: IgxSimpleComboComponent;
-
   @ViewChild('scatterSeriesCross', {static: true}) public scatterSeriesCross: IgxScatterSeriesComponent;
   @ViewChild('scatterSeriesRobotPos', {static: true}) public scatterSeriesRobotPos: IgxScatterSeriesComponent;
-
-  @ViewChild('drawAreaSeries', {static: true}) public drawAreaSeries;
-  IgxScatterPolygonSeriesComponent
-
+  @ViewChild('drawAreaSeries', {static: true}) public drawAreaSeries : IgxScatterPolygonSeriesComponent;
 
   // 計測基準点名のリスト
   BasePointList = [
-    {name: "P1", msterPoint: [100.0, 101.0], measurePoint: [200.0, 201.0], id: 1, masterName: "MASTER_P1", updated : false},
-    {name: "P2", msterPoint: [101.0, 101.0], measurePoint: [200.0, 201.0], id: 2, masterName: "MASTER_P2", updated : false},
-    {name: "P3", msterPoint: [102.0, 101.0], measurePoint: [200.0, 201.0], id: 3, masterName: "MASTER_P3", updated : false},
+    {name: "P1", masterPoint: [100.0, 101.0], measurePoint: [200.0, 201.0], id: 1, masterName: "MASTER_P1", updated : false},
+    {name: "P2", masterPoint: [101.0, 101.0], measurePoint: [200.0, 201.0], id: 2, masterName: "MASTER_P2", updated : false},
+    {name: "P3", masterPoint: [102.0, 101.0], measurePoint: [200.0, 201.0], id: 3, masterName: "MASTER_P3", updated : false},
   ];
 
   // ベースポイントの候補値
@@ -285,7 +282,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     this.BasePointList.map(d => {
       if (d.name == sp) {
         // console.log(d);
-        return d.msterPoint[0];
+        return d.masterPoint[0];
       } else return typeof d !== 'undefined'
     })
   }
@@ -297,8 +294,8 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     console.log(this.selectedPointName + `${this.tmpX}, ${this.tmpY}`);
 
     // 内部基準点データの更新
-    this.BasePointList.find(d => d.name == this.selectedPointName).msterPoint[0] = this.tmpX;
-    this.BasePointList.find(d => d.name == this.selectedPointName).msterPoint[1] = this.tmpY;
+    this.BasePointList.find(d => d.name == this.selectedPointName).masterPoint[0] = this.tmpX;
+    this.BasePointList.find(d => d.name == this.selectedPointName).masterPoint[1] = this.tmpY;
 
     // 基準点の情報をロボットへ送信する
     const masterName: string = this.BasePointList.find(d => d.name == this.selectedPointName).masterName;
