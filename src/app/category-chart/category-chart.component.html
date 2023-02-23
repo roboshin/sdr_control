@@ -41,6 +41,7 @@
                     (seriesMouseLeftButtonDown)="seriesMouseLeftBtnDown($event)"
                     (plotAreaMouseLeftButtonDown)="plorAreaMouseLeftBtnDown($event)"
                     computedPlotAreaMarginMode="Series"
+                    (seriesMouseEnter)="onsSriesMouseEnter($event)"
     >
       <igx-numeric-x-axis #xAxis name="xAxis" minimumValue="-10000" maximumValue="10000"
                           interval="500"></igx-numeric-x-axis>

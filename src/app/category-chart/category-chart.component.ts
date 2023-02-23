@@ -1,7 +1,7 @@
 import {Component, OnInit, NgZone, Input, OnDestroy, Inject} from '@angular/core';
 import {
   CategoryChartType,
-  DataChartMouseButtonEventArgs,
+  DataChartMouseButtonEventArgs, IgxChartMouseEventArgs,
   IgxDataChartMouseButtonEventArgs,
   IgxPlotAreaMouseButtonEventArgs,
   IgxRenderRequestedEventArgs,
@@ -486,4 +486,16 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     }
   }
 
+  onsSriesMouseEnter($event: { sender: any; args: IgxChartMouseEventArgs }) {
+
+    var item = $event.args.getPosition(null);
+    var vscale = $event.args.chart.getActualWindowScaleVertical();
+    var hscale = $event.args.chart.getActualWindowScaleHorizontal();
+    var viewport = $event.args.chart.effectiveViewport;
+    var pp = $event.args.series.fromWorldPosition(item);
+
+    this.logger.debug(item);
+    this.logger.debug(`${vscale} ${hscale} ${pp.x} ${pp.y}` );
+    this.logger.debug(`${viewport.top} ${viewport.left} ${viewport.height} ${viewport.width}`);
+  }
 }
