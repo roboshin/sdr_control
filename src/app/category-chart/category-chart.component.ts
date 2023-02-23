@@ -255,14 +255,13 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     if (itemRecord.class === 'Business') {
       ev.args.shapeStroke = 'LimeGreen';
     }
-    if (itemRecord.class === 'Premium') {
+    else if (itemRecord.class === 'Premium') {
       ev.args.shapeStroke = 'Orange';
     }
-    if (itemRecord.class === 'Economy') {
+    else if (itemRecord.class === 'Economy') {
       ev.args.shapeStroke = 'Red';
     }
-
-    if (itemRecord.status === 'Sold') {
+    else if (itemRecord.status === 'Sold') {
       ev.args.shapeFill = 'Gray';
     }
   }
