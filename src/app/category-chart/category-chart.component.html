@@ -61,6 +61,13 @@
                                    (styleShape)="onStylingShape($event)">
       </igx-scatter-polyline-series>
 
+      <!-- 描画範囲設定 -->
+      <igx-scatter-polyline-series name="drawAreaPolygon" #draAreaPolygon
+                                   [xAxis]="xAxis"
+                                   [yAxis]="yAxis" title="Draw Area Polygon"
+                                   shapeMemberPath="points" thickness="1"  brush="LightGray" outline="Black">
+      </igx-scatter-polyline-series>
+
 
       <!-- 交点の表示用 -->
       <igx-scatter-series

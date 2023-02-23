@@ -96,6 +96,12 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       {points: [{x: 0, y: 0}], px: 400, py: 500},
     ]
 
+  // 描画範囲設定用
+  DrawPolygonPointData =
+    [
+      {points: [{x: 1000, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1000,y:1000}]},
+    ]
+
   // ロボットの現在値を保持する
   public NowRobotPos =
     [
@@ -129,6 +135,11 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
     this.setupInterval();
 
+    // let polygonData = this.DrawPolygonPointData.map(d=>{return {points : [d.points]}})
+    // this.onLoadDrawAreaShap(polygonData);
+    this.drawAreaSeries.dataSource = this.DrawPolygonPointData;
+
+    console.log(this.DrawPolygonPointData);
   }
 
   public ngOnDestroy(){
@@ -210,6 +221,8 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     getCross.subscribe(getCrossCallbacks);
 
 
+
+
   }
 
   /**
@@ -225,6 +238,11 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     this.airplaneShapeSeries.tooltipTemplate = this.seatTooltip;
   }
 
+  public onLoadDrawAreaShap(jsonData : any[]){
+    this.drawAreaSeries.dataSource = jsonData;
+    this.drawAreaSeries.showDefaultTooltip = true;
+  }
+
   public onLoadedJsonSeats(jsonData: any[]) {
     // console.log('airplane-seats.json ' + jsonData.length);
     this.airplaneSeatSeries.dataSource = jsonData;
@@ -237,6 +255,11 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     console.log(jsonData);
 
     this.scatterSeriesCross.dataSource = jsonData;
+  }
+
+  public onLoadedAreaShap(jsonData : any[]){
+    this.drawAreaSeries.dataSource = jsonData;
+    this.drawAreaSeries.showDefaultTooltip = true;
   }
 
   public onStylingShape(ev: { sender: any, args: IgxStyleShapeEventArgs }) {
