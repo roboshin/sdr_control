@@ -2,7 +2,7 @@ import {Component, OnInit, NgZone, Input, OnDestroy, Inject} from '@angular/core
 import {
   CategoryChartType,
   DataChartMouseButtonEventArgs, IgxChartMouseEventArgs,
-  IgxDataChartMouseButtonEventArgs,
+  IgxDataChartMouseButtonEventArgs, IgxNumericYAxisComponent,
   IgxPlotAreaMouseButtonEventArgs,
   IgxRenderRequestedEventArgs,
   IgxScatterPolygonSeriesComponent,
@@ -80,6 +80,8 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   @ViewChild('scatterSeriesCross', {static: true}) public scatterSeriesCross: IgxScatterSeriesComponent;
   @ViewChild('scatterSeriesRobotPos', {static: true}) public scatterSeriesRobotPos: IgxScatterSeriesComponent;
   @ViewChild('drawAreaSeries', {static: true}) public drawAreaSeries : IgxScatterPolygonSeriesComponent;
+
+  @ViewChild('xAxis', {static : true}) public xAxis : IgxNumericYAxisComponent;
 
   // 計測基準点名のリスト
   BasePointList = [
@@ -491,10 +493,14 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     var vscale = $event.args.chart.getActualWindowScaleVertical();
     var hscale = $event.args.chart.getActualWindowScaleHorizontal();
     var viewport = $event.args.chart.effectiveViewport;
-    var pp = $event.args.series.fromWorldPosition(item);
+    var pp = $event.args.series.toWorldPosition(item);
+    var ppp = $event.args.series.fromWorldPosition(pp);
+
+    var unscaleX = this.xAxis.unscaleValue(item.x);
+    this.logger.debug(unscaleX);
 
     this.logger.debug(item);
-    this.logger.debug(`${vscale} ${hscale} ${pp.x} ${pp.y}` );
+    this.logger.debug(`${vscale} ${hscale} ${pp.x} ${pp.y} ${ppp.x} ${ppp.y}` );
     this.logger.debug(`${viewport.top} ${viewport.left} ${viewport.height} ${viewport.width}`);
   }
 }
