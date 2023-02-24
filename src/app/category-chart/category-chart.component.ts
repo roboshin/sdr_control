@@ -79,7 +79,8 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   @ViewChild('combo', {read: IgxSimpleComboComponent, static: true}) public simpleCombo: IgxSimpleComboComponent;
   @ViewChild('scatterSeriesCross', {static: true}) public scatterSeriesCross: IgxScatterSeriesComponent;
   @ViewChild('scatterSeriesRobotPos', {static: true}) public scatterSeriesRobotPos: IgxScatterSeriesComponent;
-  @ViewChild('drawAreaSeries', {static: true}) public drawAreaSeries : IgxScatterPolygonSeriesComponent;
+  @ViewChild('drawAreaPolygon', {static: true}) public drawAreaSeries : IgxScatterPolygonSeriesComponent;
+  @ViewChild('drawAreaPoint', {static: true}) public scatterDrawAreaPos: IgxScatterSeriesComponent; // 描画範囲ポリゴン表示
 
   @ViewChild('xAxis', {static : true}) public xAxis : IgxNumericYAxisComponent;
 
@@ -97,6 +98,16 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       {points: [{x: 0, y: 0}], px: 200, py: 300},
       {points: [{x: 0, y: 0}], px: 400, py: 500},
     ]
+
+  // 描画範囲設定用
+  DrawPolygonPointData =
+    [
+      {points: [{x: 1020, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1020,y:1000}]},
+    ]
+
+  DrawPointData = [
+    {x: 1020, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1020,y:1000}
+  ]
 
   // ロボットの現在値を保持する
   public NowRobotPos =
@@ -131,6 +142,15 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
     this.setupInterval();
 
+    // 描画エリアの表示
+    let polygonData = this.DrawPolygonPointData.map(d=>{return {points : [d.points]}})
+    this.onLoadDrawAreaShap(polygonData);
+
+    // let polygonPointData = this.DrawPolygonPointData.map(d=>d.points.slice());
+    // this.onLoadedAreaPoint(polygonPointData);
+
+    // console.log(polygonPointData);
+    console.log(polygonData);
   }
 
   public ngOnDestroy(){
@@ -212,6 +232,8 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     getCross.subscribe(getCrossCallbacks);
 
 
+
+
   }
 
   /**
@@ -227,6 +249,11 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     this.airplaneShapeSeries.tooltipTemplate = this.seatTooltip;
   }
 
+  public onLoadDrawAreaShap(jsonData : any[]){
+    this.drawAreaSeries.dataSource = jsonData;
+    this.drawAreaSeries.showDefaultTooltip = true;
+  }
+
   public onLoadedJsonSeats(jsonData: any[]) {
     // console.log('airplane-seats.json ' + jsonData.length);
     this.airplaneSeatSeries.dataSource = jsonData;
@@ -239,6 +266,24 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     console.log(jsonData);
 
     this.scatterSeriesCross.dataSource = jsonData;
+  }
+
+  /**
+   * 描画範囲ポリゴンを表示擦る
+   * @param jsonData
+   */
+  public onLoadedAreaShap(jsonData : any[]){
+    this.drawAreaSeries.dataSource = jsonData;
+    this.drawAreaSeries.showDefaultTooltip = true;
+  }
+
+  /**
+   * 描画エリアポリゴンを表示擦る
+   * @param jsonData
+   */
+  public onLoadedAreaPoint(jsonData : any[]){
+    this.scatterDrawAreaPos.dataSource = jsonData;
+    this.scatterDrawAreaPos.showDefaultTooltip = true;
   }
 
   public onStylingShape(ev: { sender: any, args: IgxStyleShapeEventArgs }) {
@@ -388,12 +433,19 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     console.log("seriesMouseLeftBtnDown")
     console.log(item);
 
-    const clickX = item.px;
-    const clickY = item.py;
+    // 交点表示の場合
+    if($event.args.series.name == "ScatterSeries1") {
+      const clickX = item.px;
+      const clickY = item.py;
 
-    this.tmpX = clickX;
-    this.tmpY = clickY;
-    this.form.open(); // formをオープンする
+      this.tmpX = clickX;
+      this.tmpY = clickY;
+      this.form.open(); // formをオープンする
+    }
+    else if($event.args.series.name == "ScatterSeries3"){
+      // 描画エリアポイントをクリック
+      // 移動先ポイントをクリックフォームを出す
+    }
   }
 
   plorAreaMouseLeftBtnDown($event: { sender: any; args: IgxPlotAreaMouseButtonEventArgs }) {
