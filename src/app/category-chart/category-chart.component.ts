@@ -49,10 +49,6 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   dialogTitle: string;  // dialog用タイトル
   dialogMsg : string    // dialog用メッセージ
-  @ViewChild('alert', {static : true}) public alertDialg: IgxDialogComponent;
-
-  @ViewChild('form') public form: IgxDialogComponent;
-
 
   constructor(
     private basePS: BasePointService,
@@ -73,6 +69,8 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     ),
   ]
 
+  @ViewChild('alert', {static : true}) public alertDialog: IgxDialogComponent;
+  @ViewChild('form') public form: IgxDialogComponent;
   @ViewChild('airplaneShapeSeries', {static: true}) public airplaneShapeSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('airplaneSeatSeries', {static: true}) public airplaneSeatSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('seatTooltip', {static: true}) public seatTooltip: TemplateRef<object>;
@@ -105,6 +103,8 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       {points: [{x: 1020, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1020,y:1000}]},
     ]
 
+  // 描画範囲ポイント設定用
+  //
   DrawPointData = [
     {x: 1020, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1020,y:1000}
   ]
@@ -188,14 +188,14 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
         // DXFが読み込まれていない
         this.dialogTitle = "Error in DXF";
         this.dialogMsg = "The DXF file is not loaded.";
-        this.alertDialg.open();
+        this.alertDialog.open();
 
       },
       complete: () => {
         // データ読み込み完了の表示
         this.dialogTitle ="DXF Data Read";
         this.dialogMsg = "DXF Data Read Complete.";
-        this.alertDialg.open();
+        this.alertDialog.open();
       }
     };
 
@@ -218,22 +218,18 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
         // DXFが読み込まれていない
         this.dialogTitle = "Error in Cross Points";
         this.dialogMsg = "The Cross Points Data is not loaded.";
-        this.alertDialg.open();
+        this.alertDialog.open();
       },
       complete: () => {
         // データ読み込み完了の表示
         this.dialogTitle ="Cross Points Data Read";
         this.dialogMsg = "Cross Points Data Read Complete.";
-        this.alertDialg.open();
+        this.alertDialog.open();
       }
     };
 
     getLines.subscribe(getLinesCallbacks);
     getCross.subscribe(getCrossCallbacks);
-
-
-
-
   }
 
   /**
@@ -359,7 +355,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
         this.dialogTitle = `基準点設定`;
         this.dialogMsg = `基準点${masterName}を設定しました。`;
-        this.alertDialg.open();
+        this.alertDialog.open();
       },
       error: (err: Error) => {
         console.log("err : " + err);
@@ -368,7 +364,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
         this.dialogTitle = "基準点設定エラー";
         this.dialogMsg = `基準点${masterName}設定時にエラーが発生しました。`;
-        this.alertDialg.open();
+        this.alertDialog.open();
       },
       complete: () => {
         // フォームを閉じる
