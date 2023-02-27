@@ -56,7 +56,7 @@ export class MeasureBaseComponent implements OnInit {
 
   @ViewChild('airplaneShapeSeries', {static: true}) public airplaneShapeSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('airplaneSeatSeries', {static: true}) public airplaneSeatSeries: IgxScatterPolylineSeriesComponent;
-  @ViewChild('seatTooltip', {static: true})  public seatTooltip: TemplateRef<object>;
+  // @ViewChild('seatTooltip', {static: true})  public seatTooltip: TemplateRef<object>;
   @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
   public simpleCombo: IgxSimpleComboComponent;
 
@@ -163,14 +163,14 @@ export class MeasureBaseComponent implements OnInit {
     console.log(this.airplaneShapeSeries.dataSource);
 
     this.airplaneShapeSeries.showDefaultTooltip = true;
-    this.airplaneShapeSeries.tooltipTemplate = this.seatTooltip;
+    // this.airplaneShapeSeries.tooltipTemplate = this.seatTooltip;
   }
 
   public onLoadedJsonSeats(jsonData: any[]) {
     // console.log('airplane-seats.json ' + jsonData.length);
     this.airplaneSeatSeries.dataSource = jsonData;
     this.airplaneSeatSeries.showDefaultTooltip = true;
-    this.airplaneSeatSeries.tooltipTemplate = this.seatTooltip;
+    // this.airplaneSeatSeries.tooltipTemplate = this.seatTooltip;
   }
 
   public onStylingShape(ev: { sender: any, args: IgxStyleShapeEventArgs }) {

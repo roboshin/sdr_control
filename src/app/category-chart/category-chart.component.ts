@@ -13,7 +13,7 @@ import {IgxStyleShapeEventArgs} from "igniteui-angular-charts";
 import {IgxScatterPolylineSeriesComponent} from "igniteui-angular-charts";
 import {
   IDialogCancellableEventArgs,
-  IDialogEventArgs,
+  IDialogEventArgs, IgxButtonModule,
   IgxDialogComponent,
   IgxOverlayService,
   IgxSimpleComboComponent
@@ -25,6 +25,7 @@ import {FileService} from "../file.service";
 import {NGXLogger} from "ngx-logger";
 import {logger} from "codelyzer/util/logger";
 import {keyframes} from "@angular/animations";
+import { ButtonGroupAlignment } from 'igniteui-angular';
 
 class linfo implements LineInfo {
   Draw: boolean;
@@ -81,6 +82,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   @ViewChild('drawAreaPoint', {static: true}) public scatterDrawAreaPos: IgxScatterSeriesComponent; // 描画範囲ポリゴン表示
 
   @ViewChild('xAxis', {static : true}) public xAxis : IgxNumericYAxisComponent;
+  // @ViewChild('buttonA', {static: true}) public bA : IgxButtonModule;
 
   // 計測基準点名のリスト
   BasePointList = [
@@ -120,11 +122,15 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   public selectedId: Number;
   public itemBasePointName: string;
 
+  public alignment = ButtonGroupAlignment.horizontal;
+
   tmpX: number; // formのX入力値
   tmpY: number; // formのY入植地
   tmpOffsetX: number;  // formのOffsetX入力値
   tmpOffsetY: number;  // formのOffsetY入力値
 
+  basePointerSelected: any;
+  drawAreaSelected: any;
 
   /**
    * 起動時にサービスから描画データを取得する
@@ -151,6 +157,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
     // console.log(polygonPointData);
     console.log(polygonData);
+
   }
 
   public ngOnDestroy(){
@@ -161,9 +168,9 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   /**
    * 起動時の処理
    */
-  public ngOnInit() {
+  public async ngOnInit() {
 
-    this.selectedPointName = this.BasePointList[0].name;
+    this.selectedPointName = this.BasePointList[0].name;  // 初期ComboboxをP1とする
     this.selectedId = this.BasePointList[0].id;
     this.itemBasePointName = this.BasePointList[0].name;
 
@@ -193,7 +200,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       },
       complete: () => {
         // データ読み込み完了の表示
-        this.dialogTitle ="DXF Data Read";
+        this.dialogTitle = "DXF Data Read";
         this.dialogMsg = "DXF Data Read Complete.";
         this.alertDialog.open();
       }
@@ -222,14 +229,17 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       },
       complete: () => {
         // データ読み込み完了の表示
-        this.dialogTitle ="Cross Points Data Read";
+        this.dialogTitle = "Cross Points Data Read";
         this.dialogMsg = "Cross Points Data Read Complete.";
         this.alertDialog.open();
       }
     };
 
-    getLines.subscribe(getLinesCallbacks);
-    getCross.subscribe(getCrossCallbacks);
+    await getLines.subscribe(getLinesCallbacks);
+    await getCross.subscribe(getCrossCallbacks);
+
+    this.basePointerSelected = true;  // 初期状態で基準点設定ボタンが押されている状態
+    this.drawAreaSelected = false;
   }
 
   /**
@@ -476,6 +486,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   private _refreshInterval: number = 10;
   private shouldTick: boolean = true;
   // private _refreshInterval: number = 10;
+
 
   /**
    *

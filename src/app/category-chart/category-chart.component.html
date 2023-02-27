@@ -22,7 +22,7 @@
 
 <div class="container vertical">
   <div class="options vertical">
-    <label id="legendTitle">Airplane Seating Chart (Polylines)</label>
+<!--    <label id="legendTitle">Airplane Seating Chart (Polylines)</label>-->
   </div>
 
   <!--  <div class="custom-legend">-->
@@ -35,6 +35,10 @@
   <!--  </div>-->
 
   <div class="container">
+    <igx-buttongroup [alignment]="alignment">
+      <button igxButton #basePointSet [selected]="basePointerSelected">基準点設定</button>
+      <button igxButton #drawAreaSet [selected]="drawAreaSelected">描画範囲設定</button>
+    </igx-buttongroup>
     <igx-data-chart isHorizontalZoomEnabled="true" isVerticalZoomEnabled="true"
                     width="100%"
                     height="100%"
@@ -45,10 +49,10 @@
                     computedPlotAreaMarginMode="Series"
                     (seriesMouseEnter)="onsSriesMouseEnter($event)"
     >
-      <igx-numeric-x-axis #xAxis name="xAxis" minimumValue="-10000" maximumValue="10000"
-                          interval="1000"></igx-numeric-x-axis>
-      <igx-numeric-y-axis #yAxis name="yAxis" minimumValue="-10000" maximumValue="10000"
-                          interval="1000"></igx-numeric-y-axis>
+      <igx-numeric-x-axis #xAxis name="xAxis"
+                          ></igx-numeric-x-axis>
+      <igx-numeric-y-axis #yAxis name="yAxis"
+                          ></igx-numeric-y-axis>
 
       <igx-scatter-polyline-series name="airplaneShapeSeries" #airplaneShapeSeries
                                    [xAxis]="xAxis"
