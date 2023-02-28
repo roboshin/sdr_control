@@ -235,8 +235,8 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       }
     };
 
-    await getLines.subscribe(getLinesCallbacks);
-    await getCross.subscribe(getCrossCallbacks);
+    await getLines.subscribe(getLinesCallbacks);  // 描画線の取得
+    await getCross.subscribe(getCrossCallbacks);  // 交点情報の取得
 
     this.basePointerSelected = true;  // 初期状態で基準点設定ボタンが押されている状態
     this.drawAreaSelected = false;
