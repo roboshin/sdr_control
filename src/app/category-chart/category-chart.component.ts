@@ -111,7 +111,11 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   // 描画範囲設定用
   DrawPolygonPointData =
     [
-      {points: [{x: 1020, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1020,y:1000}]},
+      {points: [
+        [{x: 1020, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1020,y:1000}],
+          [{x:5000,y:5000},{x:6000,y:6000}]
+        ]
+      },
     ]
 
   // 描画範囲ポイント設定用
@@ -159,7 +163,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
     // 描画エリアの表示
     let polygonData = this.DrawPolygonPointData.map(d=>{return {points : [d.points]}})
-    this.onLoadDrawAreaShap(polygonData);
+    console.log("polygonData");
+    console.log(polygonData);
+    console.log(this.DrawPolygonPointData);
+    this.onLoadDrawAreaShap(this.DrawPolygonPointData);
 
     // let polygonPointData = this.DrawPolygonPointData.map(d=>d.points.slice());
     // this.onLoadedAreaPoint(polygonPointData);
@@ -502,7 +509,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
       if(!('points' in this.DrawPolygonPointData)){
         this.logger.debug("points is not exist");
-        this.DrawPolygonPointData.push({points:[{x:unscaleX, y:unscaleY}]});
+        // this.DrawPolygonPointData.push({points:[{x:unscaleX, y:unscaleY}]});
         console.log(`${this.DrawPolygonPointData[0][0]}`);
       }
       else {
