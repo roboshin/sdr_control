@@ -7,17 +7,18 @@ import { UncaughtErrorComponent } from './error-routing/error/uncaught-error.com
 import { ErrorRoutingModule } from './error-routing/error-routing.module';
 import { CategoryChartComponent } from './category-chart/category-chart.component';
 import { SelectComponent } from './select/select.component';
-import { RadialGaugeComponent } from './radial-gauge/radial-gauge.component';
 import { DropDownComponent } from './drop-down/drop-down.component';
 import {ManualMovesdrComponent} from "./manual-movesdr/manual-movesdr.component";
 import {MeasureBaseComponent} from "./measure-base/measure-base.component";
 import {KuinavyControlComponent} from "./kuinavy-control/kuinavy-control.component";
+import {RobotInfoComponent} from "./robot-info/robot-info.component";
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent, data: { text: 'ホーム' } },
   { path: 'error', component: UncaughtErrorComponent },
-  {path: 'kui-navy', component: KuinavyControlComponent, data:{text: '杭ナビ設定'}},
+  { path: 'kui-navy', component: KuinavyControlComponent, data:{text: '杭ナビ設定'}},
+  { path: 'robot-info', component : RobotInfoComponent, data:{text: 'ロボット情報'}},
   { path: 'select', component: SelectComponent, data: { text: 'DXF設定' } },
   { path: 'category-chart', component: CategoryChartComponent, data: { text: '基準点設定' } },
   { path: 'measure-base', component: MeasureBaseComponent, data: { text: '基準点計測' } },

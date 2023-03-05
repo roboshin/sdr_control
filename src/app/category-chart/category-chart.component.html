@@ -1,25 +1,3 @@
-<!--<p>basic category chart with chart type selector.</p>-->
-<!--<div>-->
-<!--  <span>Chart Type:</span>-->
-<!--  <select [(ngModel)]="chartType">-->
-<!--    <option>Auto</option>-->
-<!--    <option>Area</option>-->
-<!--    <option>Line</option>-->
-<!--    <option>Column</option>-->
-<!--    <option>Point</option>-->
-<!--    <option>Spline</option>-->
-<!--    <option>SplineArea</option>-->
-<!--    <option>StepArea</option>-->
-<!--    <option>StepLine</option>-->
-<!--    <option>Waterfall</option>-->
-<!--  </select>-->
-<!--</div>-->
-<!--<igx-category-chart height="550px" width="100%"-->
-<!--    chartTitle="Population per Country (millions)"-->
-<!--    [chartType]="chartType"-->
-<!--    [dataSource]="data">-->
-<!--</igx-category-chart>-->
-
 <div class="container vertical">
   <div class="options vertical">
 <!--    <label id="legendTitle">Airplane Seating Chart (Polylines)</label>-->
@@ -35,10 +13,17 @@
   <!--  </div>-->
 
   <div class="container">
-    <igx-buttongroup [alignment]="alignment">
-      <button igxButton #basePointSet [selected]="basePointerSelected">基準点設定</button>
-      <button igxButton #drawAreaSet [selected]="drawAreaSelected">描画範囲設定</button>
-    </igx-buttongroup>
+<!--    <igx-buttongroup [alignment]="alignment">-->
+<!--      <button igxButton #basePointSet [selected]="basePointerSelected" >基準点設定</button>-->
+<!--      <button igxButton #drawAreaSet [selected]="drawAreaSelected">描画範囲設定</button>-->
+<!--    </igx-buttongroup>-->
+
+    <igx-radio-group [alignment]="alignment">
+      <igx-radio [(ngModel)]="selected" value="basePointMode">基準点設定</igx-radio>
+      <igx-radio [(ngModel)]="selected" value="drawRangeMode">描画範囲設定></igx-radio>
+      <button igxButton="flat" igxRipple (buttonClick)="drawAreaClear($event)">描画範囲クリア</button>
+    </igx-radio-group>
+
     <igx-data-chart isHorizontalZoomEnabled="true" isVerticalZoomEnabled="true"
                     width="100%"
                     height="100%"
@@ -67,14 +52,6 @@
                                    (styleShape)="onStylingShape($event)">
       </igx-scatter-polyline-series>
 
-      <!-- 描画範囲設定 -->
-      <igx-scatter-polyline-series name="drawAreaPolygon" #drawAreaPolygon
-                                   [xAxis]="xAxis"
-                                   [yAxis]="yAxis" title="Draw Area Polygon"
-                                   shapeMemberPath="points" thickness="2"  brush="LightGray" outline="Black">
-      </igx-scatter-polyline-series>
-
-
       <!-- 交点の表示用 -->
       <igx-scatter-series
         [xAxis]="xAxis"
@@ -88,6 +65,18 @@
         name="ScatterSeries1"
         #scatterSeriesCross>
       </igx-scatter-series>
+
+      <!-- 交点ポイントのポイント表示用 -->
+      <igx-scatter-series
+        #scatterMasterPoint
+        [xAxis]="xAxis"
+        [yAxis]="yAxis"
+        xMemberPath="px"
+        yMemberPath="py"
+        [dataSource]="BaseMasterPointData"
+        titile="Master Point"
+        name="MasterPointSeries"
+        showDefaultTooltip="true"></igx-scatter-series>
 
       <!-- ロボットの現在位置表示用 -->
       <igx-scatter-series
@@ -105,6 +94,7 @@
         #scatterSeriesRobotPos>
       </igx-scatter-series>
 
+      <!-- 描画エリアポイント表示用 -->
       <igx-scatter-series
         [xAxis]="xAxis"
         [yAxis]="yAxis"
@@ -118,7 +108,13 @@
         name="ScatterSeries3" #drawAreaPoint>
       </igx-scatter-series>
 
-      <igx-scatter-area-series></igx-scatter-area-series>
+      <!-- 描画範囲設定 -->
+      <igx-scatter-polyline-series name="drawAreaPolygon" #drawAreaPolygon
+                                   [xAxis]="xAxis"
+                                   [yAxis]="yAxis" title="Draw Area Polygon"
+                                   shapeMemberPath="points" thickness="2"  brush="LightGray" outline="Black">
+      </igx-scatter-polyline-series>
+
     </igx-data-chart>
   </div>
 

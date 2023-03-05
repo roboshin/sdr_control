@@ -14,7 +14,8 @@ import {
   IgxSelectModule,
   IgxSimpleComboModule,
   IgxSliderModule,
-  IgxToggleModule
+  IgxToggleModule,
+  IgxSwitchModule,
 } from 'igniteui-angular';
 import {
     IgxCategoryChartModule, IgxDataChartCoreModule, IgxDataChartInteractivityModule,
@@ -45,6 +46,7 @@ import { LoggerModule, NgxLoggerLevel } from "ngx-logger";
 import { KuinavyControlComponent } from './kuinavy-control/kuinavy-control.component';
 import { RobotParamSettingComponent } from './robot-param-setting/robot-param-setting.component';
 import { RobotInfoViewComponent } from './robot-info-view/robot-info-view.component';
+import { RobotInfoComponent } from './robot-info/robot-info.component';
 
 // import {
 //     ReferencepointMeasureComponent
@@ -59,14 +61,13 @@ import { RobotInfoViewComponent } from './robot-info-view/robot-info-view.compon
     SelectComponent,
     RadialGaugeComponent,
     DropDownComponent,
-    // SvgViewComponent,
-    // ReferencepointMeasureComponent,
     ManualMovesdrComponent,
     MeasureBaseComponent,
     LoginDialogComponent,
     KuinavyControlComponent,
     RobotParamSettingComponent,
-    RobotInfoViewComponent
+    RobotInfoViewComponent,
+    RobotInfoComponent
   ],
   imports: [
     FormsModule,
@@ -100,6 +101,7 @@ import { RobotInfoViewComponent } from './robot-info-view/robot-info-view.compon
     IgxSliderModule,
     IgxDialogModule,
     IgxSimpleComboModule,
+    IgxSwitchModule,
 
     /**
      * for logger

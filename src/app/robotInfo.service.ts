@@ -3,35 +3,39 @@ import {
   HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpRequest, HttpResponse
 } from '@angular/common/http';
 import {Injectable, ViewChild} from '@angular/core';
-import {IgxSliderComponent, IgxSliderType} from "igniteui-angular";
+import { NGXLogger } from "ngx-logger";
+// import {logger} from "codelyzer/util/logger";
 
 
 @Injectable({
   providedIn: 'root'
 })
 
+// ロボットの情報を取得するサービス
 export class RobotInfoService{
 
-  baseApiUrl = "/app/info"
+  // ロボット情報取得用のサービスアドレス
+  baseApiUrl = "/app/robotInfo"
 
-  constructor(private http:HttpClient) {
+  constructor(private http:HttpClient,
+              private logger:NGXLogger) {
   }
 
-
-
-  getRobotInfo() : Observable<HttpEvent<any>>{
+  // ロボットの情報を取得する
+  getRobotInfo() : Observable<any>{
 
     let cmd = "all";
-    let getUrl = `${this.baseApiUrl}/${cmd}/`;
+    let getUrl = `${this.baseApiUrl}/info/${cmd}/`;
 
     console.log(getUrl);
+    this.logger.debug(`getRobotInfo service`, `getUrl : ${getUrl}`)
 
-    return this.http.get<any>(getUrl);
+    return this.http.get(getUrl);
   }
-
-  getInterval(){
-    return interval(1000);
-  }
+  //
+  // getInterval(){
+  //   return interval(1000);
+  // }
 
 
 

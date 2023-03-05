@@ -1,0 +1,50 @@
+<p>robot-info works!</p>
+<form>
+<!--  現在位置表示用-->
+  <igx-input-group>
+    <input igxInput name="nowX" type="text" [value]="nowPoint.x"/>
+    <label igxLabel for="nowX">Now X[mm]</label>
+  </igx-input-group>
+
+  <igx-input-group>
+    <input igxInput name="nowY" type="text" [value]="nowPoint.y"/>
+    <label igxLabel for="nowY">Now Y[mm]</label>
+  </igx-input-group>
+
+  <igx-input-group>
+    <input igxInput name="nowZ" type="text" [value]="nowPoint.z" />
+    <label igxLabel for="nowZ">Now Z[mm]</label>
+  </igx-input-group>
+</form>
+
+<form>
+  <igx-switch [checked]="drawing">
+    描画中
+  </igx-switch>
+</form>
+
+<form>
+<!--  エラー量表表示用-->
+  <igx-input-group>
+    <input igxInput name="errorX" type="text" [value]="errorMat.x" />
+    <label igxLabel for="errorX">error X[mm]</label>
+  </igx-input-group>
+
+  <igx-input-group>
+    <input igxInput name="errorY" type="text" [value]="errorMat.y" />
+    <label igxLabel for="errorY">error Y[mm]</label>
+  </igx-input-group>
+
+  <igx-input-group>
+    <input igxInput name="errorZ" type="text" [value]="errorMat.z" />
+    <label igxLabel for="errorZ">error Z[mm]</label>
+  </igx-input-group>
+</form>
+
+<form>
+  <!-- IMU角度の表示-->
+  <igx-input-group>
+    <input igxInput name="imtAngle" type="text" [value]="imuAngle" />
+    <label igxLabel for="imtAngle">Imu rot z[deg]</label>
+  </igx-input-group>
+</form>
