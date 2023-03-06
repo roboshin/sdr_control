@@ -3,6 +3,7 @@ import {
   HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpRequest, HttpResponse
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {DxfChartDatas} from "./draw-point-data";
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class BasePointService{
   baseApiUrlMeasure = "/app/measure";
   baseApiUrlResult ="/app/result";
   baseApiUrlCal = "/app/calc";
+  baseApiUrlSetDrawArea = "/app/drawArea";
   constructor(private http:HttpClient) {
   }
 
@@ -77,6 +79,16 @@ export class BasePointService{
 
     let getUrl = `${this.baseApiUrlResult}/${cmd}`
     return this.http.get<any>(getUrl,{observe:'response'});
+  }
+
+  /**
+   * サーバーに描画エリア関係のデータをセットする
+   * @param drawAreaData
+   */
+  setDrawAreaPoints(cmd : string,  drawAreaData : DxfChartDatas): Observable<HttpEvent<any>> {
+
+    let getUrl = `${this.baseApiUrlSetDrawArea}/${cmd}`;
+    return this.http.put<any>(getUrl, {});
   }
 
 

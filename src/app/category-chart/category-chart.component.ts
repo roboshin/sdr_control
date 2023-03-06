@@ -20,12 +20,13 @@ import {
 } from "igniteui-angular";
 import {LineInfo, Point2D} from "../LineInfo";
 import {BasePointService} from "../BasePoint.Service";
-import {map} from "rxjs/operators";
+import {last, map} from "rxjs/operators";
 import {FileService} from "../file.service";
 import {NGXLogger} from "ngx-logger";
 import {keyframes} from "@angular/animations";
 import { ButtonGroupAlignment } from 'igniteui-angular';
 import {RobotInfoService} from "../robotInfo.service";
+import {DxfChartDatas} from "../draw-point-data";
 
 class linfo implements LineInfo {
   Draw: boolean;
@@ -87,42 +88,45 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   // @ViewChild('buttonA', {static: true}) public bA : IgxButtonModule;
 
-  // 計測基準点名のリスト
-  BasePointList = [
-    {name: "P1", masterPoint: [100.0, 101.0], measurePoint: [200.0, 201.0], id: 1, masterName: "MASTER_P1", updated : false},
-    {name: "P2", masterPoint: [101.0, 101.0], measurePoint: [200.0, 201.0], id: 2, masterName: "MASTER_P2", updated : false},
-    {name: "P3", masterPoint: [102.0, 101.0], measurePoint: [200.0, 201.0], id: 3, masterName: "MASTER_P3", updated : false},
-  ];
-
-  // ベースポイントの候補値
-  BasePointsCrossPointData =
-    [
-      {points: [{x: 0, y: 0}], px: 100, py: 100},
-      {points: [{x: 0, y: 0}], px: 200, py: 300},
-      {points: [{x: 0, y: 0}], px: 400, py: 500},
-    ]
-
-  BaseMasterPointData = [
-    {name : "P1", points: [{x: 0, y: 0}], px: 100, py: 100},
-    {name : "P2",points: [{x: 0, y: 0}], px: 200, py: 200},
-    {name : "P3",points: [{x: 0, y: 0}], px: 300, py: 300},
-  ]
-
-  // 描画範囲設定用
-  DrawPolygonPointData =
-    [
-      {points: [
-        [{x: 1020, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1020,y:1000}],
-          [{x:5000,y:5000},{x:6000,y:6000}]
-        ]
-      },
-    ]
-
-  // 描画範囲ポイント設定用
+  // // 計測基準点名のリスト
+  // BasePointList = [
+  //   {name: "P1", masterPoint: [100.0, 101.0], measurePoint: [200.0, 201.0], id: 1, masterName: "MASTER_P1", updated : false},
+  //   {name: "P2", masterPoint: [101.0, 101.0], measurePoint: [200.0, 201.0], id: 2, masterName: "MASTER_P2", updated : false},
+  //   {name: "P3", masterPoint: [102.0, 101.0], measurePoint: [200.0, 201.0], id: 3, masterName: "MASTER_P3", updated : false},
+  // ];
   //
-  DrawPointData = [
-    {x: 1020, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1020,y:1000}
-  ]
+  // // ベースポイントの候補値
+  // BasePointsCrossPointData =
+  //   [
+  //     {points: [{x: 0, y: 0}], px: 100, py: 100},
+  //     {points: [{x: 0, y: 0}], px: 200, py: 300},
+  //     {points: [{x: 0, y: 0}], px: 400, py: 500},
+  //   ]
+  //
+  // BaseMasterPointData = [
+  //   {name : "P1", points: [{x: 0, y: 0}], px: 100, py: 100},
+  //   {name : "P2",points: [{x: 0, y: 0}], px: 200, py: 200},
+  //   {name : "P3",points: [{x: 0, y: 0}], px: 300, py: 300},
+  // ]
+  //
+  // // 描画範囲設定用
+  // DrawPolygonPointData =
+  //   [
+  //     {points: [
+  //       [{x: 1020, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1020,y:1000}],
+  //         [{x:5000,y:5000},{x:6000,y:6000}]
+  //       ]
+  //     },
+  //   ]
+  //
+  // // 描画範囲ポイント設定用
+  // //
+  // DrawPointData = [
+  //   {x: 1020, y: 1000},{x:2000, y:1000}, {x:2000,y:2000}, {x:1000, y:2000}, {x:1020,y:1000}
+  // ]
+
+  // グラフに関するデータ
+  chartDatas : DxfChartDatas = new DxfChartDatas();
 
   // ロボットの現在値を保持する
   public NowRobotPos =
@@ -162,17 +166,17 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     this.setupInterval();
 
     // 描画エリアの表示
-    let polygonData = this.DrawPolygonPointData.map(d=>{return {points : [d.points]}})
+    // let polygonData = this.chartDatas.DrawPolygonPointData.map(d=>{return {points : [d.points]}})
     console.log("polygonData");
-    console.log(polygonData);
-    console.log(this.DrawPolygonPointData);
-    this.onLoadDrawAreaShap(this.DrawPolygonPointData);
+    // console.log(polygonData);
+    console.log(this.chartDatas.DrawPolygonPointData);
+    this.onLoadDrawAreaShap(this.chartDatas.DrawPolygonPointData);
 
     // let polygonPointData = this.DrawPolygonPointData.map(d=>d.points.slice());
     // this.onLoadedAreaPoint(polygonPointData);
 
     // console.log(polygonPointData);
-    console.log(polygonData);
+    // console.log(polygonData);
 
   }
 
@@ -186,9 +190,9 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    */
   public async ngOnInit() {
 
-    this.selectedPointName = this.BasePointList[0].name;  // 初期ComboboxをP1とする
-    this.selectedId = this.BasePointList[0].id;
-    this.itemBasePointName = this.BasePointList[0].name;
+    this.selectedPointName = this.chartDatas.BasePointList[0].name;  // 初期ComboboxをP1とする
+    this.selectedId = this.chartDatas.BasePointList[0].id;
+    this.itemBasePointName = this.chartDatas.BasePointList[0].name;
 
     const getLines = this.fileUploadService.getLines();
     const getCross = this.fileUploadService.getCrossPoint();
@@ -227,12 +231,12 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       next: (x: any) => {
         let crossPoints = x['Item1'];
         // 受信データの整形
-        this.BasePointsCrossPointData = crossPoints.map(d => {
-          return {points: [{x: 0, y: 0}], px: d.X, py: d.Y}
+        this.chartDatas.BasePointsCrossPointData = crossPoints.map(d => {
+          return { px: d.X, py: d.Y}
         });
 
         this.logger.debug("受信データ");
-        this.logger.debug(this.BasePointsCrossPointData);
+        this.logger.debug(this.chartDatas.BasePointsCrossPointData);
       },
       error: (err: Error) => {
         this.logger.debug("Error in getLines" + `${Error.name}`);
@@ -346,7 +350,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   onGetValue(sp: string) {
     // console.log("sp : "+sp);
-    this.BasePointList.map(d => {
+    this.chartDatas.BasePointList.map(d => {
       if (d.name == sp) {
         // console.log(d);
         return d.masterPoint[0];
@@ -361,22 +365,22 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     console.log(this.selectedPointName + `${this.tmpX}, ${this.tmpY}`);
 
     // 内部基準点データの更新
-    this.BasePointList.find(d => d.name == this.selectedPointName).masterPoint[0] = this.tmpX;
-    this.BasePointList.find(d => d.name == this.selectedPointName).masterPoint[1] = this.tmpY;
+    this.chartDatas.BasePointList.find(d => d.name == this.selectedPointName).masterPoint[0] = this.tmpX;
+    this.chartDatas.BasePointList.find(d => d.name == this.selectedPointName).masterPoint[1] = this.tmpY;
 
     // グラフ表示用データを更新する
-    this.BaseMasterPointData.find(d=>d.name == this.selectedPointName).px = this.tmpX;
-    this.BaseMasterPointData.find(d=>d.name == this.selectedPointName).py = this.tmpY;
+    this.chartDatas.BaseMasterPointData.find(d=>d.name == this.selectedPointName).px = this.tmpX;
+    this.chartDatas.BaseMasterPointData.find(d=>d.name == this.selectedPointName).py = this.tmpY;
 
-    this.scatterMasterPoint.dataSource = this.BaseMasterPointData;
+    this.scatterMasterPoint.dataSource = this.chartDatas.BaseMasterPointData;
 
     // 基準点の情報をロボットへ送信する
-    const masterName: string = this.BasePointList.find(d => d.name == this.selectedPointName).masterName;
-    this.BasePointList.find(d=>d.name == this.selectedPointName).updated = true;
+    const masterName: string = this.chartDatas.BasePointList.find(d => d.name == this.selectedPointName).masterName;
+    this.chartDatas.BasePointList.find(d=>d.name == this.selectedPointName).updated = true;
 
     {
       // for debug
-      this.BasePointList.forEach((value, index, array)=>{
+      this.chartDatas.BasePointList.forEach((value, index, array)=>{
         this.logger.debug(`updated flag ${index} : ${value.updated}`)
       })
     }
@@ -405,7 +409,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
         console.log("comp")
         this.form.close();
 
-        let flags =this.BasePointList.map(d=>d.updated);
+        let flags =this.chartDatas.BasePointList.map(d=>d.updated);
 
       }
     };
@@ -429,7 +433,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   onOpen($event: IDialogEventArgs) {
     console.log("onOpen");
     var selItem = this.simpleCombo.value;
-    var it = this.BasePointList.find(d => d.name == selItem);
+    var it = this.chartDatas.BasePointList.find(d => d.name == selItem);
 
 
   }
@@ -441,7 +445,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   onComboChange($event: any) {
     console.log("change combo")
     var selItem = this.simpleCombo.value;
-    var it = this.BasePointList.find(d => d.name == selItem);
+    var it = this.chartDatas.BasePointList.find(d => d.name == selItem);
 
     var masterName = it.masterName; // 送信用マスター値
 
@@ -503,24 +507,37 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     else if(this.selected == "drawRangeMode")
     {
       // 描画範囲が選択された場合
-      this.DrawPointData.push({x: unscaleX, y: unscaleY});
-      console.log(`${this.DrawPointData}`);
-      this.scatterDrawAreaPos.dataSource = this.DrawPointData;
+      this.chartDatas.DrawPointData.push({x: unscaleX, y: unscaleY});
+      console.log(`${this.chartDatas.DrawPointData}`);
+      this.scatterDrawAreaPos.dataSource = this.chartDatas.DrawPointData;
 
-      if(!('points' in this.DrawPolygonPointData)){
+      if(this.chartDatas.DrawPolygonPointData.length == 0){
         this.logger.debug("points is not exist");
-        // this.DrawPolygonPointData.push({points:[{x:unscaleX, y:unscaleY}]});
-        console.log(`${this.DrawPolygonPointData[0][0]}`);
+        this.chartDatas.DrawPolygonPointData.push({points: [[]]});
+      }
+
+      // polylineの要素数を計算する
+      var numOfPoints = this.chartDatas.DrawPolygonPointData[0].points[0].length;
+      this.logger.debug(`numOfPoints : ${numOfPoints}`)
+
+      if(numOfPoints > 1){
+        // データの終点を一旦削除する
+        var lastData = this.chartDatas.DrawPolygonPointData[0].points[0].pop();
+        this.chartDatas.DrawPolygonPointData[0].points[0].push({x:unscaleX, y:unscaleY});
+        this.chartDatas.DrawPolygonPointData[0].points[0].push(lastData);
+        console.log(this.chartDatas.DrawPolygonPointData);
+      }
+      else if(numOfPoints == 0){
+        this.chartDatas.DrawPolygonPointData[0].points[0].push({x:unscaleX, y:unscaleY});
+        this.chartDatas.DrawPolygonPointData[0].points[0].push({x:unscaleX, y:unscaleY});
       }
       else {
-        this.logger.debug("points is exist");
-        this.DrawPolygonPointData[`points`].push({x: unscaleX, y: unscaleY});
+        this.chartDatas.DrawPolygonPointData[0].points[0].push({x: unscaleX, y: unscaleY});
       }
 
       // polylineを更新する
       // 描画エリアの表示
-      let polygonData = this.DrawPolygonPointData.map(d=>{return {points : [d.points]}})
-      this.onLoadDrawAreaShap(polygonData);
+      this.onLoadDrawAreaShap(this.chartDatas.DrawPolygonPointData);
 
     }
   }
@@ -607,34 +624,26 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   onsSriesMouseEnter($event: { sender: any; args: IgxChartMouseEventArgs }) {
 
-    // var item = $event.args.getPosition(null);
-    // var vscale = $event.args.chart.getActualWindowScaleVertical();
-    // var hscale = $event.args.chart.getActualWindowScaleHorizontal();
-    // var viewport = $event.args.chart.effectiveViewport;
-    // var pp = $event.args.series.toWorldPosition(item);
-    // var ppp = $event.args.series.fromWorldPosition(pp);
-    //
-    // var unscaleX = this.xAxis.unscaleValue(item.x);
-    // var unscaleY = this.yAxis.unscaleValue(item.y);
-    // this.logger.debug(`${unscaleX}, ${unscaleY}`);
-    //
-    // if(this.selected){
-    //   this.logger.debug(`selected : basePointSelected`);
-    //   this.tmpX = unscaleX;
-    //   this.tmpY = unscaleY;
-    //   this.form.open();
-    // }
-    //
-    // this.logger.debug(item);
-    // this.logger.debug(`${vscale} ${hscale} ${pp.x} ${pp.y} ${ppp.x} ${ppp.y}` );
-    // this.logger.debug(`${viewport.top} ${viewport.left} ${viewport.height} ${viewport.width}`);
   }
 
   // 描画範囲クリアボタンが押された時の処理
   drawAreaClear($event: any)
   {
-    this.DrawPointData = [];
-    console.log(`${this.DrawPolygonPointData}`)
-    this.onLoadDrawAreaShap(null);
+    this.chartDatas.DrawPointData = [];
+    this.chartDatas.DrawPolygonPointData = [];
+    // console.log(`${this.chartDatas.DrawPolygonPointData}`)
+
+    this.onLoadDrawAreaShap(this.chartDatas.DrawPolygonPointData);
+  }
+
+  /**
+   * 描画範囲設定
+   * @param $event
+   */
+  drawAreaSet($event: any) {
+    this.logger.log("drawAreaSet function");
+
+
+
   }
 }
