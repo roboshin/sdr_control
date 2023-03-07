@@ -47,6 +47,7 @@ import { KuinavyControlComponent } from './kuinavy-control/kuinavy-control.compo
 import { RobotParamSettingComponent } from './robot-param-setting/robot-param-setting.component';
 import { RobotInfoViewComponent } from './robot-info-view/robot-info-view.component';
 import { RobotInfoComponent } from './robot-info/robot-info.component';
+import { RobotSettingsComponent } from './robot-settings/robot-settings.component';
 
 // import {
 //     ReferencepointMeasureComponent
@@ -67,7 +68,8 @@ import { RobotInfoComponent } from './robot-info/robot-info.component';
     KuinavyControlComponent,
     RobotParamSettingComponent,
     RobotInfoViewComponent,
-    RobotInfoComponent
+    RobotInfoComponent,
+    RobotSettingsComponent
   ],
   imports: [
     FormsModule,

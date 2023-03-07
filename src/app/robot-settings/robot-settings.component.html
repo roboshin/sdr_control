@@ -1,0 +1,26 @@
+
+<form >
+  <!--  現在位置表示用-->
+    <igx-input-group>
+      <input igxInput name="errorX" type="text" [value]="xErrorGain"/>
+      <label igxLabel for="errorX">エラーゲインX</label>
+    </igx-input-group>
+
+    <igx-input-group>
+      <input igxInput name="errorY" type="text" [value]="yErrorGain"/>
+      <label igxLabel for="errorY">エラーゲインY</label>
+    </igx-input-group>
+
+    <igx-switch [checked]="drawing">
+      INK ON
+    </igx-switch>
+
+  <button igxButton="flat" igxRipple (buttonClick)="setRobotSettings($event)">設定</button>
+</form>
+
+<igx-dialog #alert
+            [title]="dialogTitle"
+            [message]="dialogMsg"
+            leftButtonLabel="OK"
+            (leftButtonSelect)="alert.close()">
+</igx-dialog>

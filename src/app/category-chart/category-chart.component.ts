@@ -24,8 +24,7 @@ import {FileService} from "../file.service";
 import {NGXLogger} from "ngx-logger";
 import { ButtonGroupAlignment } from 'igniteui-angular';
 import {RobotInfoService} from "../robotInfo.service";
-import {DxfChartDatas} from "../draw-point-data";
-import {logger} from "codelyzer/util/logger";
+import {BasePoint, DxfChartDatas,  } from "../draw-point-data";
 
 class linfo implements LineInfo {
   Draw: boolean;
@@ -142,24 +141,22 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    * 起動時の処理
    */
   public async ngOnInit() {
+    const bPinit = this.chartDatas.getBasePointFromNumber(0); // 0番目の基準点データを取得する
+    console.log(bPinit);
+    this.selectedPointName = bPinit.Name;  // 初期ComboboxをP1とする
+    this.selectedId = bPinit.ID;
+    this.itemBasePointName = bPinit.Name;
 
-    this.selectedPointName = this.chartDatas.BasePointList[0].name;  // 初期ComboboxをP1とする
-    this.selectedId = this.chartDatas.BasePointList[0].id;
-    this.itemBasePointName = this.chartDatas.BasePointList[0].name;
-
-    const getLines = this.fileUploadService.getLines();
-    const getCross = this.fileUploadService.getCrossPoint();
+    const getLines = this.fileUploadService.getLines(); // サーバからラインを取得する
+    const getCross = this.fileUploadService.getCrossPoint();  // サーバから交点情報を取得する
 
     // ライン情報を取得する
     const getLinesCallbacks = {
       next: (x: any) => {
         this.dummyData = x['Item1'];
         // 画面の更新
-        const viewData = this.dummyData.map(d => {
-          return {points: [d.Points]}
-        })
+        const viewData = this.dummyData.map(d => {return {points: [d.Points]}})
         this.onLoadedLineShape(viewData);
-
       },
       error: (err: Error) => {
         this.logger.debug("Error in getLines" + `${Error.name}`);
@@ -312,26 +309,38 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   formUpdate() {
     console.log(this.selectedPointName + `${this.tmpX}, ${this.tmpY}`);
 
-    // 内部基準点データの更新
-    this.chartDatas.BasePointList.find(d => d.name == this.selectedPointName).masterPoint[0] = this.tmpX;
-    this.chartDatas.BasePointList.find(d => d.name == this.selectedPointName).masterPoint[1] = this.tmpY;
+    // 選択されている基準点名称を取得する
+    var bP = this.chartDatas.getBasePointFromName(this.selectedPointName);
 
-    // グラフ表示用データを更新する
-    this.chartDatas.BaseMasterPointData.find(d=>d.name == this.selectedPointName).Point2D.X = this.tmpX;
-    this.chartDatas.BaseMasterPointData.find(d=>d.name == this.selectedPointName).Point2D.Y = this.tmpY;
+    // 基準点値の更新
+    bP.MasterPoint.X = this.tmpX;
+    bP.MasterPoint.Y = this.tmpY;
 
-    this.scatterMasterPoint.dataSource = this.chartDatas.BaseMasterPointData;
+    // // 内部基準点データの更新
+    // this.chartDatas.BasePointList.find(d => d.BasePoint.name == this.selectedPointName).BasePoint[0].masterPoint[0] = this.tmpX;
+    // this.chartDatas.BasePointList.find(d => d.BasePoint.name == this.selectedPointName).BasePoint[0].masterPoint[1] = this.tmpY;
+
+    // // グラフ表示用データを更新する
+    // this.chartDatas.BaseMasterPointData.find(d=>d.name == this.selectedPointName).Point2D.X = this.tmpX;
+    // this.chartDatas.BaseMasterPointData.find(d=>d.name == this.selectedPointName).Point2D.Y = this.tmpY;
+    //
+    // this.scatterMasterPoint.dataSource = this.chartDatas.BaseMasterPointData;
+
+    this.scatterMasterPoint.dataSource = this.chartDatas.getBaseMasterPoints();
 
     // 基準点の情報をロボットへ送信する
-    const masterName: string = this.chartDatas.BasePointList.find(d => d.name == this.selectedPointName).masterName;
-    this.chartDatas.BasePointList.find(d=>d.name == this.selectedPointName).updated = true;
+    // const masterName: string = this.chartDatas.BasePointList.find(d => d.name == this.selectedPointName).masterName;
+    // this.chartDatas.BasePointList.find(d=>d.name == this.selectedPointName).updated = true;
 
-    {
-      // for debug
-      this.chartDatas.BasePointList.forEach((value, index, array)=>{
-        this.logger.debug(`updated flag ${index} : ${value.updated}`)
-      })
-    }
+    bP.Updated = true;
+    const masterName:string = bP.MasterName;
+    //
+    // {
+    //   // for debug
+    //   this.chartDatas.BasePointList.forEach((value, index, array)=>{
+    //     this.logger.debug(`updated flag ${index} : ${value.updated}`)
+    //   })
+    // }
 
     const obs = {
       next: (x: any) => {
@@ -357,7 +366,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
         console.log("comp")
         this.form.close();
 
-        let flags =this.chartDatas.BasePointList.map(d=>d.updated);
+        // let flags =this.chartDatas.BasePointList.map(d=>d.updated);
 
       }
     };
@@ -377,7 +386,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   onOpen($event: IDialogEventArgs) {
     console.log("onOpen");
     var selItem = this.simpleCombo.value;
-    var it = this.chartDatas.BasePointList.find(d => d.name == selItem);
+    // var it = this.chartDatas.BasePointList.find(d => d.name == selItem);
   }
 
   /**

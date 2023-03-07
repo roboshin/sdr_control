@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone,ViewChild, ElementRef } from '@angular/core';
-import { IgxSwitchModule } from 'igniteui-angular';
+import {ButtonGroupAlignment, IgxSwitchModule} from 'igniteui-angular';
 import {RobotInfoService} from "../robotInfo.service";
 import {NGXLogger} from "ngx-logger";
 import {Matrix, Point3D, RobotInfo} from "../RobotInfoInterface";
@@ -22,6 +22,7 @@ export class RobotInfoComponent implements OnInit {
 
 
   // rInfo : RobotInfo;
+  aligment: any =ButtonGroupAlignment.horizontal;
 
   ngOnInit(): void {
 

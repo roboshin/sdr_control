@@ -72,9 +72,9 @@
         #scatterMasterPoint
         [xAxis]="xAxis"
         [yAxis]="yAxis"
-        xMemberPath="px"
-        yMemberPath="py"
-        [dataSource]="chartDatas.BaseMasterPointData"
+        xMemberPath="X"
+        yMemberPath="Y"
+        [dataSource]="chartDatas.BasePointList"
         titile="Master Point"
         name="MasterPointSeries"
         showDefaultTooltip="true"></igx-scatter-series>
@@ -154,7 +154,7 @@
     <div class="combo-section">
       <igx-simple-combo class="input-container" #combo
                         [data]="chartDatas.BasePointList"
-                        [displayKey]="'name'" [valueKey]="'name'"
+                        [displayKey]="'Name'" [valueKey]="'Name'"
                         [(ngModel)]="selectedPointName" name="name" (ngModelChange)="onComboChange($event)">
       </igx-simple-combo>
     </div>
