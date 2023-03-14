@@ -150,6 +150,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     const getLines = this.fileUploadService.getLines(); // サーバからラインを取得する
     const getCross = this.fileUploadService.getCrossPoint();  // サーバから交点情報を取得する
 
+
     // ライン情報を取得する
     const getLinesCallbacks = {
       next: (x: any) => {
@@ -204,6 +205,18 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
         this.alertDialog.open();
       }
     };
+
+    const getMasterPointsObc = {
+      next : (x : any) =>{
+
+      },
+      error:(err:Error)=>{
+
+      },
+      complete : ()=>{
+
+      }
+    }
 
     await getLines.subscribe(getLinesCallbacks);  // 描画線の取得
     await getCross.subscribe(getCrossCallbacks);  // 交点情報の取得

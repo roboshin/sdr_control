@@ -1,22 +1,58 @@
 
-<form >
+
   <!--  現在位置表示用-->
     <igx-input-group>
-      <input igxInput name="errorX" type="text" [value]="xErrorGain"/>
+      <input igxInput name="errorX" type="text" [(ngModel)]="xErrorGain" />
       <label igxLabel for="errorX">エラーゲインX</label>
     </igx-input-group>
 
     <igx-input-group>
-      <input igxInput name="errorY" type="text" [value]="yErrorGain"/>
+      <input igxInput name="errorY" type="text" [(ngModel)]="yErrorGain"/>
       <label igxLabel for="errorY">エラーゲインY</label>
     </igx-input-group>
 
-    <igx-switch [checked]="drawing">
+    <igx-switch [(ngModel)]="drawing">
       INK ON
     </igx-switch>
 
+  <igx-input-group>
+    <input igxInput name="drawVelo" type="text" [(ngModel)]="linearGauge.value"/>
+    <label igxLabel for="drawVelo">描画速度</label>
+  </igx-input-group>
+
+  <div class="container" >
+
+  <igx-linear-gauge
+    #linearGauge
+    height="80px"
+    width="400px"
+    minimumValue=0
+    maximumValue=150
+    value=50
+    interval=10
+    labelInterval=10
+    labelExtent=0.02
+
+    minorTickEndExtent=0.10,
+    minorTickStartExtent=0.20,
+    tickStartExtent=0.25,
+    tickEndExtent=0.05,
+    tickStrokeThickness=2,
+
+    needleShape="Needle"
+    needleBrush="#79797a"
+    needleOutline="#79797a"
+    scaleStrokeThickness=0
+    scaleBrush="#ffffff"
+    scaleOutline="#d3d3d3"
+    backingBrush="#ffffff"
+    backingOutline="#d1d1d1"
+    backingStrokeThickness=0>
+  </igx-linear-gauge>
+  </div>
+
+
   <button igxButton="flat" igxRipple (buttonClick)="setRobotSettings($event)">設定</button>
-</form>
 
 <igx-dialog #alert
             [title]="dialogTitle"

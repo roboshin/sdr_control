@@ -48,6 +48,8 @@ import { RobotParamSettingComponent } from './robot-param-setting/robot-param-se
 import { RobotInfoViewComponent } from './robot-info-view/robot-info-view.component';
 import { RobotInfoComponent } from './robot-info/robot-info.component';
 import { RobotSettingsComponent } from './robot-settings/robot-settings.component';
+import { IgxLinearGaugeModule } from "igniteui-angular-gauges";
+
 
 // import {
 //     ReferencepointMeasureComponent
@@ -104,6 +106,7 @@ import { RobotSettingsComponent } from './robot-settings/robot-settings.componen
     IgxDialogModule,
     IgxSimpleComboModule,
     IgxSwitchModule,
+    IgxLinearGaugeModule,
 
     /**
      * for logger
