@@ -1,4 +1,5 @@
 import {NGXLogger} from "ngx-logger";
+// import {name} from "jszip";
 
 export namespace Chart {
   /**
@@ -152,6 +153,27 @@ export class DxfChartDatas {
 
     return retAns;
   }
+
+  /**
+   * 基準点情報を設定する
+   * @param baseName
+   * @param x
+   * @param y
+   * @param index
+   */
+  setBasePoint(baseName : string, x : number, y : number, index : number){
+    var basePointName = `MASTER_P${index}`;
+    this.logger.log("Convert number" + `${basePointName}`)
+    this.BasePointList.push(new BasePoint(baseName,new Chart.Point2D(x,y), new Chart.Point2D(x,y), 1, basePointName, false));
+  }
+
+  /**
+   * 基準点情報の全クリア
+   */
+  clearBasePoint(){
+    this.BasePointList.splice(0);
+  }
+
 
   /**
    * 基準点表示用のデータを取得する

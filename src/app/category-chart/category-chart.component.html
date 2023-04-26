@@ -23,6 +23,7 @@
       <igx-radio [(ngModel)]="selected" value="drawRangeMode">描画範囲設定></igx-radio>
       <button igxButton="flat" igxRipple (buttonClick)="drawAreaClear($event)">描画範囲クリア</button>
       <button igxButton="flat" igxRipple (buttonClick)="drawAreaSet($event)">描画範囲設定</button>
+      <button igxButton="flat" igxRipple (buttonClick)="buttonSetP_numbers($event)">P点数設定</button>
     </igx-radio-group>
 
     <igx-data-chart isHorizontalZoomEnabled="true" isVerticalZoomEnabled="true"
@@ -138,6 +139,28 @@
   </div>
 </ng-template>
 
+<!-- 基準点数の入力フォームを表示 -->
+<igx-dialog #form_p_num_input [closeOnOutsideSelect]="false" [hidden]="true" (opened)="onOpen_p_num_input($event)">
+  <igx-dialog-title>
+    <div class="title-container">
+      <igx-icon>vpn_key</igx-icon>
+      <div class="dialog-title">基準点数の入力</div>
+    </div>
+  </igx-dialog-title>
+
+  <form>
+    <igx-input-group>
+      <input igxInput name="P_num" [(ngModel)]="p_numbers" id="P_num"/>
+      <label igxLabel for="P_num">P点数</label>
+    </igx-input-group>
+  </form>
+
+  <div igxDialogActions>
+    <button igxButton (click)="form_p_num_input.close()">CANCEL</button>
+    <button igxButton (click)="p_num_input_SetNumber()">設定</button>
+  </div>
+
+</igx-dialog>
 
 <!--位置入力Dialog -->
 <igx-dialog #form [closeOnOutsideSelect]="false" [hidden]="true" (opened)="onOpen($event)">
@@ -155,7 +178,7 @@
       <igx-simple-combo class="input-container" #combo
                         [data]="chartDatas.BasePointList"
                         [displayKey]="'Name'" [valueKey]="'Name'"
-                        [(ngModel)]="selectedPointName" name="name" (ngModelChange)="onComboChange($event)">
+                        [(ngModel)]="selectedPointName" name="name" (ngModelChange)="onComboChange($event)" (selectionChanging)="comboSelectionChangeing($event)">
       </igx-simple-combo>
     </div>
 

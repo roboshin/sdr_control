@@ -16,7 +16,7 @@ import {
   IDialogEventArgs, IgxButtonModule,
   IgxDialogComponent,
   IgxOverlayService,
-  IgxSimpleComboComponent
+  IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs
 } from "igniteui-angular";
 import {LineInfo, Point2D} from "../LineInfo";
 import {BasePointService} from "../BasePoint.Service";
@@ -72,6 +72,9 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   @ViewChild('alert', {static : true}) public alertDialog: IgxDialogComponent;
   @ViewChild('form') public form: IgxDialogComponent;
+
+  @ViewChild('form_p_num_input') public form_p_num_input : IgxDialogComponent;  // P点数入力フォーム
+
   @ViewChild('airplaneShapeSeries', {static: true}) public airplaneShapeSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('airplaneSeatSeries', {static: true}) public airplaneSeatSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('seatTooltip', {static: true}) public seatTooltip: TemplateRef<object>;
@@ -605,5 +608,62 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     };
 
     this.basePS.setDrawAreaPoints("all", this.chartDatas).subscribe(setAreaObs);
+  }
+
+  comboSelectionChangeing($event: ISimpleComboSelectionChangingEventArgs) {
+
+  }
+
+  // P座標値の個数を設定するボタンを押した場合の処理
+  buttonSetP_numbers($event: any) {
+    this.logger.log("buttonSetP_numbers function start");
+
+    // Pの個数を入力するフォームをOpenする
+    this.form_p_num_input.open();
+  }
+
+  p_numbers: any; // P点の個数を入力
+  // P点入力フォームが平板場合の処理
+
+  onOpen_p_num_input($event: IDialogEventArgs) {
+    this.logger.log("p number input form open");
+  }
+
+
+  /**
+   * P点の数をCombo表示用データとして更新する
+   */
+  p_num_input_SetNumber() {
+
+    // データにP点数を設定する
+    this.chartDatas.clearBasePoint();
+
+    for (var i=0;i<this.p_numbers;i++) {
+      this.chartDatas.setBasePoint(`P${i+1}`, 0,0,i+1);
+    }
+
+    this.simpleCombo.data = this.chartDatas.BasePointList;
+
+    // 使用するPの個数をPCに通知する
+    const setPnumbersObs = {
+      next:(x:any) =>{
+
+      },
+      error : (err:Error) =>{
+        // エラー表示
+        this.dialogTitle = "Error in Set P numbers";
+        this.dialogMsg = "Failed to Set P numbers";
+        this.alertDialog.open();
+      },
+      complete:() =>{
+        this.dialogTitle = "Success in Set P numbers";
+        this.dialogMsg = "Success to Set P numbers";
+        this.alertDialog.open();
+      }
+    };
+
+    this.basePS.setMasterPointNumbers(this.p_numbers).subscribe(setPnumbersObs);
+
+    this.form_p_num_input.close();
   }
 }

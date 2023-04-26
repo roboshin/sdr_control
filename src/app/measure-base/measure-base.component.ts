@@ -128,6 +128,39 @@ export class MeasureBaseComponent implements OnInit {
   }
 
   public ngOnInit() {
+
+    // 計測ポイント数を取得する
+    const obs = {
+      next: (x: any) => {
+
+        // 取得回数を取得する
+        this.BasePointList.splice(0); //配列を削除
+        for(var i=0;i<x;i++){
+          this.BasePointList.push({name: `P${i+1}`,  msterPoint:[100.0,101.0], measurePoint:[200.0, 201.0], id:1, masterName: `MASTER_P${i+1}`})
+        }
+
+        this.simpleCombo.data = this.BasePointList; // データの更新
+
+        this.dialogTitle = `計測点数取得`;
+        this.dialogMsg = `計測点を${x}回測定します`;
+        this.alertDialg.open();
+      },
+      error: (err: Error) => {
+        console.log("err : " + err);
+        console.log(err.message)
+
+        this.form.close();
+
+      },
+      complete: () => {
+        // フォームを閉じる
+        console.log("comp")
+
+      }
+    };
+
+    this.basePS.getMeasurePointNumbers().subscribe(obs);
+
     // this.selectedPointName = this.BasePointList[0].name;
     this.selectedPointName = this.BasePointList[0].name;
     this.selectedId = this.BasePointList[0].id;
@@ -363,6 +396,7 @@ export class MeasureBaseComponent implements OnInit {
         this.dialogTitle = `座標変換計算`;
         this.dialogMsg = `変換行列を計算しました。`;
         this.alertDialg.open();
+
       },
       error: (err: Error) => {
         this.dialogTitle = `座標変換計算エラー`;
@@ -370,15 +404,30 @@ export class MeasureBaseComponent implements OnInit {
         this.alertDialg.open();
       },
       complete: () => {
-
-
-
         this.formResult.open();
 
       }
     }
 
     this.basePS.getMeasurePoint("CALC").subscribe(obs);
+
+    const saveFileObs = {
+      next : (x:any) =>{
+        this.dialogTitle = `ファイル保存`;
+        this.dialogMsg = `ファイルに保存しました`;
+        this.alertDialg.open();
+      },
+      error : (err :Error) =>{
+        this.dialogTitle = `ファイル保存エラー`;
+        this.dialogMsg = `ファイル保存に失敗しました`;
+        this.alertDialg.open();
+      },
+      complete :() =>{
+
+      }
+    };
+
+    this.basePS.saveOrgManager("dummy_file.xml").subscribe(saveFileObs);
 
   }
 

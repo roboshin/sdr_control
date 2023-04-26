@@ -4,6 +4,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {DxfChartDatas} from "./draw-point-data";
+import * as http from "http";
 
 @Injectable({
   providedIn: 'root'
@@ -24,9 +25,33 @@ export class BasePointService{
    * @param y Y座標値
    */
   setMasterPoint(pname:string, x:number, y:number): Observable<HttpEvent<any>> {
+
+    // /app/master/P1/x座標/y座標
+    // でロボット側に通知
     let getUrl = `${this.baseApiUrlMaster}/${pname}/${x}/${y}`;
     console.log(getUrl);
     return this.http.put<any>(getUrl, {});
+  }
+
+  /**
+   * 基準座標値の数（Pの数）を設定する
+   * @param numOfPont
+   */
+  setMasterPointNumbers(numOfPont : number):Observable<HttpEvent<any>> {
+    // /master/set_number/{num}
+
+    let putUrl =`${this.baseApiUrlMaster}/set_number/${numOfPont}`
+
+    return this.http.put<any>(putUrl, {});
+  }
+
+  /**
+   * 計測するP点の個数を取得する
+   */
+  getMeasurePointNumbers():Observable<HttpEvent<any>> {
+    let getUrl = `${this.baseApiUrlMaster}/get_number/`;
+
+    return this.http.get<any>(getUrl, {});
   }
 
   /**
@@ -57,7 +82,7 @@ export class BasePointService{
    */
   getMeasurePoint(pname:string): Observable<HttpEvent<any>>
   {
-    let getUrl = `${this.baseApiUrlMeasure}/${pname}`;
+    let getUrl = `${this.baseApiUrlMeasure}/point/${pname}`;
     console.log(getUrl);
     return this.http.get<any>(getUrl,{observe:'response'});
   }
@@ -89,6 +114,16 @@ export class BasePointService{
 
     let getUrl = `${this.baseApiUrlSetDrawArea}/${cmd}`;
     return this.http.put<any>(getUrl, {});
+  }
+
+  /**
+   * 基準設定をファイルに保存する
+   * @param fileName
+   */
+  saveOrgManager(fileName : string) : Observable<HttpEvent<any>>{
+    let putUrl = `${this.baseApiUrlMeasure}/save_org_manager/${fileName}`;
+    return this.http.put<any>(putUrl, {});
+
   }
 
 
