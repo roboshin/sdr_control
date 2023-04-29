@@ -1,22 +1,66 @@
 <p>Robot Control Panel</p>
 
-
 <div class="sample-wrapper drop-down-wrapper">
-<!--  <button #button igxButton="raised" igxRipple [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">Toggle dropdown</button>-->
-<!--  <igx-drop-down width="200px" #dropdown>-->
-<!--    <igx-drop-down-item *ngFor="let item of items" [disabled]="!!item.disabled" [isHeader]="!!item.header">-->
-<!--      {{ item.name }}-->
-<!--    </igx-drop-down-item>-->
-<!--  </igx-drop-down>-->
 
+  <!-- ロボットのメイン制御用 -->
   <igx-buttongroup>
+    <!-- 動作開始ボタン -->
     <button igxButton [igxRipple]="rippleColor" (click)="onPlay()">START</button>
+
+    <!-- 動作一時停止ボタン -->
     <button igxButton [igxRipple]="rippleColor" (click)="onHold()">HOLD</button>
+
+    <!-- 停止ボタン -->
     <button igxButton [igxRipple]="rippleColor" (click)="onStop()">STOP</button>
+
+    <!-- 予約-->
     <button igxButton [igxRipple]="rippleColor" [selected]="true">RESERVED</button>
   </igx-buttongroup>
+<br>
+  <igx-buttongroup>
+    <!-- 現在値を取得するボタン -->
+    <!--
+      現在値を杭ナビから取得して、ロボット現在値情報として、表示する
+      表示は、杭ナビの現在値、DXF上の現在値として表示
+    -->
+    <button igxButton [igxRipple]="rippleColor" (click)="onMeasureNowPoint()">現在値計測</button>
+  </igx-buttongroup>
+  <form>
+    <!-- 杭ナビの計測値表示用 -->
+    <igx-input-group>
+      <input igxInput name="kui_x" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.x" />
+      <label igxLabel for="kui_x">x[mm]</label>
+    </igx-input-group>
+
+    <igx-input-group>
+      <input igxInput name="kui_y" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.y" />
+      <label igxLabel for="kui_y">y[mm]</label>
+    </igx-input-group>
+
+    <igx-input-group>
+      <input igxInput name="kui_z" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.z" />
+      <label igxLabel for="kui_z">z[mm]</label>
+    </igx-input-group>
+
+    <!-- DXF上の現在値を表示用 -->
+    <igx-input-group>
+      <input igxInput name="dxf_x" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.x" />
+      <label igxLabel for="dxf_x">x[mm]</label>
+    </igx-input-group>
+
+    <igx-input-group>
+      <input igxInput name="dxf_y" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.y" />
+      <label igxLabel for="dxf_y">y[mm]</label>
+    </igx-input-group>
+
+    <igx-input-group>
+      <input igxInput name="dxf_z" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.z" />
+      <label igxLabel for="dxf_z">z[mm]</label>
+    </igx-input-group>
+  </form>
 
 
+  <!-- アラート表示用 -->
   <igx-dialog #alert
               [title]="dialogTitle"
               [message]="dialogMsg"

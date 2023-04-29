@@ -44,3 +44,39 @@ class rinfo implements RobotInfo {
   }
 
 }
+
+/**
+ * ロボットの状態を管理するクラス
+ */
+export class RobotInformation {
+
+  /** @type {Point3D} */
+  NowMeasurePoint: Point3D;
+
+  /** @type {Point3D} */
+  NowMeasureDxfPoint: Point3D;
+
+  /** @type {boolean} */
+  InkOnStatus: boolean;
+
+  constructor() {
+    this.NowMeasurePoint = new class implements Point3D {
+      x: number;
+      y: number;
+      z: number;
+    }
+    this.NowMeasureDxfPoint = new class implements Point3D {
+      x: number;
+      y: number;
+      z: number;
+    }
+
+    this.NowMeasurePoint.x = 0;
+    this.NowMeasurePoint.y = 0;
+    this.NowMeasurePoint.z = 0;
+
+    this.NowMeasureDxfPoint.x = 0;
+    this.NowMeasureDxfPoint.y = 0;
+    this.NowMeasureDxfPoint.z = 0;
+  }
+}

@@ -165,3 +165,32 @@ export class RobotControService {
     return this.http.get(this.baseApiUrl+`/rinfo`);
   }
 }
+
+/**
+ * ロボットの現在位置を取得する
+ */
+@Injectable({
+  providedIn : 'root'
+})
+export class RobotPoseService{
+
+  // C#との通信用ルート
+  baseApiUrl = "/app/robotPose"
+
+  httpOptions = {
+    headers: new HttpHeaders({'Content-Type': 'application/json'},)
+  };
+
+  constructor(private http: HttpClient) {
+  }
+
+  /**
+   * ロボットの現在位置（測定値、DXF上の値）を取得する
+   * @param str
+   */
+  getPose(str : string): Observable<any>{
+    let getPoseUrl = this.baseApiUrl+'/getPose';
+    return this.http.get(getPoseUrl);
+  }
+
+}

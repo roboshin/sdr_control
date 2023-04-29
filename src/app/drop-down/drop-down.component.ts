@@ -5,6 +5,8 @@ import {RobotControService} from "../file.service";
 import { from, Observable } from 'rxjs';
 import {NGXLogger} from "ngx-logger";
 import {IgxDialogComponent} from "igniteui-angular";
+import {RobotInformation} from "../robot-information";
+
 
 @Component({
   selector: 'app-drop-down',
@@ -20,6 +22,8 @@ export class DropDownComponent implements OnInit{
   private _refreshInterval: number = 3000;
   private shouldTick: boolean = true;
 
+  public robotInfo : RobotInformation;
+
   dialogTitle: string;  // dialog用タイトル
   dialogMsg : string    // dialog用メッセージ
 
@@ -31,7 +35,7 @@ export class DropDownComponent implements OnInit{
   }
 
   ngOnInit():void{
-
+    this.robotInfo = new RobotInformation();
   }
 
   public ngAfterViewInit() {
@@ -64,6 +68,26 @@ export class DropDownComponent implements OnInit{
     });
   }
 
+  /**
+   * ロボットの現在値を取得する
+   */
+  onGetRobotPose(){
+    const obs = {
+      next: (x: any) => {
+
+      },
+      error : (err:Error) =>{
+    },
+      complete : ()=>{
+      }
+    }
+
+
+  }
+
+  /**
+   * ロボットの状態を取得する
+   */
   onGetRobotIfo(){
     const obs = {
       next: (x: any) => {
@@ -152,4 +176,11 @@ export class DropDownComponent implements OnInit{
     })};
 
 
+  /**
+   * 現在値の計測
+   * 計測結果は、現在の杭ナビ値とそれをDXF座標系で表した値
+   */
+  onMeasureNowPoint() {
+
+  }
 }
