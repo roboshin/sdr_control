@@ -114,7 +114,7 @@ import { IgxLinearGaugeModule } from "igniteui-angular-gauges";
     LoggerModule.forRoot({
       serverLoggingUrl: '/api/logs',
       level: NgxLoggerLevel.DEBUG,
-      serverLogLevel: NgxLoggerLevel.ERROR
+      serverLogLevel: NgxLoggerLevel.OFF
     }),
     IgxRadioModule,
   ],

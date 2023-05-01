@@ -1,4 +1,4 @@
-import { Component , OnInit, NgZone, OnDestroy} from '@angular/core';
+import {Component, OnInit, NgZone, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import {AfterViewInit, TemplateRef, ViewChild, ElementRef} from "@angular/core";
 import { Country, data } from './local-data';
 import {RobotControService} from "../file.service";
@@ -29,9 +29,13 @@ export class DropDownComponent implements OnInit{
 
   @ViewChild('alert', {static : true}) public alertDialg: IgxDialogComponent;
 
+  // 各ボタンの有効無効フラグ
+  playButtonDisable: boolean = true;
+
   constructor(private rcs: RobotControService,
               private logger: NGXLogger,
-              private _zone: NgZone,) {
+              private _zone: NgZone,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit():void{
@@ -89,34 +93,40 @@ export class DropDownComponent implements OnInit{
    * ロボットの状態を取得する
    */
   onGetRobotIfo(){
+
     const obs = {
-      next: (x: any) => {
+      next: (x: RobotInformation) => {
         // 設定しましたDialogを表示する
-        console.log(x)
-        if (x['Obstacle'] == true) {
+        this.logger.log(`x : ${typeof x}`)
+        if (x.obstacleDetected == true) {
           this.dialogTitle = `障害物`;
           this.dialogMsg = `障害物を検知`;
           this.alertDialg.open();
         }
-        else if(x['NonKuinabi'] == true){
+        else if(x.nonKuiNavyData == true){
           this.dialogTitle = `杭ナビエラー`;
           this.dialogMsg = `杭ナビがエラーを通知しました`;
           this.alertDialg.open();
         }
 
+        // 現在情報をセットする
+        this.robotInfo = x;
+
+        // DXFの読み込みが完了している場合
+        if(this.robotInfo.dxfLoaded) this.playButtonDisable = false;
+
+        this.changeDetectorRef.detectChanges(); // 画面の再描画
+
       },
       error: (err: Error) => {
-        console.log("err : " + err);
-        console.log(err.message);
-
+        this.logger.error("err : " + `${err.message}`);
         this.dialogTitle = "通信エラー";
         this.dialogMsg = `ロボットと通信ができません`;
         this.alertDialg.open();
       },
       complete: () => {
         // フォームを閉じる
-        console.log("comp")
-
+        this.logger.log("comp");
       }
     }
 
@@ -124,22 +134,13 @@ export class DropDownComponent implements OnInit{
   }
 
   /**
-   *
+   * タイマ処理
    * @private
    */
   private tick(): void {
 
     if (this.shouldTick) {
-      //console.log("tick")
-      // const newVal = {px:100+200, py:210};
-      // this.NowRobotPos.push(newVal)
-      //
-      // //console.log(this.NowRobotPos.length);
-      // this.NowRobotPos.pop()
-      //
-      // this.NowRobotPos[0].px += 10; // 現在地の更新
-      // this.scatterSeriesRobotPos.dataSource = this.NowRobotPos;
-
+      // ロボットの状態を所得する
       this.onGetRobotIfo();
     }
   }
@@ -148,39 +149,54 @@ export class DropDownComponent implements OnInit{
    * 動作開始
    */
   onPlay(){
-    console.log("onPlay");
-    this.rcs.setPlay('play').subscribe({
-      next(response) { console.log(response); },
-      error(err) { console.error('Error: ' + err); },
-      complete() { console.log('Completed'); }
-    })};
+    // console.log("onPlay");
+    this.logger.log("onPlay");
+
+    let obs = {
+      next : (response:any)=> { this.logger.log(response); },
+      error : (err: Error)=> { this.logger.error('Error: ' + `${err.message}`); },
+      complete :()=> { this.logger.log('Completed'); }
+    };
+
+    this.rcs.setPlay('play').subscribe(obs);
+  };
 
   /**
    * 動作一時停止
    */
   onHold(){
-    this.rcs.setHold('hold').subscribe({
-      next(response) { console.log(response); },
-      error(err) { console.error('Error: ' + err); },
-      complete() { console.log('Completed'); }
-    })};
+
+    let obs = {
+      next : (response:any)=> { this.logger.log(response); },
+      error : (err: Error)=> { this.logger.error('Error: ' + `${err.message}`); },
+      complete :()=> { this.logger.log('Completed'); }
+    };
+
+    this.rcs.setHold('hold').subscribe(obs);
+  };
 
   /**
    * 動作停止
    */
   onStop(){
-    this.rcs.setStop('stop').subscribe({
-      next(response) { console.log(response); },
-      error(err) { console.error('Error: ' + err); },
-      complete() { console.log('Completed'); }
-    })};
+
+    let obs = {
+      next : (response:any)=> { this.logger.log(response); },
+      error : (err: Error)=> { this.logger.error('Error: ' + `${err.message}`); },
+      complete :()=> { this.logger.log('Completed'); }
+    };
+
+    this.rcs.setStop('stop').subscribe(obs);
+  };
 
 
   /**
    * 現在値の計測
    * 計測結果は、現在の杭ナビ値とそれをDXF座標系で表した値
    */
-  onMeasureNowPoint() {
+  onMeasureNowPoint(){
+    this.logger?.log(`[START]:onMeasureNowPoint`);
 
+    this.logger?.log(`[END]:onMeasureNowPoint`);
   }
 }

@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http';
 import {TmplAstRecursiveVisitor} from '@angular/compiler';
 import {Injectable} from '@angular/core';
+import {RobotInformation} from "./robot-information";
 
 @Injectable({
   providedIn: 'root'
@@ -161,8 +162,12 @@ export class RobotControService {
   }
 
 
-  getRobotInfo(cmd : string) : Observable<any>{
-    return this.http.get(this.baseApiUrl+`/rinfo`);
+  /**
+   * ロボットの状態を取得する
+   * @param cmd
+   */
+  getRobotInfo(cmd : string) : Observable<RobotInformation>{
+    return this.http.get<RobotInformation>(this.baseApiUrl+`/rinfo`);
   }
 }
 

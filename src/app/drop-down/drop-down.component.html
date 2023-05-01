@@ -5,7 +5,8 @@
   <!-- ロボットのメイン制御用 -->
   <igx-buttongroup>
     <!-- 動作開始ボタン -->
-    <button igxButton [igxRipple]="rippleColor" (click)="onPlay()">START</button>
+<!--    <button igxButton [igxRipple]="rippleColor" (click)="onPlay()" [disabled]="playButtonDisable">START</button>-->
+    <button igxButton [igxRipple]="rippleColor" (click)="onPlay()" >START</button>
 
     <!-- 動作一時停止ボタン -->
     <button igxButton [igxRipple]="rippleColor" (click)="onHold()">HOLD</button>
@@ -16,7 +17,8 @@
     <!-- 予約-->
     <button igxButton [igxRipple]="rippleColor" [selected]="true">RESERVED</button>
   </igx-buttongroup>
-<br>
+
+
   <igx-buttongroup>
     <!-- 現在値を取得するボタン -->
     <!--
@@ -29,7 +31,7 @@
     <!-- 杭ナビの計測値表示用 -->
     <igx-input-group>
       <input igxInput name="kui_x" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.x" />
-      <label igxLabel for="kui_x">x[mm]</label>
+      <label igxLabel>x[mm]</label>
     </igx-input-group>
 
     <igx-input-group>
