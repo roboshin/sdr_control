@@ -25,6 +25,9 @@ import {NGXLogger} from "ngx-logger";
 import { ButtonGroupAlignment } from 'igniteui-angular';
 import {RobotInfoService} from "../robotInfo.service";
 import {BasePoint, DxfChartDatas,  } from "../draw-point-data";
+import {DrawLineDatas} from "../draw-line-datas";
+import {CrossPointDatas} from "../cross-point-datas";
+import {Point2D_Ts} from "../point2d_-ts";
 
 class linfo implements LineInfo {
   Draw: boolean;
@@ -61,21 +64,23 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   public chartType = CategoryChartType.Auto;
 
-  // ダミー表示用データ
-  private dummyData: LineInfo[] = [
-    new linfo(true, "00", "Line",
-      [
-        {X: 110, Y: 100, x: 110, y: 100},
-        {X: 100, Y: 200, x: 100, y: 200}]
-    ),
-  ]
+  // // ダミー表示用データ
+  // private dummyData: LineInfo[] = [
+  //   new linfo(true, "00", "Line",
+  //     [
+  //       {X: 110, Y: 100, x: 110, y: 100},
+  //       {X: 100, Y: 200, x: 100, y: 200}]
+  //   ),
+  // ]
+
+  private dummyData : DrawLineDatas;
 
   @ViewChild('alert', {static : true}) public alertDialog: IgxDialogComponent;
   @ViewChild('form') public form: IgxDialogComponent;
 
   @ViewChild('form_p_num_input') public form_p_num_input : IgxDialogComponent;  // P点数入力フォーム
 
-  @ViewChild('airplaneShapeSeries', {static: true}) public airplaneShapeSeries: IgxScatterPolylineSeriesComponent;
+  @ViewChild('drawDxfLineSeries', {static: true}) public drawDxfLineSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('airplaneSeatSeries', {static: true}) public airplaneSeatSeries: IgxScatterPolylineSeriesComponent;
   @ViewChild('seatTooltip', {static: true}) public seatTooltip: TemplateRef<object>;
   @ViewChild('combo', {read: IgxSimpleComboComponent, static: true}) public simpleCombo: IgxSimpleComboComponent;
@@ -116,11 +121,11 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    */
   public ngAfterViewInit() {
 
-    let viewData = this.dummyData.map(d => {
-      return {points: [d.Points]}
-    })
-
-    this.onLoadedLineShape(viewData);
+    // let viewData = this.dummyData.map(d => {
+    //   return {points: [d.Points]}
+    // })
+    //
+    // this.onLoadedLineShape(viewData);
 
     this.tmpOffsetY = 0;
     this.tmpOffsetX = 0;
@@ -156,10 +161,15 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
     // ライン情報を取得する
     const getLinesCallbacks = {
-      next: (x: any) => {
-        this.dummyData = x['Item1'];
+      next: (x: DrawLineDatas) => {
+        console.log(x);
+        this.dummyData = x;
+
         // 画面の更新
-        const viewData = this.dummyData.map(d => {return {points: [d.Points]}})
+
+        // const viewData = this.dummyData.map(d => {return {points: [d.Points]}})
+        const viewData = this.dummyData.lineList.map(d=>d.points.map(dd=>dd.x));
+
         this.onLoadedLineShape(viewData);
       },
       error: (err: Error) => {
@@ -182,14 +192,16 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
     // 交点情報を取得する
     const getCrossCallbacks = {
-      next: (x: any) => {
-        let crossPoints = x['Item1'];
+      next: (x: CrossPointDatas) => {
+        console.log(x);
+        let crossPoints = x;
         // 受信データの整形
-        this.chartDatas.BasePointsCrossPointData = crossPoints.map(d => {
-          return { px: d.X, py: d.Y}
-        });
+        // this.chartDatas.BasePointsCrossPointData = crossPoints.map(d => {
+        //   return { px: d.X, py: d.Y}
+        // });
 
         this.logger.debug("受信データ");
+
         this.logger.debug(this.chartDatas.BasePointsCrossPointData);
       },
       error: (err: Error) => {
@@ -229,13 +241,14 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    *　描画ラインを表示
    * @param jsonData
    */
-  public onLoadedLineShape(jsonData: any[]) {
+  public onLoadedLineShape(jsonData: Point2D_Ts[][]) {
+    console.log(jsonData);
     this.logger.debug('onLoadedLineShape' + `${jsonData.length}`);
     this.logger.debug(jsonData);
 
-    this.airplaneShapeSeries.dataSource = jsonData;
-    this.airplaneShapeSeries.showDefaultTooltip = true;
-    this.airplaneShapeSeries.tooltipTemplate = this.seatTooltip;
+    this.drawDxfLineSeries.dataSource = jsonData;
+    this.drawDxfLineSeries.showDefaultTooltip = true;
+    this.drawDxfLineSeries.tooltipTemplate = this.seatTooltip;
   }
 
   public onLoadDrawAreaShap(jsonData : any[]){

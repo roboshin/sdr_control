@@ -41,15 +41,18 @@
       <igx-numeric-y-axis #yAxis name="yAxis"
                           ></igx-numeric-y-axis>
 
-      <igx-scatter-polyline-series name="airplaneShapeSeries" #airplaneShapeSeries
+      <igx-scatter-polyline-series name="drawDxfLineSeries" #drawDxfLineSeries
                                    [xAxis]="xAxis"
-                                   [yAxis]="yAxis" shapeMemberPath="points" thickness="0.5"
+                                   [yAxis]="yAxis"
+                                   shapeMemberPath="points"
+                                   thickness="0.5"
                                    (styleShape)="onStyleLine($event)">
       </igx-scatter-polyline-series>
 
       <igx-scatter-polyline-series name="airplaneSeatSeries" #airplaneSeatSeries
                                    [xAxis]="xAxis"
-                                   [yAxis]="yAxis" shapeMemberPath="points"
+                                   [yAxis]="yAxis"
+                                   shapeMemberPath="points"
                                    title="Airplane Seats"
                                    (styleShape)="onStylingShape($event)">
       </igx-scatter-polyline-series>

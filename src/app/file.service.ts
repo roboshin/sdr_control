@@ -6,6 +6,9 @@ import {
 import {TmplAstRecursiveVisitor} from '@angular/compiler';
 import {Injectable} from '@angular/core';
 import {RobotInformation} from "./robot-information";
+import {NGXLogger} from "ngx-logger";
+import {DrawLineDatas} from "./draw-line-datas";
+import {CrossPointDatas} from "./cross-point-datas";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +21,8 @@ export class FileService {
    *
    * @param http
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private logger: NGXLogger,) {
   }
 
   getCurrDxfFilename(): Observable<string> {
@@ -61,8 +65,13 @@ export class FileService {
     return throwError(() => new Error('Something bad happened; please try again later.'))
   }
 
-  upload(file): Observable<any> {
-    console.log("upload : " + file);
+  /**
+   * DXFファイルをアップロードする
+   * @param file
+   */
+  upload(file : File): Observable<[DrawLineDatas,CrossPointDatas]> {
+    // console.log("upload : " + file);
+    this.logger.log(`upload : ${file.name}`)
 
     const formData = new FormData();
 
@@ -71,25 +80,25 @@ export class FileService {
 
     // Make http post request over api
     // with formData as req
-    return this.http.post(this.baseApiUrl, formData)
+    return this.http.post<[DrawLineDatas,CrossPointDatas]>(this.baseApiUrl, formData)
   }
 
   /**
    * ラインデータを取得する
    */
-  getLines(): Observable<any> {
+  getLines(): Observable<DrawLineDatas> {
     var getBaseUrl = "/app/linedata";
 
-    return this.http.get(getBaseUrl);
+    return this.http.get<DrawLineDatas>(getBaseUrl);
   }
 
   /**
    * 交点情報を取得する
    */
-  getCrossPoint():Observable<any>{
+  getCrossPoint():Observable<CrossPointDatas>{
     const getBaseUrl = "/app/crossData";
 
-    return this.http.get(getBaseUrl);
+    return this.http.get<CrossPointDatas>(getBaseUrl);
   }
 }
 

@@ -8,6 +8,8 @@ import {LineInfo} from "../LineInfo";
 import {FileInfo} from "@angular-devkit/build-angular/src/utils/index-file/augment-index-html";
 import {SharedDataService} from "../SharedData.Service";
 import {NGXLogger} from "ngx-logger";
+import {DrawLineDatas} from "../draw-line-datas";
+import {CrossPointDatas} from "../cross-point-datas";
 
 // for ngx-logger
 // https://github.com/dbfannin/ngx-logger
@@ -50,7 +52,7 @@ export class SelectComponent implements OnInit, AfterViewInit {
   file: File = null;
 
   private layerNames: string[];  // レイヤー名称のリスト
-  private lineDatas: LineInfo[]; // 描画用データ
+  private lineDatas: DrawLineDatas; // 描画用データ
 
 
   /**
@@ -98,26 +100,36 @@ export class SelectComponent implements OnInit, AfterViewInit {
     const layersMap = this.fileUploadService.upload(this.file);
 
     const obsCallbacks = {
-      next:(x:any)=>{
-        this.logger.debug(x);
+      next:(x:[DrawLineDatas, CrossPointDatas])=>{
+        this.logger.log(`${x}`);
+        this.logger.debug(`${x['Item1']}`);
+        this.logger.debug(`${x['Item2']}`);
 
-        this.layerNames = x['Item2'];
-        this.lineDatas  = x['Item1'];
+        // this.layerNames = x['Item2'];
+        // this.lineDatas  = x['Item1'];
+
+        // layer名称の取得
+        let layers = x['Item1'].lineList.map(v=>v.layerName);
+        this.layerNames = layers.filter((value, index)=> layers.indexOf(value) === index);  // 重複レイヤー名を削除
+        this.lineDatas = x['Item1'];
+
         this.upDateLineData();  // 描画データの更新
 
-        this.itemViewLayer = x['Item2'];
-        this.itemDrawLayer = x['Item2'];
+        this.itemViewLayer = this.layerNames;
+        this.itemDrawLayer = this.layerNames;
 
-        this.logger.debug("LayerName : "+`${this.layerNames}`);
-        this.logger.debug("lineDatas : "+`${this.lineDatas}`);
+        this.logger.log("LayerNames : "+`${this.layerNames}`);
+        this.logger.log("lineDatas : "+`${this.lineDatas}`);
 
-        if(this.itemViewLayer.length > 0) {
+        if(this.layerNames.length > 0) {
           this.selectViewLayer.setSelectedItem(0);
         }
 
-        if(this.itemDrawLayer.length > 0){
+        if(this.layerNames.length > 0){
           this.selectDrawLayer.setSelectedItem(0);
         }
+
+        this.logger.log("XXX");
       },
 
       error:(err:Error)=>{
