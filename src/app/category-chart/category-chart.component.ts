@@ -64,14 +64,6 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
 
   public chartType = CategoryChartType.Auto;
 
-  // // ダミー表示用データ
-  // private dummyData: LineInfo[] = [
-  //   new linfo(true, "00", "Line",
-  //     [
-  //       {X: 110, Y: 100, x: 110, y: 100},
-  //       {X: 100, Y: 200, x: 100, y: 200}]
-  //   ),
-  // ]
 
   private dummyData : DrawLineDatas;
 
@@ -168,9 +160,27 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
         // 画面の更新
 
         // const viewData = this.dummyData.map(d => {return {points: [d.Points]}})
-        const viewData = this.dummyData.lineList.map(d=>d.points.map(dd=>dd.x));
+        const viewData = this.dummyData.lineList.map(d=>d.points);
+        const values = viewData.values();
 
-        this.onLoadedLineShape(viewData);
+        // DXFライン表示用のデータ形式に変換する
+        let pointList :Array<{points: Array< Array<{x:number; y:number;}>>}> = [
+            // {
+            //   points: [
+            //     [{x: 1020, y: 1000}, {x: 2000, y: 1000}, {x: 2000, y: 2000}, {x: 1000, y: 2000}, {x: 1020, y: 1000}],
+            //     [{x: 5000, y: 5000}, {x: 6000, y: 6000}]
+            //   ]
+            // },
+        ];
+
+        // web経由で取得したデータを表示可能な形式に変換する
+        for(const v of values){
+          let pp ={points: [v.map(d=>({x:d.x,y:d.y}))]};
+          pointList.push(pp);
+        }
+
+        // 描画対象ラインを表示
+        this.onLoadedLineShape(pointList);
       },
       error: (err: Error) => {
         this.logger.debug("Error in getLines" + `${Error.name}`);
@@ -199,6 +209,9 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
         // this.chartDatas.BasePointsCrossPointData = crossPoints.map(d => {
         //   return { px: d.X, py: d.Y}
         // });
+        // let cp = x.pointList.map(d=>  ({x:d.point.x, y:d.point.y}))
+        let cp = x.pointList.map(d=> ({Point2D : ({X:d.point.x, Y:d.point.y}) }));
+        this.chartDatas.BasePointsCrossPointData = cp;
 
         this.logger.debug("受信データ");
 
@@ -241,7 +254,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    *　描画ラインを表示
    * @param jsonData
    */
-  public onLoadedLineShape(jsonData: Point2D_Ts[][]) {
+  public onLoadedLineShape(jsonData: Array<{points: Array< Array<{x:number; y:number;}>>}> ) {
     console.log(jsonData);
     this.logger.debug('onLoadedLineShape' + `${jsonData.length}`);
     this.logger.debug(jsonData);
@@ -345,31 +358,10 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     bP.MasterPoint.X = this.tmpX;
     bP.MasterPoint.Y = this.tmpY;
 
-    // // 内部基準点データの更新
-    // this.chartDatas.BasePointList.find(d => d.BasePoint.name == this.selectedPointName).BasePoint[0].masterPoint[0] = this.tmpX;
-    // this.chartDatas.BasePointList.find(d => d.BasePoint.name == this.selectedPointName).BasePoint[0].masterPoint[1] = this.tmpY;
-
-    // // グラフ表示用データを更新する
-    // this.chartDatas.BaseMasterPointData.find(d=>d.name == this.selectedPointName).Point2D.X = this.tmpX;
-    // this.chartDatas.BaseMasterPointData.find(d=>d.name == this.selectedPointName).Point2D.Y = this.tmpY;
-    //
-    // this.scatterMasterPoint.dataSource = this.chartDatas.BaseMasterPointData;
-
     this.scatterMasterPoint.dataSource = this.chartDatas.getBaseMasterPoints();
-
-    // 基準点の情報をロボットへ送信する
-    // const masterName: string = this.chartDatas.BasePointList.find(d => d.name == this.selectedPointName).masterName;
-    // this.chartDatas.BasePointList.find(d=>d.name == this.selectedPointName).updated = true;
 
     bP.Updated = true;
     const masterName:string = bP.MasterName;
-    //
-    // {
-    //   // for debug
-    //   this.chartDatas.BasePointList.forEach((value, index, array)=>{
-    //     this.logger.debug(`updated flag ${index} : ${value.updated}`)
-    //   })
-    // }
 
     const obs = {
       next: (x: any) => {
@@ -395,8 +387,6 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
         console.log("comp")
         this.form.close();
 
-        // let flags =this.chartDatas.BasePointList.map(d=>d.updated);
-
       }
     };
 
@@ -404,9 +394,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     this.basePS.setMasterPoint(masterName, this.tmpX + this.tmpOffsetX, this.tmpY + this.tmpOffsetY).subscribe(obs);
   }
 
-  // onOpening($event: IDialogCancellableEventArgs) {
-  //
-  // }
+
 
   /**
    * 基準点情報を取得する
@@ -424,21 +412,7 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
    */
   onComboChange($event: any) {
     console.log("change combo")
-    // var selItem = this.simpleCombo.value;
-    // var it = this.chartDatas.BasePointList.find(d => d.name == selItem);
-    //
-    // var masterName = it.masterName; // 送信用マスター値
-    //
-    // // // マスター値をファイルから読み出す
-    // // var subObj = this.basePS.getMasterPoint(masterName).pipe(map((v, i) => {
-    // //   this.tmpX = v['body']['X'];
-    // //   this.tmpY = v['body']['Y'];
-    // //   console.log(v);
-    // //   console.log(this.tmpX);
-    // // }));
-    // //
-    // // subObj.subscribe(x => {
-    // // });
+
   }
 
 

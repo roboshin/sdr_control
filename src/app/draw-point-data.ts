@@ -92,7 +92,7 @@ export class DxfChartDatas {
   ]
 
   // 基準点の候補値
-  public BasePointsCrossPointData =
+  public BasePointsCrossPointData : Array<{Point2D : {X:number, Y:number}}> =
     [
       // {points: [{x: 0, y: 0}], px: 100, py: 100},
       // {points: [{x: 0, y: 0}], px: 200, py: 300},
@@ -100,7 +100,7 @@ export class DxfChartDatas {
       {Point2D: {X: 100, Y: 100}},
       {Point2D: {X: 200, Y: 300}},
       {Point2D: {X: 400, Y: 500}},
-    ]
+    ];
 
   // public BaseMasterPointData = [
   //   // {name : "P1", points: [{x: 0, y: 0}], px: 100, py: 100},
