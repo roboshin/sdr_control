@@ -59,59 +59,53 @@
       </igx-scatter-polyline-series>
 
       <!-- 交点の表示用 -->
-      <igx-scatter-series
-        [xAxis]="xAxis"
-        [yAxis]="yAxis"
-        xMemberPath="Point2D.X"
-        yMemberPath="Point2D.Y"
-        markerType="Circle"
-        [dataSource]="chartDatas.BasePointsCrossPointData"
-        showDefaultTooltip="true"
-        title="CroosPoint"
-        name="ScatterSeries1"
-        #scatterSeriesCross>
+      <igx-scatter-series name="ScatterSeries1" #scatterSeriesCross
+                          [xAxis]="xAxis"
+                          [yAxis]="yAxis"
+                          xMemberPath="Point2D.X"
+                          yMemberPath="Point2D.Y"
+                          markerType="Circle"
+                          [dataSource]="chartDatas.BasePointsCrossPointData"
+                          showDefaultTooltip="true"
+                          title="CroosPoint">
       </igx-scatter-series>
 
-      <!-- 交点ポイントのポイント表示用 -->
-      <igx-scatter-series
-        #scatterMasterPoint
-        [xAxis]="xAxis"
-        [yAxis]="yAxis"
-        xMemberPath="X"
-        yMemberPath="Y"
-        [dataSource]="chartDatas.BasePointList"
-        titile="Master Point"
-        name="MasterPointSeries"
-        showDefaultTooltip="true"></igx-scatter-series>
+      <!-- 基準点 交点ポイントのポイント表示用 -->
+      <igx-scatter-series name="MasterPointSeries" #scatterMasterPoint
+                          [xAxis]="xAxis"
+                          [yAxis]="yAxis"
+                          xMemberPath="X"
+                          yMemberPath="Y"
+                          [dataSource]="chartDatas.BasePointList"
+                          titile="Master Point"
+                          showDefaultTooltip="true">
+      </igx-scatter-series>
 
       <!-- ロボットの現在位置表示用 -->
-      <igx-scatter-series
-        [xAxis]="xAxis"
-        [yAxis]="yAxis"
-        xMemberPath="px"
-        yMemberPath="py"
-        markerType="Circle"
-        [markerThickness]="10"
-        markerBrush="red"
-        [dataSource]="NowRobotPos"
-        showDefaultTooltip="true"
-        title="Robot Position"
-        name="ScatterSeries2"
-        #scatterSeriesRobotPos>
+      <igx-scatter-series name="ScatterSeries2" #scatterSeriesRobotPos
+                          [xAxis]="xAxis"
+                          [yAxis]="yAxis"
+                          xMemberPath="px"
+                          yMemberPath="py"
+                          markerType="Circle"
+                          [markerThickness]="10"
+                          markerBrush="red"
+                          [dataSource]="NowRobotPos"
+                          showDefaultTooltip="true"
+                          title="Robot Position">
       </igx-scatter-series>
 
       <!-- 描画エリアポイント表示用 -->
-      <igx-scatter-series
-        [xAxis]="xAxis"
-        [yAxis]="yAxis"
-        xMemberPath="Point2D.X"
-        yMemberPath="Point2D.Y"
-        markerType="Circle"
-        markerBrush="red"
-        showDefaultTooltip="true"
-        [dataSource]="chartDatas.DrawPointData"
-        title="Draw Area Position"
-        name="ScatterSeries3" #drawAreaPoint>
+      <igx-scatter-series name="ScatterSeries3" #drawAreaPoint
+                          [xAxis]="xAxis"
+                          [yAxis]="yAxis"
+                          xMemberPath="Point2D.X"
+                          yMemberPath="Point2D.Y"
+                          markerType="Circle"
+                          markerBrush="red"
+                          showDefaultTooltip="true"
+                          [dataSource]="chartDatas.DrawPointData"
+                          title="Draw Area Position">
       </igx-scatter-series>
 
       <!-- 描画範囲設定 -->
