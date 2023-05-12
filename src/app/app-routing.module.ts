@@ -13,6 +13,7 @@ import {MeasureBaseComponent} from "./measure-base/measure-base.component";
 import {KuinavyControlComponent} from "./kuinavy-control/kuinavy-control.component";
 import {RobotInfoComponent} from "./robot-info/robot-info.component";
 import {RobotSettingsComponent} from "./robot-settings/robot-settings.component";
+import {CalibPrintPointComponent} from "./calib-print-point/calib-print-point.component";
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -26,6 +27,7 @@ export const routes: Routes = [
   { path: 'measure-base', component: MeasureBaseComponent, data: { text: '基準点計測' } },
   { path: 'drop-down', component: DropDownComponent, data: { text: 'コントロールボタン' } },
   { path: 'manual-Move', component: ManualMovesdrComponent, data: { text: 'マニュアル操作' } },
+  { path: 'print-setup', component: CalibPrintPointComponent, data:{text: 'プリント位置調整'}},
   { path: '**', component: PageNotFoundComponent } // must always be last
 ];
 

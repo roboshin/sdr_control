@@ -19,7 +19,7 @@ export class DropDownComponent implements OnInit{
 
 
   private _interval: number = -1;
-  private _refreshInterval: number = 3000;
+  private _refreshInterval: number = 500;
   private shouldTick: boolean = true;
 
   public robotInfo : RobotInformation;

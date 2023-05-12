@@ -49,6 +49,7 @@ import { RobotInfoViewComponent } from './robot-info-view/robot-info-view.compon
 import { RobotInfoComponent } from './robot-info/robot-info.component';
 import { RobotSettingsComponent } from './robot-settings/robot-settings.component';
 import { IgxLinearGaugeModule } from "igniteui-angular-gauges";
+import { CalibPrintPointComponent } from './calib-print-point/calib-print-point.component';
 
 
 // import {
@@ -71,7 +72,8 @@ import { IgxLinearGaugeModule } from "igniteui-angular-gauges";
     RobotParamSettingComponent,
     RobotInfoViewComponent,
     RobotInfoComponent,
-    RobotSettingsComponent
+    RobotSettingsComponent,
+    CalibPrintPointComponent
   ],
   imports: [
     FormsModule,
