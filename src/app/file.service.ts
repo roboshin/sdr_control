@@ -125,6 +125,16 @@ export class ViewLayerService {
     return this.http.put<any>(`${this.baseApiUrl}/setDrawLayer`, transjson);
   }
 
+  /**
+   * PCに表示用レイヤー名称（基準点レイヤー）をセットする
+   * @param layerName
+   */
+  setViewerLayer(layerName : string) : Observable<string>{
+    let setLayerName = this.baseApiUrl+`/setLayer/${layerName}`;
+
+    return this.http.put<string>(setLayerName,{});
+  }
+
 }
 
 /**
@@ -142,7 +152,18 @@ export class DrawLayerService {
   getViewLayer(): Observable<string[]> {
     return this.http.get<string[]>(this.baseApiUrl);
   }
+
+  /**
+   * PCに表示用レイヤー名称（基準点レイヤー）をセットする
+   * @param layerName
+   */
+  setDrawLayer(layerName : string) : Observable<string>{
+    let setLayerName = this.baseApiUrl+`/setLayer/${layerName}`;
+
+    return this.http.put<string>(setLayerName,{});
+  }
 }
+
 
 
 @Injectable({

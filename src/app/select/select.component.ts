@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild, AfterViewInit,} from '@angular/core';
-import {FileService, ViewLayerService} from "../file.service";
+import {DrawLayerService, FileService, ViewLayerService} from "../file.service";
 import {catchError, lastValueFrom, take} from "rxjs";
 import {map} from "rxjs/operators";
 import {IgxDialogComponent, IgxSelectComponent} from "igniteui-angular";
@@ -25,6 +25,7 @@ export class SelectComponent implements OnInit, AfterViewInit {
     private fileUploadService: FileService,
     private viewLayerService: ViewLayerService,
     private shareDataService: SharedDataService,
+    private drawLayerService : DrawLayerService,
     private logger: NGXLogger) {
   }
 
@@ -188,4 +189,55 @@ export class SelectComponent implements OnInit, AfterViewInit {
   }
 
 
+  /**
+   * 表示レイヤーを変更
+   */
+  viewLayerSelectChange() {
+    let selectNum = this.selectViewLayer.selectedItem.index;
+    this.logger.log(`Selected Item Index(view) : ${selectNum}`);
+
+    let selectName = this.selectViewLayer.selectionValue;
+    this.logger.log(`Selected Item(view) : ${selectName}`);
+
+
+    const obs = {
+      next:(x:string)=>{
+        this.logger.log(` view set : ${x}`);
+      },
+      error:(err : Error) =>{
+
+      },
+      complete : ()=>{
+
+      }
+    }
+
+    this.viewLayerService.setViewerLayer(selectName).subscribe(obs);
+
+  }
+
+  /**
+   * 描画レイヤーを変更
+   */
+  drawLayerSelectChange() {
+    let selectNum = this.selectViewLayer.selectedItem.index;
+    this.logger.log(`Selected Item Index(view) : ${selectNum}`);
+
+    let selectName = this.selectViewLayer.selectionValue;
+    this.logger.log(`Selected Item(view) : ${selectName}`);
+
+    const obs = {
+      next:(x:string)=>{
+        this.logger.log(` draw set : ${x}`);
+      },
+      error:(err : Error) =>{
+
+      },
+      complete : ()=>{
+
+      }
+    }
+
+    this.drawLayerService.setDrawLayer(selectName).subscribe(obs);
+  }
 }

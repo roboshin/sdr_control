@@ -28,6 +28,7 @@ import {BasePoint, DxfChartDatas,  } from "../draw-point-data";
 import {DrawLineDatas} from "../draw-line-datas";
 import {CrossPointDatas} from "../cross-point-datas";
 import {Point2D_Ts} from "../point2d_-ts";
+import {DrawAreaPolygon} from "../draw-area-polygon";
 
 class linfo implements LineInfo {
   Draw: boolean;
@@ -108,17 +109,15 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   selected: string;
   drawAreaSelected: any;
 
+  // 描画範囲設定用クラス
+  public drawAreaPolygon : DrawAreaPolygon = new DrawAreaPolygon();
+
   /**
    * 起動時にサービスから描画データを取得する
    */
   public ngAfterViewInit() {
 
-    // let viewData = this.dummyData.map(d => {
-    //   return {points: [d.Points]}
-    // })
-    //
-    // this.onLoadedLineShape(viewData);
-
+    this.drawAreaPolygon.polygonPointsList = new Array<Point2D_Ts>();
     this.tmpOffsetY = 0;
     this.tmpOffsetX = 0;
 
@@ -461,6 +460,9 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
     else if(this.selected == "drawRangeMode")
     {
       // 描画範囲が選択された場合
+      let px = unscaleX;  // クリックされたDXF上の座標値
+      let py = unscaleX;  // クリックされたDXF上の座標値
+
       this.chartDatas.DrawPointData.push({Point2D : {X: unscaleX, Y: unscaleY}});
       console.log(`${this.chartDatas.DrawPointData}`);
       this.scatterDrawAreaPos.dataSource = this.chartDatas.DrawPointData;
@@ -488,6 +490,9 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       else {
         this.chartDatas.DrawPolygonPointData[0].points[0].push({x: unscaleX, y: unscaleY});
       }
+
+      // this.chartDatas.DrawPolygonPointDataデータをサーバ送信用データに変換する
+
 
       // polylineを更新する
       // 描画エリアの表示
@@ -525,30 +530,8 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
   private tick(): void {
 
     if (this.shouldTick) {
-      // // ロボット現在値を取得する
-      // const rinfo = this.robotInfo.getRobotInfo();
-      //
-      // const rinfoObs = {
-      //   next: (x: any) => {
-      //     // ロボット現在値
-      //     var nowX = x["NowMeasurePoint3D"]['X'];
-      //     var nowY = x["NowMeasurePoint3D"]['Y'];
-      //     var nowZ = x["NowMeasurePoint3D"]['Z'];
-      //
-      //     this.NowRobotPos[0].px = nowX;
-      //     this.NowRobotPos[0].py = nowY;
-      //
-      //     this.scatterSeriesRobotPos.dataSource = this.NowRobotPos;
-      //
-      //   },
-      //   error: (err: Error) => {
-      //
-      //   },
-      //   complete: () => {
-      //
-      //   },
-      // }
-      // rinfo.subscribe(rinfoObs);
+      // ロボット現在値を取得する
+
     }
   }
 
@@ -594,7 +577,25 @@ export class CategoryChartComponent implements AfterViewInit, OnInit {
       }
     };
 
-    this.basePS.setDrawAreaPoints("all", this.chartDatas).subscribe(setAreaObs);
+    // this.basePS.setDrawAreaPoints("all", this.chartDatas).subscribe(setAreaObs);
+
+    // サーバ送信用でーたを作成する
+    var tmpPolygon = new DrawAreaPolygon();
+
+    for (var cnt=0;cnt<this.chartDatas.DrawPolygonPointData[0].points[0].length;cnt++){
+      let tmpPoint = new Point2D_Ts();
+      tmpPoint.x = this.chartDatas.DrawPolygonPointData[0].points[0][cnt].x;
+      tmpPoint.y = this.chartDatas.DrawPolygonPointData[0].points[0][cnt].y;
+
+      this.logger?.info(`write point : ${tmpPoint.x}, ${tmpPoint.y}`)
+
+      this.drawAreaPolygon.polygonPointsList.push(tmpPoint);
+    }
+
+    // var a = this.chartDatas
+    this.basePS.setDrawAreaPointsFromList(this.drawAreaPolygon).subscribe(setAreaObs);
+
+
   }
 
   comboSelectionChangeing($event: ISimpleComboSelectionChangingEventArgs) {

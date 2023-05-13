@@ -5,6 +5,7 @@ import {
 import { Injectable } from '@angular/core';
 import {DxfChartDatas} from "./draw-point-data";
 import * as http from "http";
+import {DrawAreaPolygon} from "./draw-area-polygon";
 
 @Injectable({
   providedIn: 'root'
@@ -113,7 +114,17 @@ export class BasePointService{
   setDrawAreaPoints(cmd : string,  drawAreaData : DxfChartDatas): Observable<HttpEvent<any>> {
 
     let getUrl = `${this.baseApiUrlSetDrawArea}/${cmd}`;
-    return this.http.put<any>(getUrl, {});
+    return this.http.put<any>(getUrl, {drawAreaData});
+  }
+
+  /**
+   * サーバーに描画エリアデータをセットする
+   * @param dAreaPoly
+   */
+  setDrawAreaPointsFromList(dAreaPoly : DrawAreaPolygon) : Observable<DrawAreaPolygon>{
+    let setUrl = `${this.baseApiUrlSetDrawArea}/setPolygon`;
+
+    return this.http.post<DrawAreaPolygon>(setUrl, dAreaPoly);
   }
 
   /**
