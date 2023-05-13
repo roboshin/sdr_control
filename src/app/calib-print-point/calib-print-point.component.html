@@ -1,0 +1,125 @@
+<p>calib-print-point works!</p>
+
+<table>
+
+  <tr class="row_title">
+    <td>
+      <label >リフレクタ位置</label>
+    </td>
+  </tr>
+
+  <!-- -->
+  <tr>
+    <td>
+      <!-- 吐出時　リフレクタ位置 X-->
+      <igx-input-group>
+        <input igxInput name="kui_x" type="number"  [(ngModel)]="refPos.x"/>
+        <label igxLabel for="kui_x">x[mm]</label>
+      </igx-input-group>
+    </td>
+    <td>
+      <!-- -->
+      <igx-input-group>
+        <input igxInput name="kui_y" type="number" [(ngModel)]="refPos.y" />
+        <label igxLabel for="kui_y">y[mm]</label>
+      </igx-input-group>
+    </td>
+    <td>
+      <!-- -->
+      <igx-input-group>
+        <input igxInput name="kui_z" type="number"  [(ngModel)]="refPos.z"/>
+        <label igxLabel for="kui_z">z[mm]</label>
+      </igx-input-group>
+    </td>
+    <td>
+    <div class="button-sample">
+      <button igxButton="raised" igxRipple name="printPointButton" (click)="measureButtonClick($event)">計測</button>
+    </div>
+    </td>
+  </tr>
+
+  <tr class="row_title">
+    <td>
+      <label >吐出結果位置</label>
+    </td>
+  </tr>
+  <!-- 吐出ポイント-->
+  <tr>
+    <td>
+      <!-- 取得座標値 X-->
+      <igx-input-group>
+        <input igxInput name="print_x" type="number" [ngModel]="printPos.x"/>
+        <label igxLabel for="print_x">x[mm]</label>
+      </igx-input-group>
+    </td>
+    <td>
+      <!-- -->
+      <igx-input-group>
+        <input igxInput name="print_y" type="number" [ngModel]="printPos.x"/>
+        <label igxLabel for="print_y">y[mm]</label>
+      </igx-input-group>
+    </td>
+    <td>
+      <!-- -->
+      <igx-input-group>
+        <input igxInput name="print_z" type="number" [ngModel]="printPos.x"/>
+        <label igxLabel for="print_z" >z[mm]</label>
+      </igx-input-group>
+    </td>
+
+    <td>
+      <div class="button-sample">
+        <button igxButton="raised" igxRipple name="printPointButton" (click)="measureButtonClick($event)">計測</button>
+      </div>
+    </td>
+  </tr>
+
+  <tr class="row_title">
+    <td>
+      <label >偏差計算</label>
+    </td>
+  </tr>
+  <!-- -->
+  <tr>
+    <td>
+      <!-- 取得座標値 X-->
+      <igx-input-group>
+        <input igxInput name="print_x" type="number" [ngModel]="errorPos.x"/>
+        <label igxLabel for="print_x">x[mm]</label>
+      </igx-input-group>
+    </td>
+    <td>
+      <!-- -->
+      <igx-input-group>
+        <input igxInput name="print_y" type="number" [ngModel]="errorPos.x"/>
+        <label igxLabel for="print_y">y[mm]</label>
+      </igx-input-group>
+    </td>
+    <td>
+      <!-- -->
+      <igx-input-group>
+        <input igxInput name="print_z" type="number" [ngModel]="errorPos.x"/>
+        <label igxLabel for="print_z" >z[mm]</label>
+      </igx-input-group>
+    </td>
+
+    <td>
+      <div class="button-sample">
+        <button igxButton="raised" igxRipple name="printPointButton" (click)="measureButtonClick($event)">計算</button>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<!-- -->
+<div class="button-sample">
+  <button igxButton="raised" igxRipple name="printPointButton" (click)="writeCorrectValue($event)">補正値書込</button>
+</div>
+
+<!-- アラート表示用 -->
+<igx-dialog #alert
+            [title]="dialogTitle"
+            [message]="dialogMsg"
+            leftButtonLabel="OK"
+            (leftButtonSelect)="alert.close()">
+</igx-dialog>
