@@ -177,7 +177,23 @@ export class SelectComponent implements OnInit, AfterViewInit {
    * レイヤー名　一覧を取得する
    */
   onLoadViewLayer() {
-    this.viewLayerService.getViewLayer()
+    let layer = this.selectViewLayer.selectionValue;
+
+    this.viewLayerService.getViewLayer(layer)
+      .subscribe({
+        next(vl) {
+          this.itemViewLayer = vl
+        },
+        error(msg) {
+          console.log(msg);
+        }
+      });
+  }
+
+  onLoadDrawLayer() {
+    let layer = this.selectDrawLayer.selectionValue;
+
+    this.viewLayerService.getDrawLayer(layer)
       .subscribe({
         next(vl) {
           this.itemViewLayer = vl

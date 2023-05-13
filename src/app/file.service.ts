@@ -114,8 +114,15 @@ export class ViewLayerService {
   constructor(private http: HttpClient) {
   }
 
-  getViewLayer(): Observable<string[]> {
-    return this.http.get<string[]>(this.baseApiUrl);
+  /**
+   *
+   */
+  getViewLayer(layerName:string): Observable<string[]> {
+    return this.http.get<string[]>(this.baseApiUrl+`/view/`+`${layerName}`);
+  }
+
+  getDrawLayer(layerName:string): Observable<string[]> {
+    return this.http.get<string[]>(this.baseApiUrl+`/draw/`+`${layerName}`);
   }
 
   setDrawLayer(str: string): Observable<HttpResponse<any>> {

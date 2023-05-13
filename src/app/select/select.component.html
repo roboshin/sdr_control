@@ -54,7 +54,7 @@
   <!-- 表示レイヤーのCombobox　-->
   <igx-select #selectViewLayer>
     <label igxLabel>表示レイヤー名</label>
-    <igx-select-item *ngFor="let item of itemViewLayer" [value]="item" (click)="onLoadViewLayer()" (selectedChange)="viewLayerSelectChange()">
+    <igx-select-item *ngFor="let item of itemViewLayer" [value]="item" (click)="onLoadViewLayer()" (selectionchange)="viewLayerSelectChange()" >
       {{item}}
     </igx-select-item>
   </igx-select>
@@ -62,7 +62,7 @@
   <!-- 描画レイヤーのCombobox -->
   <igx-select #selectDrawLayer>
     <label igxLabel>描画レイヤー名</label>
-    <igx-select-item *ngFor="let item of itemDrawLayer" [value]="item" (click)="onLoadViewLayer()" (selectedChange)="drawLayerSelectChange()">
+    <igx-select-item *ngFor="let item of itemDrawLayer" [value]="item" (click)="onLoadDrawLayer()" (selectionchange)="drawLayerSelectChange()">
       {{item}}
     </igx-select-item>
   </igx-select>
