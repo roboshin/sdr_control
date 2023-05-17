@@ -168,23 +168,23 @@ export class MeasureBaseComponent implements OnInit {
     this.itemBasePointName = this.BasePointList[0].name;
 
     console.log("dummy update")
-    this.shareDataService.sharedData$.subscribe(sData=> {
-      this.dummyData = sData;
-      console.log("subscribed")
-      console.log(sData);
-    });
-    console.log("dummy updated")
-    console.log(this.dummyData);
-
-    this.fileUploadService.getLines().subscribe(subData =>{
-      this.dummyData = subData['Item1'];  // linedata
-      console.log('Item1')
-      console.log(this.dummyData);
-
-      // 画面の更新
-      var viewData = this.dummyData.map(d=>{return {points : [d.Points]}})
-      this.onLoadedJsonShape(viewData);
-    })
+    // this.shareDataService.sharedData$.subscribe(sData=> {
+    //   this.dummyData = sData;
+    //   console.log("subscribed")
+    //   console.log(sData);
+    // });
+    // console.log("dummy updated")
+    // console.log(this.dummyData);
+    //
+    // this.fileUploadService.getLines().subscribe(subData =>{
+    //   this.dummyData = subData['Item1'];  // linedata
+    //   console.log('Item1')
+    //   // console.log(this.dummyData);
+    //
+    //   // 画面の更新
+    //   var viewData = this.dummyData.map(d=>{return {points : [d.Points]}})
+    //   this.onLoadedJsonShape(viewData);
+    // })
 
   }
 

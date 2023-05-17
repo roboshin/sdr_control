@@ -172,7 +172,10 @@ export class DrawLayerService {
 }
 
 
-
+/**
+ * ロボットコントロール用サービス
+ * 再生ボタン、停止、ホールド用通信
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -186,14 +189,26 @@ export class RobotControService {
   constructor(private http: HttpClient) {
   }
 
+  /**
+   *
+   * @param str
+   */
   setPlay(str: string): Observable<any> {
     return this.http.put(this.baseApiUrl + '/play', str, this.httpOptions);
   }
 
+  /**
+   *
+   * @param str
+   */
   setHold(str: string): Observable<any> {
     return this.http.put(this.baseApiUrl + '/hold', str, this.httpOptions);
   }
 
+  /**
+   *
+   * @param str
+   */
   setStop(str: string): Observable<any> {
     return this.http.put(this.baseApiUrl + '/stop', str, this.httpOptions);
   }
@@ -204,6 +219,12 @@ export class RobotControService {
    * @param cmd
    */
   getRobotInfo(cmd : string) : Observable<RobotInformation>{
+
+    //
+    // 通信アドレス　get
+    // /app/robotControl/rinfo
+    //
+
     return this.http.get<RobotInformation>(this.baseApiUrl+`/rinfo`);
   }
 }
