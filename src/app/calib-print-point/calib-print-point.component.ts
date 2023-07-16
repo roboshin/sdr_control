@@ -4,7 +4,6 @@ import {NGXLogger} from "ngx-logger";
 import {IgxDialogComponent} from "igniteui-angular";
 import {RobotControService} from "../file.service";
 import {Point3D_Ts} from "../point3d_-ts";
-import {award} from "@igniteui/material-icons-extended";
 
 /**
  * プリンタの吐出位置

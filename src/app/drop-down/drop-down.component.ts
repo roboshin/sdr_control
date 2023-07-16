@@ -197,6 +197,8 @@ export class DropDownComponent implements OnInit{
   onMeasureNowPoint(){
     this.logger?.log(`[START]:onMeasureNowPoint`);
 
+    this.onGetRobotIfo();
+
     this.logger?.log(`[END]:onMeasureNowPoint`);
   }
 }
