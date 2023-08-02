@@ -14,4 +14,7 @@ export class RobotInformation {
     obstacleDetected: boolean;
     errorX: number;
     errorY: number;
+    imuRz: number;
+    imuRy: number;
+    imuRx: number;
 }

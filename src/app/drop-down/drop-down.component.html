@@ -47,17 +47,31 @@
     <!-- DXF上の現在値を表示用 -->
     <igx-input-group>
       <input igxInput name="dxf_x" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.x" />
-      <label igxLabel for="dxf_x">x[mm]</label>
+      <label igxLabel for="dxf_x">dxf x[mm]</label>
     </igx-input-group>
 
     <igx-input-group>
       <input igxInput name="dxf_y" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.y" />
-      <label igxLabel for="dxf_y">y[mm]</label>
+      <label igxLabel for="dxf_y">dxf y[mm]</label>
     </igx-input-group>
 
     <igx-input-group>
       <input igxInput name="dxf_z" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.z" />
-      <label igxLabel for="dxf_z">z[mm]</label>
+      <label igxLabel for="dxf_z">dxf [mm]</label>
+    </igx-input-group>
+
+    <!-- 現在IMUの値 -->
+    <igx-input-group>
+      <input igxInput name="imu_rz" type="number" [(ngModel)]="robotInfo.imuRz" />
+      <label igxLabel for="imu_rz">Rz[deg]</label>
+    </igx-input-group>
+    <igx-input-group>
+      <input igxInput name="imu_ry" type="number" [(ngModel)]="robotInfo.imuRy" />
+      <label igxLabel for="imu_ry">Rydeg]</label>
+    </igx-input-group>
+    <igx-input-group>
+      <input igxInput name="imu_rx" type="number" [(ngModel)]="robotInfo.imuRx" />
+      <label igxLabel for="imu_rx">Rx[deg]</label>
     </igx-input-group>
   </form>
 
