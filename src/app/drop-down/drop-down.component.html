@@ -16,6 +16,10 @@
 
     <!-- 予約-->
     <button igxButton [igxRipple]="rippleColor" [selected]="true">RESERVED</button>
+
+    <button igxButton [igxRipple]="rippleColor" (click)="onInitImu()" )>IMU初期値設定</button>
+
+
   </igx-buttongroup>
 
 
@@ -67,7 +71,7 @@
     </igx-input-group>
     <igx-input-group>
       <input igxInput name="imu_ry" type="number" [(ngModel)]="robotInfo.imuRy" />
-      <label igxLabel for="imu_ry">Rydeg]</label>
+      <label igxLabel for="imu_ry">Ry[deg]</label>
     </igx-input-group>
     <igx-input-group>
       <input igxInput name="imu_rx" type="number" [(ngModel)]="robotInfo.imuRx" />

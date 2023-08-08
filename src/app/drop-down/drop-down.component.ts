@@ -201,4 +201,11 @@ export class DropDownComponent implements OnInit{
 
     this.logger?.log(`[END]:onMeasureNowPoint`);
   }
+
+  /**
+   * IMUの初期値設定ボタン
+   */
+  onInitImu() {
+
+  }
 }

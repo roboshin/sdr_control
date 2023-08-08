@@ -193,6 +193,16 @@ export class RobotControService {
    *
    * @param str
    */
+  setInitialImu(rz:number, ry:number, rx:number):Observable<any>{
+    let getUrl = `${this.baseApiUrl}/setImu/${rz}/${ry}/${rx}`;
+    console.log(getUrl);
+    return this.http.put<any>(getUrl, {});
+  }
+
+  /**
+   *
+   * @param str
+   */
   setPlay(str: string): Observable<any> {
     return this.http.put(this.baseApiUrl + '/play', str, this.httpOptions);
   }
