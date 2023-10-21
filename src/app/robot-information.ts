@@ -17,4 +17,9 @@ export class RobotInformation {
     imuRz: number;
     imuRy: number;
     imuRx: number;
+    beforMove: boolean;
+    drawing: boolean;
+    drawLayerName: string = "";
+    viewLayerName: string = "";
+    orgError: number;
 }
