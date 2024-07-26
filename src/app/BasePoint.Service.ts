@@ -38,7 +38,7 @@ export class BasePointService{
    * 基準座標値の数（Pの数）を設定する
    * @param numOfPont
    */
-  setMasterPointNumbers(numOfPont : number):Observable<HttpEvent<any>> {
+    setMasterPointNumbers(numOfPont : number):Observable<HttpEvent<any>> {
     // /master/set_number/{num}
 
     let putUrl =`${this.baseApiUrlMaster}/set_number/${numOfPont}`
