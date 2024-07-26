@@ -108,6 +108,16 @@ export class BasePointService{
   }
 
   /**
+   * Pnに関するエラーを取得する
+   * @param cmd
+   */
+  getP1Error(cmd : string) : Observable<HttpEvent<any>>{
+    let getUrl = `${this.baseApiUrlResult}/${cmd}`
+    return this.http.get<any>(getUrl,{observe:'response'});
+
+  }
+
+  /**
    * サーバーに描画エリア関係のデータをセットする
    * @param drawAreaData
    */

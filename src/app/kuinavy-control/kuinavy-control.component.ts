@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import {NGXLogger} from "ngx-logger";
+import {KuiNavyService} from "../KuiNavy.service";
 
 @Component({
   selector: 'app-kuinavy-control',
@@ -12,7 +13,8 @@ export class KuinavyControlComponent implements OnInit, AfterViewInit {
 
 
   constructor(
-    private logger:NGXLogger) { }
+    private logger:NGXLogger,
+    private kuinavy:KuiNavyService) { }
 
   ngOnInit(): void {
     this.logger.debug("[START] : ngOnInit")
@@ -42,20 +44,59 @@ export class KuinavyControlComponent implements OnInit, AfterViewInit {
    * ターゲットサーチコマンドを発行
    */
   onSearchTarget() {
+    const obs = {
+      next : (x : any)=>{
+        console.log("杭ナビサーチ開始")
+      },
+      error:(err:Error) =>{
+        console.log("杭ナビサーチ開始エラー")
+        console.log(err.message);
+      },
+      complete:()=>{
+        console.log("杭ナビサーチ開始Complete")
+      }
+    };
 
+    this.kuinavy.setCmdSearch().subscribe(obs);
   }
 
   /**
    * 連続計測を開始する
    */
   onStartMeasure() {
+    const obs = {
+      next : (x : any)=>{
+        console.log("杭ナビ計測開始")
+      },
+      error:(err:Error) =>{
+        console.log("杭ナビ計測開始")
+        console.log(err.message);
+      },
+      complete:()=>{
+        console.log("杭ナビ計測開始omplete")
+      }
+    };
 
+    this.kuinavy.setCmdStartMeasure().subscribe(obs);
   }
 
   /**
    * 計測を停止する
    */
   onStopMeasure() {
+    const obs = {
+      next : (x : any)=>{
+        console.log("杭ナビ計測停止")
+      },
+      error:(err:Error) =>{
+        console.log("杭ナビ計測停止エラー")
+        console.log(err.message);
+      },
+      complete:()=>{
+        console.log("杭ナビ計測停止Complete")
+      }
+    };
 
+    this.kuinavy.setCmdStopMeasure().subscribe(obs);
   }
 }
