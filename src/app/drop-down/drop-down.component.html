@@ -5,84 +5,93 @@
   <!-- ロボットのメイン制御用 -->
   <igx-buttongroup>
     <!-- 動作開始ボタン -->
-<!--    <button igxButton [igxRipple]="rippleColor" (click)="onPlay()" [disabled]="playButtonDisable">START</button>-->
-    <button igxButton [igxRipple]="rippleColor" (click)="onPlay()" >START</button>
+    <!--    <button igxButton [igxRipple]="rippleColor" (click)="onPlay()" [disabled]="playButtonDisable">START</button>-->
+    <button igxButton="flat" [igxRipple]="rippleColor" (click)="onPlay()">START</button>
 
     <!-- 動作一時停止ボタン -->
-    <button igxButton [igxRipple]="rippleColor" (click)="onHold()">HOLD</button>
+    <button igxButton="flat" [igxRipple]="rippleColor" (click)="onHold()">HOLD</button>
 
     <!-- 停止ボタン -->
-    <button igxButton [igxRipple]="rippleColor" (click)="onStop()">STOP</button>
+    <button igxButton="flat" [igxRipple]="rippleColor" (click)="onStop()">STOP</button>
 
     <!-- 予約-->
-    <button igxButton [igxRipple]="rippleColor" [selected]="true">RESERVED</button>
+    <button igxButton="flat" [igxRipple]="rippleColor" [selected]="true">RESERVED</button>
 
-    <button igxButton [igxRipple]="rippleColor" (click)="onInitImu()">IMU初期値設定</button>
+    <button igxButton="flat" [igxRipple]="rippleColor" (click)="onInitImu()">IMU初期値設定</button>
 
-
-  </igx-buttongroup>
-
-
-  <igx-buttongroup>
     <!-- 現在値を取得するボタン -->
     <!--
       現在値を杭ナビから取得して、ロボット現在値情報として、表示する
       表示は、杭ナビの現在値、DXF上の現在値として表示
     -->
-    <button igxButton [igxRipple]="rippleColor" (click)="onMeasureNowPoint()">現在値計測</button>
+    <button igxButton="flat" [igxRipple]="rippleColor" (click)="onMeasureNowPoint()">現在値計測</button>
   </igx-buttongroup>
-  <form>
-    <!-- 杭ナビの計測値表示用 -->
-    <igx-input-group>
-      <input igxInput name="kui_x" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.x" />
-      <label igxLabel for="kui_x">x[mm]</label>
-    </igx-input-group>
 
-    <igx-input-group>
-      <input igxInput name="kui_y" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.y" />
-      <label igxLabel for="kui_y">y[mm]</label>
-    </igx-input-group>
 
-    <igx-input-group>
-      <input igxInput name="kui_z" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.z" />
-      <label igxLabel for="kui_z">z[mm]</label>
-    </igx-input-group>
+  <div>
+    <div>
+      <!-- 杭ナビの計測値表示用 -->
+      <p>
+        <igx-input-group>
+          <input igxInput name="kui_x" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.x"/>
+          <label igxLabel for="kui_x">X[mm]</label>
+        </igx-input-group>
 
-    <!-- DXF上の現在値を表示用 -->
-    <igx-input-group>
-      <input igxInput name="dxf_x" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.x" />
-      <label igxLabel for="dxf_x">DXF X[mm]</label>
-    </igx-input-group>
+        <igx-input-group>
+          <input igxInput name="kui_y" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.y"/>
+          <label igxLabel for="kui_y">Y[mm]</label>
+        </igx-input-group>
 
-    <igx-input-group>
-      <input igxInput name="dxf_y" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.y" />
-      <label igxLabel for="dxf_y">DXY Y[mm]</label>
-    </igx-input-group>
+        <igx-input-group>
+          <input igxInput name="kui_z" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.z"/>
+          <label igxLabel for="kui_z">Z[mm]</label>
+        </igx-input-group>
+      </p>
+    </div>
 
-    <igx-input-group>
-      <input igxInput name="dxf_z" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.z" />
-      <label igxLabel for="dxf_z">DXF Z[mm]</label>
-    </igx-input-group>
+    <div>
+      <p>
+        <!-- DXF上の現在値を表示用 -->
+        <igx-input-group>
+          <input igxInput name="dxf_x" w8type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.x"/>
+          <label igxLabel for="dxf_x">DXF X[mm]</label>
+        </igx-input-group>
 
-    <!-- 現在IMUの値 -->
-    <igx-input-group>
-      <input igxInput name="imu_rz" type="number" [(ngModel)]="robotInfo.imuRz" />
-      <label igxLabel for="imu_rz">Rz[deg]</label>
-    </igx-input-group>
-    <igx-input-group>
-      <input igxInput name="imu_ry" type="number" [(ngModel)]="robotInfo.imuRy" />
-      <label igxLabel for="imu_ry">Ry[deg]</label>
-    </igx-input-group>
-    <igx-input-group>
-      <input igxInput name="imu_rx" type="number" [(ngModel)]="robotInfo.imuRx" />
-      <label igxLabel for="imu_rx">Rx[deg]</label>
-    </igx-input-group>
+        <igx-input-group>
+          <input igxInput name="dxf_y" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.y"/>
+          <label igxLabel for="dxf_y">DXY Y[mm]</label>
+        </igx-input-group>
 
-    <igx-input-group>
-      <input igxInput name="errorOrg" type="number" [(ngModel)]="robotInfo.orgError" />
-      <label igxLabel for="errorOrg">Rx[deg]</label>
-    </igx-input-group>
-  </form>
+        <igx-input-group>
+          <input igxInput name="dxf_z" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.z"/>
+          <label igxLabel for="dxf_z">DXF Z[mm]</label>
+        </igx-input-group>
+      </p>
+    </div>
+
+    <div>
+      <p>
+        <!-- 現在IMUの値 -->
+        <igx-input-group>
+          <input igxInput name="imu_rz" type="number" [(ngModel)]="robotInfo.imuRz"/>
+          <label igxLabel for="imu_rz">Rz[deg]</label>
+        </igx-input-group>
+        <igx-input-group>
+          <input igxInput name="imu_ry" type="number" [(ngModel)]="robotInfo.imuRy"/>
+          <label igxLabel for="imu_ry">Ry[deg]</label>
+        </igx-input-group>
+        <igx-input-group>
+          <input igxInput name="imu_rx" type="number" [(ngModel)]="robotInfo.imuRx"/>
+          <label igxLabel for="imu_rx">Rx[deg]</label>
+        </igx-input-group>
+
+        <igx-input-group>
+          <input igxInput name="errorOrg" type="number" [(ngModel)]="robotInfo.orgError"/>
+          <label igxLabel for="errorOrg">RMS[deg]</label>
+        </igx-input-group>
+      </p>
+    </div>
+  </div>
 
 
   <!-- アラート表示用 -->

@@ -11,7 +11,7 @@ import {Injectable} from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class FileService {
+export class KuiNavyService {
 
   public selected: string;
 
@@ -33,7 +33,7 @@ export class FileService {
    * 杭ナビの状態を取得する
    */
   getKuiStatus() :Observable<any>{
-    const baseUrl = this.cmdBaseUrl+`/status`;
+    const baseUrl = this.cmdBaseUrl+`/ctrl/status`;
 
     return this.http.get(baseUrl);
   }
@@ -42,27 +42,27 @@ export class FileService {
    * 杭ナビにターゲットサーチコマンドを発行する
    */
   setCmdSearch():Observable<any>{
-    const baseUrl = this.cmdBaseUrl+`/search`;
+    const baseUrl = this.cmdBaseUrl+`/ctrl/search`;
 
-    return this.http.put(baseUrl, {});
+    return this.http.get(baseUrl, {});
   }
 
   /**
    * 杭ナビに計測開始を指示
    */
   setCmdStartMeasure():Observable<any>{
-    const basweUrl = this.cmdBaseUrl+`/start`;
+    const basweUrl = this.cmdBaseUrl+`/ctrl/start`;
 
-    return this.http.put(basweUrl, {});
+    return this.http.get(basweUrl, {});
   }
 
   /**
    * 杭ナビに計測停止を指示
    */
   setCmdStopMeasure():Observable<any>{
-    const basweUrl = this.cmdBaseUrl+`/stop`;
+    const basweUrl = this.cmdBaseUrl+`/ctrl/stop`;
 
-    return this.http.put(basweUrl, {});
+    return this.http.get(basweUrl, {});
   }
 
   /**
@@ -74,7 +74,7 @@ export class FileService {
   setCmdReflectorParam(prismType:string, prismDia:number, prismValue:number):Observable<any>{
     const basweUrl = this.cmdBaseUrl+`/priParam`+`/${prismType}/${prismDia}/${prismValue}`;
 
-    return this.http.put(basweUrl, {});
+    return this.http.get(basweUrl, {});
   }
 
 }

@@ -50,6 +50,7 @@ import { RobotInfoComponent } from './robot-info/robot-info.component';
 import { RobotSettingsComponent } from './robot-settings/robot-settings.component';
 import { IgxLinearGaugeModule } from "igniteui-angular-gauges";
 import { CalibPrintPointComponent } from './calib-print-point/calib-print-point.component';
+import { DrawingDxfTestComponent } from './drawing-dxf-test/drawing-dxf-test.component';
 
 
 // import {
@@ -57,6 +58,8 @@ import { CalibPrintPointComponent } from './calib-print-point/calib-print-point.
 // } from './referencepoint-measure/referencepoint-measure.component';
 // import { SvgViewComponent } from './svg-view/svg-view.component';
 
+// @ts-ignore
+// @ts-ignore
 @NgModule({
   declarations: [
     AppComponent,
@@ -73,7 +76,8 @@ import { CalibPrintPointComponent } from './calib-print-point/calib-print-point.
     RobotInfoViewComponent,
     RobotInfoComponent,
     RobotSettingsComponent,
-    CalibPrintPointComponent
+    CalibPrintPointComponent,
+    DrawingDxfTestComponent
   ],
   imports: [
     FormsModule,
@@ -122,8 +126,8 @@ import { CalibPrintPointComponent } from './calib-print-point/calib-print-point.
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [],
-  schemas: []
+  // entryComponents: [],
+  // schemas: []
 })
 export class AppModule {
 }
