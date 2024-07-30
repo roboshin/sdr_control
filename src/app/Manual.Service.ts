@@ -3,7 +3,7 @@ import {
   HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpRequest, HttpResponse
 } from '@angular/common/http';
 import {Injectable, ViewChild} from '@angular/core';
-import {IgxSliderComponent, IgxSliderType} from "igniteui-angular";
+import {IgxSliderComponent, IgxSliderType} from "@infragistics/igniteui-angular";
 
 @Injectable({
   providedIn: 'root'

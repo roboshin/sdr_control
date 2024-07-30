@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxDropDownModule, IgxToggleModule } from 'igniteui-angular';
+import { IgxDropDownModule, IgxToggleModule } from '@infragistics/igniteui-angular';
 import { DropDownComponent } from './drop-down.component';
 
 describe('DropDownComponent', () => {

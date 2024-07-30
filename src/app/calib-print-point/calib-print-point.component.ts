@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {RobotInformation} from "../robot-information";
 import {NGXLogger} from "ngx-logger";
-import {IgxDialogComponent} from "igniteui-angular";
+import {IgxDialogComponent} from "@infragistics/igniteui-angular";
 import {RobotControService} from "../file.service";
 import {Point3D_Ts} from "../point3d_-ts";
 

@@ -4,7 +4,7 @@ import {
   IDialogEventArgs,
   IgxDialogComponent, IgxOverlayService,
   IgxSimpleComboComponent
-} from "igniteui-angular";
+} from "@infragistics/igniteui-angular";
 import {CategoryChartType, IgxScatterPolylineSeriesComponent, IgxStyleShapeEventArgs} from "igniteui-angular-charts";
 import {LineInfo, Point2D} from "../LineInfo";
 import {BasePointService} from "../BasePoint.Service";

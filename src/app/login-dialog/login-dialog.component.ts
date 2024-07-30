@@ -1,6 +1,6 @@
 import {Component, OnInit, AfterViewInit, ViewChild} from '@angular/core';
 import {Form} from "@angular/forms";
-import {IgxDialogComponent} from "igniteui-angular";
+import {IgxDialogComponent} from "@infragistics/igniteui-angular";
 
 @Component({
   selector: 'app-login-dialog',

@@ -4,7 +4,7 @@ import {
   IgxSliderComponent,
   IgxSliderType,
   ISliderValueChangeEventArgs
-} from 'igniteui-angular';
+} from '@infragistics/igniteui-angular';
 import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ManualService} from "../Manual.Service";
 import {error} from "protractor";

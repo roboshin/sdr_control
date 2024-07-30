@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import {RobotInfoService, SettingInfo} from "../robotInfo.service";
 import { NGXLogger } from "ngx-logger";
-import {IgxDialogComponent} from "igniteui-angular";
+import {IgxDialogComponent} from "@infragistics/igniteui-angular";
 import { IgxLinearGaugeComponent } from "igniteui-angular-gauges";
 import { IgxLinearGraphRangeComponent } from "igniteui-angular-gauges";
 import { LinearGraphNeedleShape } from "igniteui-angular-gauges";

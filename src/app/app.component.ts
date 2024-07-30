@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
-import { IgxNavigationDrawerComponent } from 'igniteui-angular';
+import { IgxNavigationDrawerComponent } from '@infragistics/igniteui-angular';
 import { filter } from 'rxjs/operators';
 import { routes } from './app-routing.module';
 

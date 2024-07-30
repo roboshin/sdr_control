@@ -4,7 +4,7 @@ import { Country, data } from './local-data';
 import {RobotControService} from "../file.service";
 import { from, Observable } from 'rxjs';
 import {NGXLogger} from "ngx-logger";
-import {IgxDialogComponent} from "igniteui-angular";
+import {IgxDialogComponent} from "@infragistics/igniteui-angular";
 import {RobotInformation} from "../robot-information";
 
 

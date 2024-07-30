@@ -4,7 +4,7 @@
 @forward "minireset.css/minireset";
 
 /* See: https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/index */
-@use "igniteui-angular/theming" as *;
+@use "@infragistics/igniteui-angular/theming" as *;
 
 $primary: #731963 !default;
 $secondary: #ce5712 !default;

@@ -16,7 +16,7 @@ import {
   IgxSliderModule,
   IgxToggleModule,
   IgxSwitchModule,
-} from 'igniteui-angular';
+} from '@infragistics/igniteui-angular';
 import {
     IgxCategoryChartModule, IgxDataChartCoreModule, IgxDataChartInteractivityModule,
     IgxDataChartScatterModule, IgxDataChartShapeCoreModule, IgxDataChartShapeModule, IgxLegendModule,

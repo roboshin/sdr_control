@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild, AfterViewInit,} from '@angular
 import {DrawLayerService, FileService, ViewLayerService} from "../file.service";
 import {catchError, lastValueFrom, take} from "rxjs";
 import {map} from "rxjs/operators";
-import {IgxDialogComponent, IgxSelectComponent} from "igniteui-angular";
+import {IgxDialogComponent, IgxSelectComponent} from "@infragistics/igniteui-angular";
 import {filter} from "rxjs/operators";
 import {LineInfo} from "../LineInfo";
 import {FileInfo} from "@angular-devkit/build-angular/src/utils/index-file/augment-index-html";

@@ -17,12 +17,12 @@ import {
   IgxDialogComponent,
   IgxOverlayService,
   IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs
-} from "igniteui-angular";
+} from "@infragistics/igniteui-angular";
 import {LineInfo, Point2D} from "../LineInfo";
 import {BasePointService} from "../BasePoint.Service";
 import {FileService} from "../file.service";
 import {NGXLogger} from "ngx-logger";
-import { ButtonGroupAlignment } from 'igniteui-angular';
+import { ButtonGroupAlignment } from '@infragistics/igniteui-angular';
 import {RobotInfoService} from "../robotInfo.service";
 import {BasePoint, DxfChartDatas,  } from "../draw-point-data";
 import {DrawLineDatas} from "../draw-line-datas";
