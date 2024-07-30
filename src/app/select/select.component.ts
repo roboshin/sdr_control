@@ -97,7 +97,11 @@ export class SelectComponent implements OnInit, AfterViewInit {
   onUpload() {
     this.logger.debug("[STAR] : onUpload");
 
-    this.loading = !this.loading;
+    // 表示を更新
+    this.loading = true;
+    this.success_loading = false;
+    this.error_loading = false;
+
     const layersMap = this.fileUploadService.upload(this.file);
 
     const obsCallbacks = {
@@ -141,12 +145,22 @@ export class SelectComponent implements OnInit, AfterViewInit {
         this.dialog_title = "Failed";
         this.dialog_msg = "ファイル転送に失敗しました";
         this.alertDialg.open(); // 完了Dialogをオープンする
+
+        // 表示を更新
+        this.loading = false;
+        this.success_loading = false;
+        this.error_loading = true;
       },
 
       complete:()=>{
         this.dialog_title = "Success";
         this.dialog_msg = "ファイル転送完了\nLayers : " + this.itemViewLayer;
         this.alertDialg.open(); // 完了Dialogをオープンする
+
+        // 表示を更新
+        this.loading = false;
+        this.success_loading = true;
+        this.error_loading = false;
       }
     };
 
