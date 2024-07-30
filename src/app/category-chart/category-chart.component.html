@@ -36,7 +36,7 @@
                     computedPlotAreaMarginMode="Series"
                     (seriesMouseEnter)="onsSriesMouseEnter($event)"
     >
-      <igx-numeric-x-axis #xAxis name="xAxis"
+      <igx-numeric-x-axis #xAxis name="xAxis" [interval]="yAxis.interval"
                           ></igx-numeric-x-axis>
       <igx-numeric-y-axis #yAxis name="yAxis"
                           ></igx-numeric-y-axis>
@@ -46,7 +46,8 @@
                                    [xAxis]="xAxis"
                                    [yAxis]="yAxis"
                                    shapeMemberPath="points"
-                                   thickness="0.5"
+                                   thickness="0.7"
+                                   brush="black"
                                    (styleShape)="onStyleLine($event)">
       </igx-scatter-polyline-series>
 

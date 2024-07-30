@@ -88,6 +88,11 @@ export class MeasureBaseComponent implements OnInit {
   xOffsetResult : number;
   yOffsetResult : number;
 
+  p1Error : number;
+  p2Error : number;
+  p3Error : number;
+  p4Error : number;
+
   constructor(
     private basePS : BasePointService,
     private shareDataService: SharedDataService,
@@ -453,6 +458,7 @@ export class MeasureBaseComponent implements OnInit {
   }
 
 
+  // 変換係数の結果表示ダイアログ
   onResultFormOpen($event: IDialogEventArgs) {
     this.logger.debug(`Result form opend`);
 
@@ -481,8 +487,63 @@ export class MeasureBaseComponent implements OnInit {
       }
     }
 
-    var obsResult = this.basePS.getMatrixResult(`dummy`).subscribe(obs);
+    let obsResult = this.basePS.getMatrixResult(`dummy`).subscribe(obs);
 
+    const obsP1 = {
+      next : (x : any) =>{
+        let e1 = Math.sqrt(x['body'][0]*x['body'][0]+x['body'][1]*x['body'][1]);
+        this.p1Error = e1;
+      },
+      error : (err : Error) => {
+        this.logger.debug('Result P1 error')
+      },
+      complete : () =>{
+        this.logger.debug('Result P1 Complete')
+      }
+    }
+
+    const obsP2 = {
+      next : (x : any) =>{
+        let e1 = Math.sqrt(x['body'][0]*x['body'][0]+x['body'][1]*x['body'][1]);
+        this.p2Error = e1;
+      },
+      error : (err : Error) => {
+        this.logger.debug('Result P1 error')
+      },
+      complete : () =>{
+        this.logger.debug('Result P1 Complete')
+      }
+    }
+    const obsP3 = {
+      next : (x : any) =>{
+        let e1 = Math.sqrt(x['body'][0]*x['body'][0]+x['body'][1]*x['body'][1]);
+        this.p3Error = e1;
+      },
+      error : (err : Error) => {
+        this.logger.debug('Result P1 error')
+      },
+      complete : () =>{
+        this.logger.debug('Result P1 Complete')
+      }
+    }
+
+    const obsP4 = {
+      next : (x : any) =>{
+        let e1 = Math.sqrt(x['body'][0]*x['body'][0]+x['body'][1]*x['body'][1]);
+        this.p4Error = e1;
+      },
+      error : (err : Error) => {
+        this.logger.debug('Result P1 error')
+      },
+      complete : () =>{
+        this.logger.debug('Result P1 Complete')
+      }
+    }
+
+    let obsResultP1 = this.basePS.getP1Error('P1').subscribe(obsP1);
+    let obsResultP2 = this.basePS.getP1Error('P2').subscribe(obsP2);
+    let obsResultP3 = this.basePS.getP1Error('P3').subscribe(obsP3);
+    let obsResultP4 = this.basePS.getP1Error('P4').subscribe(obsP4);
   }
 }
 
