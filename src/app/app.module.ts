@@ -16,6 +16,7 @@ import {
   IgxSliderModule,
   IgxToggleModule,
   IgxSwitchModule,
+  IgxStepperComponent, IgxStepperModule, IgxCardModule,
 } from '@infragistics/igniteui-angular';
 import {
     IgxCategoryChartModule, IgxDataChartCoreModule, IgxDataChartInteractivityModule,
@@ -123,6 +124,8 @@ import { DrawingDxfTestComponent } from './drawing-dxf-test/drawing-dxf-test.com
       serverLogLevel: NgxLoggerLevel.OFF
     }),
     IgxRadioModule,
+    IgxStepperModule,
+    IgxCardModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

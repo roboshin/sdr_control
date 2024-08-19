@@ -459,6 +459,7 @@ export class MeasureBaseComponent implements OnInit {
 
 
   // 変換係数の結果表示ダイアログ
+  selectedCard: boolean;
   onResultFormOpen($event: IDialogEventArgs) {
     this.logger.debug(`Result form opend`);
 

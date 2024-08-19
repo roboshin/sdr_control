@@ -35,16 +35,19 @@
         <igx-input-group>
           <input igxInput name="kui_x" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.x"/>
           <label igxLabel for="kui_x">X[mm]</label>
+          <igx-suffix>[mm]</igx-suffix>
         </igx-input-group>
 
         <igx-input-group>
           <input igxInput name="kui_y" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.y"/>
           <label igxLabel for="kui_y">Y[mm]</label>
+          <igx-suffix>[mm]</igx-suffix>
         </igx-input-group>
 
         <igx-input-group>
           <input igxInput name="kui_z" type="number" [(ngModel)]="robotInfo.nowMeasurePoint.z"/>
           <label igxLabel for="kui_z">Z[mm]</label>
+          <igx-suffix>[mm]</igx-suffix>
         </igx-input-group>
       </p>
     </div>
@@ -55,16 +58,19 @@
         <igx-input-group>
           <input igxInput name="dxf_x" w8type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.x"/>
           <label igxLabel for="dxf_x">DXF X[mm]</label>
+          <igx-suffix>[mm]</igx-suffix>
         </igx-input-group>
 
         <igx-input-group>
           <input igxInput name="dxf_y" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.y"/>
           <label igxLabel for="dxf_y">DXY Y[mm]</label>
+          <igx-suffix>[mm]</igx-suffix>
         </igx-input-group>
 
         <igx-input-group>
           <input igxInput name="dxf_z" type="number" [(ngModel)]="robotInfo.nowMeasureDXFPoint.z"/>
           <label igxLabel for="dxf_z">DXF Z[mm]</label>
+          <igx-suffix>[mm]</igx-suffix>
         </igx-input-group>
       </p>
     </div>
@@ -87,7 +93,7 @@
 
         <igx-input-group>
           <input igxInput name="errorOrg" type="number" [(ngModel)]="robotInfo.orgError"/>
-          <label igxLabel for="errorOrg">RMS[deg]</label>
+          <label igxLabel for="errorOrg">RMS[mm]</label>
         </igx-input-group>
       </p>
     </div>

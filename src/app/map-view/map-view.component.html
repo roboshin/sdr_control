@@ -1,0 +1,36 @@
+<p>map-view works!</p>
+<kendo-map
+  [center]="center"
+  [zoom]="15"
+  (beforeReset)="log('beforeReset', $event)"
+  (mapClick)="log('mapClick', $event)"
+  (markerActivate)="log('markerActivate', $event)"
+  (markerCreated)="log('markerCreated', $event)"
+  (markerClick)="log('markerClick', $event)"
+  (pan)="log('pan', $event)"
+  (panEnd)="log('panEnd', $event)"
+  (reset)="log('reset', $event)"
+  (shapeClick)="log('shapeClick', $event)"
+  (shapeFeatureCreated)="log('shapeFeatureCreated', $event)"
+  (shapeMouseEnter)="log('shapeMouseEnter', $event)"
+  (shapeMouseLeave)="log('shapeMouseLeave', $event)"
+  (zoomStart)="log('zoomStart', $event)"
+  (zoomEnd)="log('zoomEnd', $event)"
+>
+  <kendo-map-layers>
+    <kendo-map-tile-layer
+      [subdomains]="tileSubdomains"
+      [urlTemplate]="tileUrl"
+      attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap contributors</a>"
+    >
+    </kendo-map-tile-layer>
+    <kendo-map-shape-layer [data]="shapes" [style]="shapeStyle">
+    </kendo-map-shape-layer>
+    <kendo-map-marker-layer
+      [data]="markers"
+      locationField="latlng"
+      titleField="name"
+    >
+    </kendo-map-marker-layer>
+  </kendo-map-layers>
+</kendo-map>

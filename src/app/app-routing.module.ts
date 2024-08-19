@@ -20,12 +20,13 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent, data: { text: 'ホーム' } },
   { path: 'error', component: UncaughtErrorComponent },
   { path: 'kui-navy', component: KuinavyControlComponent, data:{text: '杭ナビ設定'}},
-  { path: 'robot-settings', component: RobotSettingsComponent, data:{text: 'ロボット設定'}},
-  { path: 'robot-info', component : RobotInfoComponent, data:{text: 'ロボット情報'}},
-  { path: 'select', component: SelectComponent, data: { text: 'DXF設定' } },
+  // { path: 'robot-settings', component: RobotSettingsComponent, data:{text: 'ロボット設定'}},
+
   { path: 'category-chart', component: CategoryChartComponent, data: { text: '基準点設定' } },
   { path: 'measure-base', component: MeasureBaseComponent, data: { text: '基準点計測' } },
+  { path: 'select', component: SelectComponent, data: { text: 'DXF設定' } },
   { path: 'drop-down', component: DropDownComponent, data: { text: 'コントロールボタン' } },
+  { path: 'robot-info', component : RobotInfoComponent, data:{text: 'ロボット情報'}},
   { path: 'manual-Move', component: ManualMovesdrComponent, data: { text: 'マニュアル操作' } },
   { path: 'print-setup', component: CalibPrintPointComponent, data:{text: 'プリント位置調整'}},
   { path: '**', component: PageNotFoundComponent } // must always be last

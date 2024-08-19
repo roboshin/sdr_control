@@ -11,6 +11,21 @@ export class KuinavyControlComponent implements OnInit, AfterViewInit {
 
   public selected: string;
 
+  /** 描画速度 **/
+  drawVeloSlider: number;
+
+  /** 空走時の速度 **/
+  unDrawVelo: number;
+
+  /** 描画線に対応する文字列 **/
+  drawChars: string;
+
+  /** アライメント距離**/
+  alignLength: number;
+
+  /** 基準点数**/
+  p_number: number;
+
 
   constructor(
     private logger:NGXLogger,

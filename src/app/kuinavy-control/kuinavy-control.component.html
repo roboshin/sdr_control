@@ -1,29 +1,94 @@
-<p>kuinavy-control works!</p>
+<p>杭ナビ設定</p>
 
 <!--杭ナビ接続方法-->
 <div>
-  <!-- 接続方法の選択 -->
-  <label>杭ナビ接続方法</label>
-  <igx-radio-group>
-    <igx-radio [(ngModel)]="selected" value="optionBluetooth">Bluetooth</igx-radio>
-    <igx-radio [(ngModel)]="selected" value="optionWIFI">Wifi</igx-radio>
-  </igx-radio-group>
+<!--  &lt;!&ndash; 接続方法の選択 &ndash;&gt;-->
+<!--  <label>杭ナビ接続方法</label>-->
+<!--  <igx-radio-group>-->
+<!--    <igx-radio [(ngModel)]="selected" value="optionBluetooth">Bluetooth</igx-radio>-->
+<!--    <igx-radio [(ngModel)]="selected" value="optionWIFI">Wifi</igx-radio>-->
+<!--  </igx-radio-group>-->
 
-  <div>
-    <button igxButton="raised" igxRipple type="submit" (click)="onConnect()">接続</button>
-    <button igxButton="raised" igxRipple type="submit" (click)="onDisconnect()">切断</button>
-  </div>
+<!--  <div>-->
+<!--    <button igxButton="raised" igxRipple type="submit" (click)="onConnect()">接続</button>-->
+<!--    <button igxButton="raised" igxRipple type="submit" (click)="onDisconnect()">切断</button>-->
+<!--  </div>-->
 
 
-  <!-- ターゲット・サーチ-->
-  <div>
-    <button igxButton="raised" igxRipple type="submit" (click)="onSearchTarget()">ターゲットサーチ</button>
-  </div>
+<!--  &lt;!&ndash; ターゲット・サーチ&ndash;&gt;-->
+<!--  <div>-->
+<!--    <button igxButton="raised" igxRipple type="submit" (click)="onSearchTarget()">ターゲットサーチ</button>-->
+<!--  </div>-->
+
 
   <!-- 計測開始・停止-->
   <div>
-    <button igxButton="raised" igxRipple type="submit" (click)="onStartMeasure()">計測開始</button>
+    <button igxButton="raised" igxRipple type="submit" (click)="onStartMeasure()">計測再開</button>
     <button igxButton="raised" igxRipple type="submit" (click)="onStopMeasure()">計測停止</button>
+  </div>
+
+  <p>動作設定</p>
+
+  <div class="container">
+    <igx-slider [step]="1" [(ngModel)]="p_number" [minValue]="4" [maxValue]="10"></igx-slider>
+    <igx-input-group type="border">
+      <input igxInput id="p_number" type="number" min="4" max="10" step="10" [(ngModel)]="p_number" />
+      <label igxLabel for="p_number">基準点数</label>
+      <igx-suffix>個</igx-suffix>
+    </igx-input-group>
+  </div>
+
+  <div>
+    <igx-switch #switchUseTrans [checked]="true">P点基準</igx-switch>
+  </div>
+
+  <div>
+    <igx-switch #switchCalibMode [checked]="false" >キャリブレーションモード</igx-switch>
+  </div>
+
+  <div>
+    <igx-switch #switchImuCorrect [checked]="false">傾斜補正</igx-switch>
+  </div>
+
+  <!-- 描画速度設定 -->
+  <div class="container">
+    <igx-slider [step]="10" [(ngModel)]="drawVeloSlider" [minValue]="40" [maxValue]="120"></igx-slider>
+    <igx-input-group type="border">
+      <input igxInput id="drawVelo" type="number" min="40" max="120" step="5" [(ngModel)]="drawVeloSlider" />
+      <label igxLabel for="drawVelo">描画速度</label>
+      <igx-suffix>[mm/sec]</igx-suffix>
+    </igx-input-group>
+  </div>
+
+  <!-- 空走距離の設定 -->
+  <div class="container">
+    <igx-slider [step]="10" [(ngModel)]="unDrawVelo" [minValue]="40" [maxValue]="120"></igx-slider>
+    <igx-input-group type="border">
+      <input igxInput id="unDrawVelo" type="number" min="40" max="120" step="5" [(ngModel)]="unDrawVelo" />
+      <label igxLabel for="unDrawVelo">描画速度</label>
+      <igx-suffix>[mm/sec]</igx-suffix>
+    </igx-input-group>
+  </div>
+
+  <div>
+    <igx-input-group>
+      <input igxInput id="drawChar" type="text" [(ngModel)]="drawChars" />
+      <label igxLabel for="drawChar">描画線</label>
+    </igx-input-group>
+  </div>
+
+  <div class="container">
+    <igx-switch #switchUseHomo [checked]="false">台形補正</igx-switch>
+  </div>
+
+  <!-- アライメント距離の設定 -->
+  <div class="container">
+    <igx-slider [step]="10" [(ngModel)]="alignLength" [minValue]="0" [maxValue]="1000"></igx-slider>
+    <igx-input-group type="border">
+      <input igxInput id="alignLength" type="number" min="0" max="1000" step="10" [(ngModel)]="alignLength" />
+      <label igxLabel for="alignLength">アライメント距離</label>
+      <igx-suffix>[mm]</igx-suffix>
+    </igx-input-group>
   </div>
 
 </div>

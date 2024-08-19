@@ -1,69 +1,174 @@
-<!--<p>basic category chart with chart type selector.</p>-->
-<!--<div>-->
-<!--  <span>Chart Type:</span>-->
-<!--  <select [(ngModel)]="chartType">-->
-<!--    <option>Auto</option>-->
-<!--    <option>Area</option>-->
-<!--    <option>Line</option>-->
-<!--    <option>Column</option>-->
-<!--    <option>Point</option>-->
-<!--    <option>Spline</option>-->
-<!--    <option>SplineArea</option>-->
-<!--    <option>StepArea</option>-->
-<!--    <option>StepLine</option>-->
-<!--    <option>Waterfall</option>-->
-<!--  </select>-->
-<!--</div>-->
-<!--<igx-category-chart height="550px" width="100%"-->
-<!--    chartTitle="Population per Country (millions)"-->
-<!--    [chartType]="chartType"-->
-<!--    [dataSource]="data">-->
-<!--</igx-category-chart>-->
 
-<div class="container vertical">
-  <div class="options vertical">
-<!--    <label id="legendTitle">Airplane Seating Chart (Polylines)</label>-->
-  </div>
+<div class="select-wrapper">
+<igx-stepper #stepper [linear]="true">
 
-  <!--  <div class="custom-legend">-->
-  <!--    <div><span style="background: DodgerBlue; "></span><label>First Class</label></div>-->
-  <!--    <div><span style="background: LimeGreen; "></span><label>Business Class</label></div>-->
-  <!--    <div><span style="background: Orange; "></span><label>Premium Class</label></div>-->
-  <!--    <div><span style="background: Red; "></span><label>Economy Class</label></div>-->
-  <!--    <div><span style="background: Gray; "></span><label>Sold Seat</label></div>-->
-  <!--    <div><span style="background: LightGray; "></span><label>Airplane</label></div>-->
-  <!--  </div>-->
+  <igx-step #step1 [isValid]="!!selectedCard" [completed]="!!selectedCard">
+    <span igxStepTitle>基準点 P1</span>
+    <div igxStepContent [tabIndex]="-1">
+<!--      <h2 class="sample-step-title">基準点 P1 情報</h2>-->
+      <div class="card-wrapper">
+        <igx-card-content>
+          <form class="info-row">
+            <igx-input-group>
+              <input igxInput name="基準値 X" id="master_x" type="number"/>
+              <label igxLabel for="master_x">基準X</label>
+              <igx-suffix>mm</igx-suffix>
+            </igx-input-group>
+            <igx-input-group>
+              <input igxInput name="基準値 Y" id="master_y" type="number"/>
+              <label igxLabel for="master_y">基準Y</label>
+              <igx-suffix>mm</igx-suffix>
+            </igx-input-group>
+            <button #buttonStartMeasure igxButton="raised" igxRipple>基準値設定</button>
 
-  <div class="container">
-    <igx-data-chart isHorizontalZoomEnabled="true" isVerticalZoomEnabled="true"
-                    width="100%"
-                    height="100%" defaultInteraction="auto">
-      <igx-numeric-x-axis #xAxis name="xAxis"></igx-numeric-x-axis>
-      <igx-numeric-y-axis #yAxis name="yAxis"></igx-numeric-y-axis>
+            <igx-input-group>
+              <input igxInput name="計測値 X" id="measure_x" type="number"/>
+              <label igxLabel for="measure_x">計測X</label>
+              <igx-suffix>mm</igx-suffix>
+            </igx-input-group>
+            <igx-input-group>
+              <input igxInput name="計測値 Y" id="measure_y" type="number"/>
+              <label igxLabel for="measure_y">計測Y</label>
+              <igx-suffix>mm</igx-suffix>
+            </igx-input-group>
+            <button #buttonStartMeasure igxButton="raised" igxRipple >基準位置計測</button>
 
-      <igx-scatter-polyline-series name="airplaneShapeSeries" #airplaneShapeSeries
-                                   [xAxis]="xAxis"
-                                   [yAxis]="yAxis" shapeMemberPath="points" thickness="0.5" brush="Black"
-                                   (styleShape)="onStyleLine($event)">
-      </igx-scatter-polyline-series>
+            <igx-input-group>
+              <input igxInput name="誤差 X" id="error_x" type="number"/>
+              <label igxLabel for="error_x">誤差X</label>
+              <igx-suffix>mm</igx-suffix>
+            </igx-input-group>
+            <igx-input-group>
+              <input igxInput name="誤差 Y" id="error_y" type="number"/>
+              <label igxLabel for="error_y">誤差Y</label>
+              <igx-suffix>mm</igx-suffix>
+            </igx-input-group>
 
-      <igx-scatter-polyline-series name="airplaneSeatSeries" #airplaneSeatSeries
-                                   [xAxis]="xAxis"
-                                   [yAxis]="yAxis" shapeMemberPath="points" brush="Black"
-                                   title="Airplane Seats"
-                                   (styleShape)="onStylingShape($event)">
-      </igx-scatter-polyline-series>
-    </igx-data-chart>
-  </div>
+          </form>
+        </igx-card-content>
+      </div>
+    </div>
+  </igx-step>
 
-<!--  <div class="option horizontal">-->
-<!--    <div><span style="border-color: dodgerblue; "></span><label>First Class</label></div>-->
-<!--    <div><span style="border-color: LimeGreen; "></span><label>Business Class</label></div>-->
-<!--    <div><span style="border-color: Orange; "></span><label>Premium Class</label></div>-->
-<!--    <div><span style="border-color: red; "></span><label>Economy Class</label></div>-->
-<!--    <div><span style="border-color: gray; "></span><label>Sold Seat</label></div>-->
-<!--  </div>-->
-</div>
+  <igx-step #step1 [isValid]="!!selectedCard" [completed]="!!selectedCard">
+    <span igxStepTitle>基準点 P1</span>
+    <div igxStepContent [tabIndex]="-1">
+      <!--      <h2 class="sample-step-title">基準点 P1 情報</h2>-->
+      <div class="card-wrapper">
+        <igx-card-content>
+          <form class="info-row">
+            <igx-input-group>
+              <input igxInput name="基準値 X" id="master_x" type="number"/>
+              <label igxLabel for="master_x">X [mm]</label>
+            </igx-input-group>
+            <igx-input-group>
+              <input igxInput name="基準値 Y" id="master_y" type="number"/>
+              <label igxLabel for="master_y">Y [mm]</label>
+            </igx-input-group>
+            <button #buttonStartMeasure igxButton="raised" igxRipple>基準値設定</button>
+
+            <igx-input-group>
+              <input igxInput name="計測値 X" id="measure_x" type="number"/>
+              <label igxLabel for="measure_x">X [mm]</label>
+            </igx-input-group>
+            <igx-input-group>
+              <input igxInput name="計測値 Y" id="measure_y" type="number"/>
+              <label igxLabel for="measure_y">Y [mm]</label>
+            </igx-input-group>
+            <button #buttonStartMeasure igxButton="raised" igxRipple >基準位置計測</button>
+
+            <igx-input-group>
+              <input igxInput name="誤差 X" id="error_x" type="number"/>
+              <label igxLabel for="error_x">X [mm]</label>
+            </igx-input-group>
+            <igx-input-group>
+              <input igxInput name="誤差 Y" id="error_y" type="number"/>
+              <label igxLabel for="error_y">Y [mm]</label>
+            </igx-input-group>
+
+          </form>
+        </igx-card-content>
+      </div>
+    </div>
+  </igx-step>
+
+  <igx-step #step1 [isValid]="!!selectedCard" [completed]="!!selectedCard">
+    <span igxStepTitle>基準点 P1</span>
+    <div igxStepContent [tabIndex]="-1">
+      <!--      <h2 class="sample-step-title">基準点 P1 情報</h2>-->
+      <div class="card-wrapper">
+        <igx-card-content>
+          <form class="info-row">
+            <igx-input-group>
+              <input igxInput name="基準値 X" id="master_x" type="number"/>
+              <label igxLabel for="master_x">X [mm]</label>
+            </igx-input-group>
+            <igx-input-group>
+              <input igxInput name="基準値 Y" id="master_y" type="number"/>
+              <label igxLabel for="master_y">Y [mm]</label>
+            </igx-input-group>
+            <button #buttonStartMeasure igxButton="raised" igxRipple>基準値設定</button>
+
+            <igx-input-group>
+              <input igxInput name="計測値 X" id="measure_x" type="number"/>
+              <label igxLabel for="measure_x">X [mm]</label>
+            </igx-input-group>
+            <igx-input-group>
+              <input igxInput name="計測値 Y" id="measure_y" type="number"/>
+              <label igxLabel for="measure_y">Y [mm]</label>
+            </igx-input-group>
+            <button #buttonStartMeasure igxButton="raised" igxRipple >基準位置計測</button>
+
+            <igx-input-group>
+              <input igxInput name="誤差 X" id="error_x" type="number"/>
+              <label igxLabel for="error_x">X [mm]</label>
+            </igx-input-group>
+            <igx-input-group>
+              <input igxInput name="誤差 Y" id="error_y" type="number"/>
+              <label igxLabel for="error_y">Y [mm]</label>
+            </igx-input-group>
+
+          </form>
+        </igx-card-content>
+      </div>
+    </div>
+  </igx-step>
+
+  <!--  <igx-step #step_total>-->
+  <!--    <span igxStepTitle>各点誤差情報</span>-->
+  <!--    <div igxStepContent [tabIndex]="-1">-->
+  <!--      <h2 class="sample-step-title">誤差情報</h2>-->
+  <!--      <div class="card-wrapper">-->
+  <!--        <igx-card-content>-->
+  <!--          <form class="info-row">-->
+  <!--            <igx-input-group>-->
+  <!--              <input igxInput name="基準値 X" id="master_x" type="number"/>-->
+  <!--              <label igxLabel for="master_x">X [mm]</label>-->
+  <!--            </igx-input-group>-->
+  <!--            <igx-input-group>-->
+  <!--              <input igxInput name="基準値 Y" id="master_y" type="number"/>-->
+  <!--              <label igxLabel for="master_y">Y [mm]</label>-->
+  <!--            </igx-input-group>-->
+  <!--            <button #buttonStartMeasure igxButton="contained" igxRipple>基準値設定</button>-->
+
+  <!--            <igx-input-group>-->
+  <!--              <input igxInput name="計測値 X" id="measure_x" type="number"/>-->
+  <!--              <label igxLabel for="measure_x">X [mm]</label>-->
+  <!--            </igx-input-group>-->
+  <!--            <igx-input-group>-->
+  <!--              <input igxInput name="計測値 Y" id="measure_y" type="number"/>-->
+  <!--              <label igxLabel for="measure_y">Y [mm]</label>-->
+  <!--            </igx-input-group>-->
+  <!--            <button #buttonStartMeasure igxButton="contained" igxRipple >基準位置計測</button>-->
+  <!--          </form>-->
+  <!--        </igx-card-content>-->
+  <!--      </div>-->
+  <!--    </div>-->
+
+  <!--  </igx-step>-->
+
+</igx-stepper>
+
 
 <!--<ng-template let-series="series" let-item="item" #seatTooltip>-->
 <!--  <div>-->
@@ -247,3 +352,4 @@
   </igx-dialog>
 </igx-dialog>
 
+</div>
